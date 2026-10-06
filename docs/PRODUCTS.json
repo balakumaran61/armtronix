@@ -1,0 +1,1607 @@
+{
+  "meta": {
+    "_note": "ARM-03. Source: ARMtronix IA and BA catalogues and per-product datasheets (github.com/armtronix/ARMtronix_Product_Documents), read 5 Oct 2026. Where a datasheet and the catalogue disagree, both are recorded: spec.verify holds the conflict and `conflicts` summarises it. unit \"—\" means the value is categorical. Product availability today: [VERIFY].",
+    "datasheetBase": "https://github.com/armtronix/ARMtronix_Product_Documents/blob/master/",
+    "generated": "2026-10-05"
+  },
+  "products": [
+    {
+      "code": "IA015",
+      "name": "Retro to IIoT",
+      "tagline": "A DIN-rail box that gives Siemens and Beckhoff PLCs a voice over Wi-Fi, CAN, RS485 and Ethernet.",
+      "power": "24 V DC @ 1 A",
+      "interfaces": [
+        "Wi-Fi",
+        "Bluetooth",
+        "CAN",
+        "RS485",
+        "Modbus TCP",
+        "Ethernet"
+      ],
+      "io": {
+        "di": 3,
+        "do": 3,
+        "ai": 4,
+        "aiType": "4–20 mA"
+      },
+      "mcu": "ESP32 (Wi-Fi/BT module)",
+      "mounting": "DIN rail (C-type)",
+      "targets": [
+        "Beckhoff PLC",
+        "Siemens PLC"
+      ],
+      "datasheetUrl": "https://github.com/armtronix/ARMtronix_Product_Documents/blob/master/IA015_Retro_To_IIoT_B.pdf",
+      "specs": [
+        {
+          "label": "Power input",
+          "value": "24 V DC @ 1 A",
+          "unit": "V DC / A",
+          "source": "catalogue"
+        },
+        {
+          "label": "Input voltage range",
+          "value": "12–24 V DC",
+          "unit": "V DC",
+          "source": "datasheet rev B"
+        },
+        {
+          "label": "Wi-Fi",
+          "value": "IEEE 802.11 b/g/n",
+          "unit": "—",
+          "source": "catalogue"
+        },
+        {
+          "label": "Bluetooth",
+          "value": "v4.2 BR/EDR",
+          "unit": "—",
+          "source": "catalogue"
+        },
+        {
+          "label": "CAN",
+          "value": "CAN bus 2.0",
+          "unit": "—",
+          "source": "catalogue"
+        },
+        {
+          "label": "RS485 / Modbus",
+          "value": "2-wire RS485, Modbus",
+          "unit": "—",
+          "source": "catalogue"
+        },
+        {
+          "label": "Ethernet",
+          "value": "RJ45 · IEEE 1588 PTP · Modbus TCP",
+          "unit": "—",
+          "source": "catalogue"
+        },
+        {
+          "label": "Digital inputs",
+          "value": "3, opto-isolated, 24 V DC tolerant",
+          "unit": "V DC",
+          "source": "catalogue"
+        },
+        {
+          "label": "Digital outputs",
+          "value": "3, opto-isolated, 24 V DC / 300 mA, open collector",
+          "unit": "V DC / mA",
+          "source": "catalogue"
+        },
+        {
+          "label": "Analog inputs",
+          "value": "4× 4–20 mA (catalogue)",
+          "unit": "mA",
+          "source": "catalogue",
+          "verify": "Datasheet rev B pin table lists AI1–AI3 only (ADC39/36/34): confirm 3 vs 4"
+        },
+        {
+          "label": "PCB size",
+          "value": "130 × 70 × 74",
+          "unit": "mm",
+          "source": "datasheet rev B"
+        },
+        {
+          "label": "Mounting",
+          "value": "DIN rail, C-type",
+          "unit": "—",
+          "source": "catalogue"
+        },
+        {
+          "label": "Programming",
+          "value": "Arduino IDE (ESP32), MQTT or HTTP firmware mode",
+          "unit": "—",
+          "source": "datasheet rev B"
+        }
+      ],
+      "hotspots": [
+        {
+          "id": "mcu",
+          "label": "ESP32 Wi-Fi / BT module",
+          "kind": "mcu",
+          "spec": "Wi-Fi 802.11 b/g/n · BT 4.2 BR/EDR · Arduino IDE compatible · MQTT or HTTP mode"
+        },
+        {
+          "id": "power",
+          "label": "Power input VDC_IN",
+          "kind": "power",
+          "spec": "24 V DC @ 1 A (12–24 V DC range) · on-board DC-DC to 3.3 V"
+        },
+        {
+          "id": "di",
+          "label": "Digital inputs DI1–DI3",
+          "kind": "di",
+          "spec": "3× opto-isolated · 12–24 V DC · GPIO32 / GPIO33 / GPIO15"
+        },
+        {
+          "id": "do",
+          "label": "Digital outputs DO1–DO3",
+          "kind": "do",
+          "spec": "3× opto-isolated · 24 V DC / 300 mA · open collector"
+        },
+        {
+          "id": "ai",
+          "label": "Analog inputs AI",
+          "kind": "ai",
+          "spec": "4–20 mA · AI1–AI3 on ESP32 ADC39 / 36 / 34 · 4th input [VERIFY]"
+        },
+        {
+          "id": "eth",
+          "label": "Ethernet (RJ45)",
+          "kind": "eth",
+          "spec": "Ethernet MAC with IEEE 1588 PTP · Modbus TCP"
+        },
+        {
+          "id": "can",
+          "label": "CAN port",
+          "kind": "can",
+          "spec": "CANH / CANL · CAN bus 2.0"
+        },
+        {
+          "id": "rs485",
+          "label": "RS485 / Modbus",
+          "kind": "rs485",
+          "spec": "Terminals A / B · 2-wire Modbus"
+        },
+        {
+          "id": "ui",
+          "label": "Buttons and LEDs",
+          "kind": "ui",
+          "spec": "S1 config · S3 reset · D3 power-presence LED · dual-colour Wi-Fi status LED"
+        }
+      ],
+      "leds": [
+        "power",
+        "wifi",
+        "di1",
+        "di2",
+        "di3",
+        "do1",
+        "do2",
+        "do3"
+      ],
+      "conflicts": [
+        "AI count: catalogue 4, datasheet pin table 3",
+        "Datasheet text mentions \"twelve\" DI/DO in one paragraph (copy-paste); pin table and catalogue say 3"
+      ],
+      "tasmota": false,
+      "verified": false,
+      "line": "IA",
+      "slug": "ia015",
+      "datasheetKind": "datasheet"
+    },
+    {
+      "code": "IA013",
+      "name": "Wi-Fi ⇄ RS485 ⇄ LoRa",
+      "tagline": "A Modbus gateway that bridges the factory floor to Wi-Fi and LoRaWAN.",
+      "power": "24 V DC @ 1 A (catalogue) · 100–250 V AC variant",
+      "interfaces": [
+        "Wi-Fi",
+        "Bluetooth",
+        "RS485",
+        "LoRa"
+      ],
+      "io": {
+        "di": 0,
+        "do": 0,
+        "ai": 0,
+        "aiType": null
+      },
+      "mcu": "ESP32 + STM32F103CBT6",
+      "mounting": "Screw mount",
+      "targets": [
+        "Modbus master",
+        "Modbus slave"
+      ],
+      "datasheetUrl": "https://github.com/armtronix/ARMtronix_Product_Documents/blob/master/IA013_Wifi_RS485_LoRa.pdf",
+      "specs": [
+        {
+          "label": "Power input",
+          "value": "24 V DC @ 1 A; AC 230 V / 1 A in a different variant",
+          "unit": "V DC / A / V AC",
+          "source": "catalogue"
+        },
+        {
+          "label": "Datasheet rev A input",
+          "value": "100–250 V AC (typ 230 V), 0.2 A typ",
+          "unit": "V AC / A",
+          "source": "datasheet rev A",
+          "verify": "Datasheet describes the AC variant only; confirm which variant ships"
+        },
+        {
+          "label": "Wi-Fi",
+          "value": "IEEE 802.11 b/g/n, 2.4 GHz",
+          "unit": "GHz",
+          "source": "catalogue"
+        },
+        {
+          "label": "Bluetooth",
+          "value": "v4.2 BR/EDR",
+          "unit": "—",
+          "source": "catalogue"
+        },
+        {
+          "label": "LoRa",
+          "value": "LoRaWAN, 862–878 MHz (868 MHz typ), configurable in program",
+          "unit": "MHz",
+          "source": "catalogue"
+        },
+        {
+          "label": "LoRa module",
+          "value": "Dorji DRF1276G (SX1272)",
+          "unit": "—",
+          "source": "datasheet rev A"
+        },
+        {
+          "label": "RS485 / Modbus",
+          "value": "2-wire, DIP-switch device address (4 switches)",
+          "unit": "—",
+          "source": "datasheet rev A"
+        },
+        {
+          "label": "MCU",
+          "value": "STM32F103CBT6 (optional on some models)",
+          "unit": "—",
+          "source": "catalogue"
+        },
+        {
+          "label": "PCB size",
+          "value": "96 × 47 × 28",
+          "unit": "mm",
+          "source": "datasheet rev A"
+        },
+        {
+          "label": "Mounting",
+          "value": "Screw type",
+          "unit": "—",
+          "source": "catalogue"
+        },
+        {
+          "label": "Programming",
+          "value": "On-field programmable, on-board USB-UART (micro-USB), Arduino compatible",
+          "unit": "—",
+          "source": "catalogue"
+        }
+      ],
+      "hotspots": [
+        {
+          "id": "esp32",
+          "label": "ESP32 Wi-Fi / BT module",
+          "kind": "mcu",
+          "spec": "Wi-Fi 802.11 b/g/n · BT 4.2 · MQTT or HTTP"
+        },
+        {
+          "id": "stm32",
+          "label": "STM32F103CBT6 MCU",
+          "kind": "mcu",
+          "spec": "Runs the LoRa stack · optional on some models"
+        },
+        {
+          "id": "lora",
+          "label": "LoRa module DRF1276G",
+          "kind": "radio",
+          "spec": "LoRaWAN · 862–878 MHz · SPI to ESP32 / STM32"
+        },
+        {
+          "id": "antenna",
+          "label": "External LoRa antenna",
+          "kind": "radio",
+          "spec": "Supplied with the device"
+        },
+        {
+          "id": "rs485",
+          "label": "RS485 header J8",
+          "kind": "rs485",
+          "spec": "A / B · 2-wire Modbus"
+        },
+        {
+          "id": "dip",
+          "label": "Address DIP switch D6",
+          "kind": "header",
+          "spec": "4 switches set the RS485 device ID"
+        },
+        {
+          "id": "power",
+          "label": "AC input J1 and PSU",
+          "kind": "power",
+          "spec": "Phase / neutral in · HLK-PM05 5 V / 1 A · 100–250 V AC"
+        },
+        {
+          "id": "usb",
+          "label": "Micro-USB programming J6",
+          "kind": "header",
+          "spec": "On-board USB-UART · J5 selects ESP or MCU"
+        },
+        {
+          "id": "gpio",
+          "label": "GPIO header J2",
+          "kind": "header",
+          "spec": "Most MCU GPIOs broken out for user code"
+        }
+      ],
+      "leds": [
+        "wifi",
+        "rs485"
+      ],
+      "conflicts": [
+        "Power: catalogue 24 V DC, datasheet rev A is AC-powered"
+      ],
+      "tasmota": false,
+      "verified": false,
+      "line": "IA",
+      "slug": "ia013",
+      "datasheetKind": "datasheet"
+    },
+    {
+      "code": "IA010",
+      "name": "Modbus to IIoT",
+      "tagline": "Wi-Fi and Ethernet gateway for Modbus-speaking PLCs.",
+      "power": "24 V DC @ 1 A",
+      "interfaces": [
+        "Wi-Fi",
+        "Bluetooth",
+        "RS485",
+        "Modbus TCP",
+        "Ethernet"
+      ],
+      "io": {
+        "di": 0,
+        "do": 1,
+        "ai": 0,
+        "aiType": null
+      },
+      "mounting": "DIN rail (C-type)",
+      "targets": [
+        "PLC"
+      ],
+      "datasheetUrl": "https://github.com/armtronix/ARMtronix_Product_Documents/blob/master/ARMtronix_IA_ProdcutCatalogue.pdf",
+      "datasheetKind": "catalogue",
+      "specs": [
+        {
+          "label": "Power input",
+          "value": "24 V DC @ 1 A",
+          "unit": "V DC / A",
+          "source": "catalogue"
+        },
+        {
+          "label": "Wi-Fi",
+          "value": "IEEE 802.11 b/g/n",
+          "unit": "—",
+          "source": "catalogue"
+        },
+        {
+          "label": "Bluetooth",
+          "value": "v4.2 BR/EDR",
+          "unit": "—",
+          "source": "catalogue"
+        },
+        {
+          "label": "RS485 / Modbus",
+          "value": "2-wire",
+          "unit": "—",
+          "source": "catalogue"
+        },
+        {
+          "label": "Ethernet",
+          "value": "IEEE 1588 PTP",
+          "unit": "—",
+          "source": "catalogue"
+        },
+        {
+          "label": "Modbus TCP",
+          "value": "Standard Modbus over the Ethernet port",
+          "unit": "—",
+          "source": "catalogue"
+        },
+        {
+          "label": "Digital output",
+          "value": "1, 24 V DC / 300 mA, open collector",
+          "unit": "V DC / mA",
+          "source": "catalogue"
+        },
+        {
+          "label": "Mounting",
+          "value": "DIN rail, C-type",
+          "unit": "—",
+          "source": "catalogue"
+        }
+      ],
+      "verified": true,
+      "conflicts": [
+        "No per-product datasheet in the public repo; catalogue only"
+      ],
+      "tasmota": false,
+      "mcu": null,
+      "line": "IA",
+      "slug": "ia010",
+      "hotspots": []
+    },
+    {
+      "code": "IA009",
+      "name": "Wi-Fi 12-DIO",
+      "tagline": "Twelve inputs and twelve outputs on Wi-Fi, acting as an MQTT client or access point.",
+      "power": "24 V DC @ 1 A",
+      "interfaces": [
+        "Wi-Fi"
+      ],
+      "io": {
+        "di": 12,
+        "do": 12,
+        "ai": 0,
+        "aiType": null
+      },
+      "mounting": "Screw mount",
+      "targets": [
+        "MQTT broker",
+        "Wi-Fi access point"
+      ],
+      "datasheetUrl": "https://github.com/armtronix/ARMtronix_Product_Documents/blob/master/IA009_Wifi_12-DIO_Board.pdf",
+      "specs": [
+        {
+          "label": "Power input",
+          "value": "24 V DC @ 1 A",
+          "unit": "V DC / A",
+          "source": "catalogue"
+        },
+        {
+          "label": "Wi-Fi",
+          "value": "IEEE 802.11 b/g/n",
+          "unit": "—",
+          "source": "catalogue"
+        },
+        {
+          "label": "Digital inputs",
+          "value": "12, 24 V DC tolerant (12–24 V DC)",
+          "unit": "V DC",
+          "source": "catalogue"
+        },
+        {
+          "label": "Digital outputs",
+          "value": "12, 24 V DC / 300 mA",
+          "unit": "V DC / mA",
+          "source": "catalogue"
+        },
+        {
+          "label": "Expansion",
+          "value": "I2C header",
+          "unit": "—",
+          "source": "catalogue"
+        },
+        {
+          "label": "PCB size",
+          "value": "220 × 60 × 25",
+          "unit": "mm",
+          "source": "datasheet"
+        },
+        {
+          "label": "Mounting",
+          "value": "Screw mount",
+          "unit": "—",
+          "source": "catalogue"
+        }
+      ],
+      "tasmota": false,
+      "verified": true,
+      "mcu": null,
+      "line": "IA",
+      "slug": "ia009",
+      "hotspots": [],
+      "conflicts": [],
+      "datasheetKind": "datasheet"
+    },
+    {
+      "code": "IA008",
+      "name": "Wi-Fi 2-DIO",
+      "tagline": "Two isolated inputs and two outputs on Wi-Fi with MQTT.",
+      "power": "24 V DC @ 0.5 A",
+      "interfaces": [
+        "Wi-Fi"
+      ],
+      "io": {
+        "di": 2,
+        "do": 2,
+        "ai": 0,
+        "aiType": null
+      },
+      "mounting": "Screw mount",
+      "targets": [
+        "MQTT broker",
+        "Wi-Fi access point"
+      ],
+      "datasheetUrl": "https://github.com/armtronix/ARMtronix_Product_Documents/blob/master/IA008_Wifi_2-DIO_Board.pdf",
+      "specs": [
+        {
+          "label": "Power input",
+          "value": "24 V DC @ 0.5 A",
+          "unit": "V DC / A",
+          "source": "catalogue"
+        },
+        {
+          "label": "Wi-Fi",
+          "value": "IEEE 802.11 b/g/n",
+          "unit": "—",
+          "source": "catalogue"
+        },
+        {
+          "label": "Digital inputs",
+          "value": "2, 24 V DC tolerant",
+          "unit": "V DC",
+          "source": "catalogue"
+        },
+        {
+          "label": "Digital outputs",
+          "value": "2, 24 V DC / 300 mA",
+          "unit": "V DC / mA",
+          "source": "catalogue"
+        },
+        {
+          "label": "Expansion",
+          "value": "I2C header",
+          "unit": "—",
+          "source": "catalogue"
+        },
+        {
+          "label": "PCB size",
+          "value": "85 × 52 × 12",
+          "unit": "mm",
+          "source": "datasheet"
+        },
+        {
+          "label": "Mounting",
+          "value": "Screw mount",
+          "unit": "—",
+          "source": "catalogue"
+        }
+      ],
+      "tasmota": false,
+      "verified": true,
+      "mcu": null,
+      "line": "IA",
+      "slug": "ia008",
+      "hotspots": [],
+      "conflicts": [],
+      "datasheetKind": "datasheet"
+    },
+    {
+      "code": "IA005",
+      "name": "LoRaWAN, STM MCU",
+      "tagline": "A user-programmable STM32 LoRaWAN node with a Li-Ion charger.",
+      "power": "5 V DC @ 1 A",
+      "interfaces": [
+        "LoRa",
+        "USB"
+      ],
+      "io": {
+        "di": 0,
+        "do": 0,
+        "ai": 0,
+        "aiType": null
+      },
+      "mcu": "STM32F103CBT6",
+      "mounting": "Drop-in / wired",
+      "targets": [
+        "Development application"
+      ],
+      "datasheetUrl": "https://github.com/armtronix/ARMtronix_Product_Documents/blob/master/IA005_LoRaWAN_Board.pdf",
+      "specs": [
+        {
+          "label": "Power input",
+          "value": "5 V DC @ 1 A",
+          "unit": "V DC / A",
+          "source": "catalogue"
+        },
+        {
+          "label": "LoRa",
+          "value": "LoRaWAN, 862–878 MHz, configurable in program",
+          "unit": "MHz",
+          "source": "catalogue"
+        },
+        {
+          "label": "MCU",
+          "value": "STM32F103CBT6",
+          "unit": "—",
+          "source": "catalogue"
+        },
+        {
+          "label": "Battery charger",
+          "value": "1-cell Li-Ion",
+          "unit": "—",
+          "source": "catalogue"
+        },
+        {
+          "label": "Programming",
+          "value": "User programmable, on-board micro-USB",
+          "unit": "—",
+          "source": "catalogue"
+        },
+        {
+          "label": "PCB size",
+          "value": "55 × 27 × 15",
+          "unit": "mm",
+          "source": "datasheet"
+        },
+        {
+          "label": "Mounting",
+          "value": "Drop-in / wired",
+          "unit": "—",
+          "source": "catalogue"
+        }
+      ],
+      "tasmota": false,
+      "verified": true,
+      "line": "IA",
+      "slug": "ia005",
+      "hotspots": [],
+      "conflicts": [],
+      "datasheetKind": "datasheet"
+    },
+    {
+      "code": "IA003",
+      "name": "RPi 4-DIO UPS board",
+      "tagline": "A Raspberry Pi HAT with isolated I/O, a Li-Po UPS and auto-reboot.",
+      "power": "24 V DC @ 1 A (12–24 V DC range)",
+      "interfaces": [
+        "Raspberry Pi"
+      ],
+      "io": {
+        "di": 4,
+        "do": 4,
+        "ai": 3,
+        "aiType": "4–20 mA"
+      },
+      "mcu": null,
+      "mounting": "Stack-up or FRC cable, screw mount",
+      "targets": [
+        "Raspberry Pi"
+      ],
+      "datasheetUrl": "https://github.com/armtronix/ARMtronix_Product_Documents/blob/master/IA003_RPi_4DIO_UPS.pdf",
+      "specs": [
+        {
+          "label": "Power input",
+          "value": "24 V DC @ 1 A (datasheet: 12–24 V DC)",
+          "unit": "V DC / A",
+          "source": "catalogue"
+        },
+        {
+          "label": "Pi supply",
+          "value": "On-board 24 V to 5 V buck converter",
+          "unit": "V DC",
+          "source": "catalogue"
+        },
+        {
+          "label": "Restart",
+          "value": "Restart switch (power recycle) and auto reboot",
+          "unit": "—",
+          "source": "catalogue"
+        },
+        {
+          "label": "RTC",
+          "value": "DS1307 with CR1220 cell holder",
+          "unit": "—",
+          "source": "datasheet rev D"
+        },
+        {
+          "label": "UPS charger",
+          "value": "Single-cell Li-Po / Li-Ion, up to 500 mA charge, MT3608 boost to 5 V",
+          "unit": "mA",
+          "source": "datasheet rev D"
+        },
+        {
+          "label": "Digital inputs",
+          "value": "4, opto-isolated, 24 V DC tolerant",
+          "unit": "V DC",
+          "source": "catalogue"
+        },
+        {
+          "label": "Digital outputs",
+          "value": "4, opto-isolated, 24 V DC / 300 mA",
+          "unit": "V DC / mA",
+          "source": "catalogue"
+        },
+        {
+          "label": "Analog inputs",
+          "value": "3× 4–20 mA via ADS1115 (datasheet rev D)",
+          "unit": "mA",
+          "source": "datasheet rev D",
+          "verify": "Catalogue lists 2× 0–5 V; datasheet rev D lists 3× 4–20 mA"
+        },
+        {
+          "label": "PCB size",
+          "value": "85 × 60 × 12",
+          "unit": "mm",
+          "source": "datasheet rev D"
+        },
+        {
+          "label": "Mounting",
+          "value": "Stack-up (40-pin) or FRC cable; screw mount",
+          "unit": "—",
+          "source": "catalogue"
+        }
+      ],
+      "hotspots": [
+        {
+          "id": "pi",
+          "label": "Raspberry Pi header J11",
+          "kind": "header",
+          "spec": "40-pin stack-up or FRC (variant 2)"
+        },
+        {
+          "id": "power",
+          "label": "24 V DC input J2",
+          "kind": "power",
+          "spec": "24 V DC @ 1 A · buck to 5 V for the Pi"
+        },
+        {
+          "id": "lipo",
+          "label": "Li-Po connector BT2 and charger",
+          "kind": "power",
+          "spec": "Single cell · up to 500 mA charge · mains-presence detection"
+        },
+        {
+          "id": "boost",
+          "label": "Boost converter MT3608",
+          "kind": "power",
+          "spec": "Lifts the 4.2 V cell to 5 V for the Pi"
+        },
+        {
+          "id": "di",
+          "label": "Digital inputs J3–J6",
+          "kind": "di",
+          "spec": "4× opto-isolated · up to 24 V DC"
+        },
+        {
+          "id": "do",
+          "label": "Digital outputs J7–J10",
+          "kind": "do",
+          "spec": "4× opto-isolated · 24 V DC / 300 mA"
+        },
+        {
+          "id": "ai",
+          "label": "Analog inputs AIN1–AIN3",
+          "kind": "ai",
+          "spec": "4–20 mA via ADS1115 · AIN0 monitors the battery [VERIFY vs catalogue]"
+        },
+        {
+          "id": "rtc",
+          "label": "Real-time clock BT1",
+          "kind": "rtc",
+          "spec": "DS1307 · CR1220 cell · I2C"
+        },
+        {
+          "id": "restart",
+          "label": "Restart SW1 and J15",
+          "kind": "ui",
+          "spec": "Power-recycle button · external switch or auto-reboot jumper"
+        }
+      ],
+      "leds": [
+        "power",
+        "di1",
+        "di2",
+        "di3",
+        "di4",
+        "do1",
+        "do2",
+        "do3",
+        "do4"
+      ],
+      "conflicts": [
+        "AI: catalogue 2× 0–5 V, datasheet 3× 4–20 mA",
+        "Input range: catalogue 24 V DC, datasheet 12–24 V DC"
+      ],
+      "tasmota": false,
+      "verified": false,
+      "line": "IA",
+      "slug": "ia003",
+      "datasheetKind": "datasheet"
+    },
+    {
+      "code": "IA002",
+      "name": "RPi 4-DIO",
+      "tagline": "A Raspberry Pi HAT with four isolated inputs and four outputs.",
+      "power": "24 V DC @ 1 A (12–24 V DC range)",
+      "interfaces": [
+        "Raspberry Pi"
+      ],
+      "io": {
+        "di": 4,
+        "do": 4,
+        "ai": 0,
+        "aiType": null
+      },
+      "mounting": "Stack-up or FRC cable, screw mount",
+      "targets": [
+        "Raspberry Pi"
+      ],
+      "datasheetUrl": "https://github.com/armtronix/ARMtronix_Product_Documents/blob/master/IA002_RPi_4IN_4OUT_Board.pdf",
+      "specs": [
+        {
+          "label": "Power input",
+          "value": "24 V DC @ 1 A (datasheet: 12–24 V DC)",
+          "unit": "V DC / A",
+          "source": "catalogue"
+        },
+        {
+          "label": "Pi supply",
+          "value": "On-board 24 V to 5 V converter",
+          "unit": "V DC",
+          "source": "catalogue"
+        },
+        {
+          "label": "Digital inputs",
+          "value": "4, 24 V DC tolerant",
+          "unit": "V DC",
+          "source": "catalogue"
+        },
+        {
+          "label": "Digital outputs",
+          "value": "4, 24 V DC / 300 mA",
+          "unit": "V DC / mA",
+          "source": "catalogue"
+        },
+        {
+          "label": "PCB size",
+          "value": "65 × 56 × 12",
+          "unit": "mm",
+          "source": "datasheet"
+        },
+        {
+          "label": "Mounting",
+          "value": "Stack-up with female header, or external FRC; screw mount",
+          "unit": "—",
+          "source": "catalogue"
+        }
+      ],
+      "tasmota": false,
+      "verified": true,
+      "mcu": null,
+      "line": "IA",
+      "slug": "ia002",
+      "hotspots": [],
+      "conflicts": [],
+      "datasheetKind": "datasheet"
+    },
+    {
+      "code": "IA001",
+      "name": "Wi-Fi industrial button",
+      "tagline": "A panel button, lamp and 16×2 display on Wi-Fi and MQTT.",
+      "power": "24 V DC @ 0.5 A",
+      "interfaces": [
+        "Wi-Fi"
+      ],
+      "io": {
+        "di": 1,
+        "do": 1,
+        "ai": 0,
+        "aiType": null
+      },
+      "mounting": "Screw mount",
+      "targets": [
+        "MQTT broker",
+        "Wi-Fi access point"
+      ],
+      "datasheetUrl": "https://github.com/armtronix/ARMtronix_Product_Documents/blob/master/ARMtronix_IA_ProdcutCatalogue.pdf",
+      "datasheetKind": "catalogue",
+      "specs": [
+        {
+          "label": "Power input",
+          "value": "24 V DC @ 0.5 A",
+          "unit": "V DC / A",
+          "source": "catalogue"
+        },
+        {
+          "label": "Wi-Fi",
+          "value": "IEEE 802.11 b/g/n",
+          "unit": "—",
+          "source": "catalogue"
+        },
+        {
+          "label": "Button input",
+          "value": "1, 24 V DC tolerant",
+          "unit": "V DC",
+          "source": "catalogue"
+        },
+        {
+          "label": "Lamp output",
+          "value": "1 LED lamp, 24 V DC tolerant",
+          "unit": "V DC",
+          "source": "catalogue"
+        },
+        {
+          "label": "Display",
+          "value": "16 × 2 character LCD",
+          "unit": "—",
+          "source": "catalogue"
+        },
+        {
+          "label": "Mounting",
+          "value": "Screw mount",
+          "unit": "—",
+          "source": "catalogue"
+        }
+      ],
+      "conflicts": [
+        "No per-product datasheet in the public repo; catalogue only"
+      ],
+      "tasmota": false,
+      "verified": true,
+      "mcu": null,
+      "line": "IA",
+      "slug": "ia001",
+      "hotspots": []
+    },
+    {
+      "code": "BA001",
+      "name": "Wi-Fi dual dimmer module",
+      "tagline": "Two triac dimmer channels for fans and incandescent lamps.",
+      "power": "100–240 V AC, 50/60 Hz",
+      "interfaces": [
+        "Wi-Fi"
+      ],
+      "io": {
+        "di": 0,
+        "do": 2,
+        "ai": 2,
+        "aiType": "0–5 V"
+      },
+      "mounting": "Wall mount using screws",
+      "targets": [
+        "MQTT broker",
+        "Wi-Fi access point",
+        "Smartphone"
+      ],
+      "tasmota": true,
+      "datasheetUrl": "https://github.com/armtronix/ARMtronix_Product_Documents/blob/master/BA001_Wifi_Two_Triac_1A_Board_%28Mini%29.pdf",
+      "datasheetKind": "datasheet",
+      "specs": [
+        {
+          "label": "Power input",
+          "value": "100–240 V AC, 50/60 Hz (catalogue: 100–260 V AC)",
+          "unit": "V AC / Hz",
+          "source": "catalogue",
+          "verify": "Datasheets state 100–240 V AC; catalogue says 100–260 V AC"
+        },
+        {
+          "label": "Dimmer outputs",
+          "value": "2 triac channels, max 200 W each (catalogue)",
+          "unit": "W",
+          "source": "catalogue",
+          "verify": "Datasheet quotes 240 V AC / 1 A / 240 W maximum"
+        },
+        {
+          "label": "ADC inputs",
+          "value": "2, 0–5 V DC tolerant",
+          "unit": "V DC",
+          "source": "catalogue"
+        },
+        {
+          "label": "Loads",
+          "value": "Fans, incandescent bulbs",
+          "unit": "—",
+          "source": "catalogue"
+        },
+        {
+          "label": "Firmware",
+          "value": "Tasmota compatible; listed in Tasmota docs as ARMTR Dimmer (since 6.4.0)",
+          "unit": "—",
+          "source": "Tasmota docs"
+        },
+        {
+          "label": "Enclosure",
+          "value": "116 × 46 × 28 box",
+          "unit": "mm",
+          "source": "datasheet"
+        }
+      ],
+      "mcu": "ESP8266 + ATmega328",
+      "conflicts": [
+        "Max load: catalogue 200 W, datasheet 240 W"
+      ],
+      "verified": false,
+      "line": "BA",
+      "slug": "ba001",
+      "hotspots": []
+    },
+    {
+      "code": "BA004",
+      "name": "Wi-Fi single dimmer module",
+      "tagline": "One triac dimmer channel for fans and incandescent lamps.",
+      "power": "100–240 V AC, 50/60 Hz",
+      "interfaces": [
+        "Wi-Fi"
+      ],
+      "io": {
+        "di": 0,
+        "do": 1,
+        "ai": 1,
+        "aiType": "0–5 V"
+      },
+      "mounting": "Wall mount using screws",
+      "targets": [
+        "MQTT broker",
+        "Wi-Fi access point",
+        "Smartphone"
+      ],
+      "tasmota": true,
+      "datasheetUrl": "https://github.com/armtronix/ARMtronix_Product_Documents/blob/master/BA004_Wifi_One_Triac_Module.pdf",
+      "datasheetKind": "datasheet",
+      "specs": [
+        {
+          "label": "Power input",
+          "value": "100–240 V AC, 50/60 Hz (catalogue: 100–260 V AC)",
+          "unit": "V AC / Hz",
+          "source": "catalogue",
+          "verify": "Datasheets state 100–240 V AC; catalogue says 100–260 V AC"
+        },
+        {
+          "label": "Dimmer output",
+          "value": "1 triac channel, max 200 W (catalogue)",
+          "unit": "W",
+          "source": "catalogue",
+          "verify": "Datasheet quotes 240 V AC / 1 A / 240 W maximum"
+        },
+        {
+          "label": "ADC input",
+          "value": "1, 0–5 V DC tolerant",
+          "unit": "V DC",
+          "source": "catalogue"
+        },
+        {
+          "label": "Loads",
+          "value": "Fans, incandescent bulbs",
+          "unit": "—",
+          "source": "catalogue"
+        },
+        {
+          "label": "Firmware",
+          "value": "Tasmota compatible; listed in Tasmota docs as ARMTR Dimmer (since 6.4.0)",
+          "unit": "—",
+          "source": "Tasmota docs"
+        }
+      ],
+      "mcu": "ESP8266 + ATmega328",
+      "conflicts": [
+        "Max load: catalogue 200 W, datasheet 240 W"
+      ],
+      "verified": false,
+      "line": "BA",
+      "slug": "ba004",
+      "hotspots": []
+    },
+    {
+      "code": "BA006",
+      "name": "Wi-Fi single relay board",
+      "tagline": "One dry-contact relay with a NodeMCU header and micro-USB.",
+      "power": "100–240 V AC, 50/60 Hz",
+      "interfaces": [
+        "Wi-Fi"
+      ],
+      "io": {
+        "di": 0,
+        "do": 1,
+        "ai": 0,
+        "aiType": null
+      },
+      "mounting": "Wall mount using screws",
+      "targets": [
+        "MQTT broker",
+        "Wi-Fi access point",
+        "Smartphone"
+      ],
+      "tasmota": true,
+      "datasheetUrl": "https://github.com/armtronix/ARMtronix_Product_Documents/blob/master/BA006_Wifi_Single_Relay_Board.pdf",
+      "datasheetKind": "datasheet",
+      "specs": [
+        {
+          "label": "Power input",
+          "value": "100–240 V AC, 50/60 Hz (catalogue: 100–260 V AC)",
+          "unit": "V AC / Hz",
+          "source": "catalogue",
+          "verify": "Datasheets state 100–240 V AC; catalogue says 100–260 V AC"
+        },
+        {
+          "label": "Relay output",
+          "value": "1 dry contact, COM / NO / NC, max 1000 W/load (catalogue)",
+          "unit": "W",
+          "source": "catalogue",
+          "verify": "Datasheet: 240 V AC / 2 A / 980 W; 24 V DC / 10 A"
+        },
+        {
+          "label": "NodeMCU header",
+          "value": "Yes",
+          "unit": "—",
+          "source": "catalogue"
+        },
+        {
+          "label": "Loads",
+          "value": "Fans, incandescent bulbs, motors",
+          "unit": "—",
+          "source": "catalogue"
+        },
+        {
+          "label": "Programming",
+          "value": "User programmable, on-board micro-USB",
+          "unit": "—",
+          "source": "catalogue"
+        },
+        {
+          "label": "PCB size",
+          "value": "70 × 50 × 20",
+          "unit": "mm",
+          "source": "datasheet"
+        }
+      ],
+      "mcu": "ESP8266",
+      "conflicts": [
+        "Relay rating: catalogue 1000 W, datasheet 980 W"
+      ],
+      "verified": false,
+      "line": "BA",
+      "slug": "ba006",
+      "hotspots": []
+    },
+    {
+      "code": "BA011",
+      "name": "Wi-Fi BT quad relay board",
+      "tagline": "Four dry-contact relays on an ESP32 with Wi-Fi and Bluetooth.",
+      "power": "100–240 V AC, 50/60 Hz",
+      "interfaces": [
+        "Wi-Fi",
+        "Bluetooth"
+      ],
+      "io": {
+        "di": 0,
+        "do": 4,
+        "ai": 0,
+        "aiType": null
+      },
+      "mounting": "Wall mount using screws",
+      "targets": [
+        "MQTT broker",
+        "Wi-Fi access point",
+        "Smartphone"
+      ],
+      "tasmota": true,
+      "datasheetUrl": "https://github.com/armtronix/ARMtronix_Product_Documents/blob/master/BA011_Wifi_BT_Quad_Relay_Board_B.pdf",
+      "datasheetKind": "datasheet",
+      "specs": [
+        {
+          "label": "Power input",
+          "value": "100–240 V AC, 50/60 Hz (catalogue: 100–260 V AC)",
+          "unit": "V AC / Hz",
+          "source": "catalogue",
+          "verify": "Datasheets state 100–240 V AC; catalogue says 100–260 V AC"
+        },
+        {
+          "label": "Relay outputs",
+          "value": "4 dry contact, COM / NO / NC, max 1000 W/load (catalogue)",
+          "unit": "W",
+          "source": "catalogue",
+          "verify": "Datasheet rev B: 240 V AC / 3 A / 980 W; 24 V DC / 3 A"
+        },
+        {
+          "label": "Wi-Fi",
+          "value": "Yes, ESP32S module",
+          "unit": "—",
+          "source": "catalogue"
+        },
+        {
+          "label": "Bluetooth",
+          "value": "Yes",
+          "unit": "—",
+          "source": "catalogue"
+        },
+        {
+          "label": "NodeMCU header",
+          "value": "Yes (J2, J3)",
+          "unit": "—",
+          "source": "catalogue"
+        },
+        {
+          "label": "Loads",
+          "value": "Fans, incandescent bulbs, motors",
+          "unit": "—",
+          "source": "catalogue"
+        },
+        {
+          "label": "Programming",
+          "value": "User programmable, on-board micro-USB (U5)",
+          "unit": "—",
+          "source": "catalogue"
+        },
+        {
+          "label": "Power supply",
+          "value": "HLK-PM01 AC-DC, 5 V / 0.6 A",
+          "unit": "V DC / A",
+          "source": "datasheet rev B"
+        },
+        {
+          "label": "PCB size",
+          "value": "140 × 60 × 20",
+          "unit": "mm",
+          "source": "datasheet rev B"
+        }
+      ],
+      "mcu": "ESP32",
+      "hotspots": [
+        {
+          "id": "esp32",
+          "label": "ESP32S Wi-Fi / BT module",
+          "kind": "mcu",
+          "spec": "Wi-Fi + Bluetooth · MQTT or HTTP firmware · Tasmota compatible"
+        },
+        {
+          "id": "psu",
+          "label": "AC-DC supply HLK-PM01",
+          "kind": "power",
+          "spec": "100–240 V AC in · 5 V / 0.6 A out · 3 W max"
+        },
+        {
+          "id": "acin",
+          "label": "AC input terminal",
+          "kind": "power",
+          "spec": "Phase and neutral · 50/60 Hz"
+        },
+        {
+          "id": "relays",
+          "label": "Relays 1–4 (J5–J8)",
+          "kind": "relay",
+          "spec": "Dry contact COM / NO / NC · 240 V AC · 980 W [datasheet]"
+        },
+        {
+          "id": "driver",
+          "label": "Opto-isolated relay drivers",
+          "kind": "relay",
+          "spec": "5 V coils · optocoupler between mains and logic"
+        },
+        {
+          "id": "usb",
+          "label": "Micro-USB U5",
+          "kind": "header",
+          "spec": "On-board USB-UART programming"
+        },
+        {
+          "id": "buttons",
+          "label": "Buttons S1 and S2",
+          "kind": "ui",
+          "spec": "S1 = GPIO0 (boot / config) · S2 = reset"
+        },
+        {
+          "id": "headers",
+          "label": "NodeMCU headers J2 / J3",
+          "kind": "header",
+          "spec": "Free ESP32 GPIOs"
+        },
+        {
+          "id": "jumpers",
+          "label": "Relay select J4",
+          "kind": "header",
+          "spec": "Removable jumpers link GPIO4/12/13/14 to relays 1–4"
+        }
+      ],
+      "leds": [
+        "relay1",
+        "relay2",
+        "relay3",
+        "relay4",
+        "status"
+      ],
+      "conflicts": [
+        "Relay rating: catalogue 1000 W/load, datasheet 980 W AC / 3 A (feature list says 4 A)"
+      ],
+      "verified": false,
+      "line": "BA",
+      "slug": "ba011"
+    },
+    {
+      "code": "BA012",
+      "name": "Wi-Fi eight relay module",
+      "tagline": "Eight dry-contact relays with a NodeMCU header.",
+      "power": "100–240 V AC, 50/60 Hz",
+      "interfaces": [
+        "Wi-Fi"
+      ],
+      "io": {
+        "di": 0,
+        "do": 8,
+        "ai": 0,
+        "aiType": null
+      },
+      "mounting": "Wall mount using screws",
+      "targets": [
+        "MQTT broker",
+        "Wi-Fi access point",
+        "Smartphone"
+      ],
+      "tasmota": true,
+      "datasheetUrl": "https://github.com/armtronix/ARMtronix_Product_Documents/blob/master/BA012_Wifi_Eight_Relay_Board_E.pdf",
+      "datasheetKind": "datasheet",
+      "specs": [
+        {
+          "label": "Power input",
+          "value": "100–240 V AC, 50/60 Hz (catalogue: 100–260 V AC)",
+          "unit": "V AC / Hz",
+          "source": "catalogue",
+          "verify": "Datasheets state 100–240 V AC; catalogue says 100–260 V AC"
+        },
+        {
+          "label": "Relay outputs",
+          "value": "8 dry contact, max 1000 W/load (catalogue)",
+          "unit": "W",
+          "source": "catalogue",
+          "verify": "Datasheet: 240 V AC / 4 A / 980 W; 24 V DC / 4 A"
+        },
+        {
+          "label": "NodeMCU header",
+          "value": "Yes",
+          "unit": "—",
+          "source": "catalogue"
+        },
+        {
+          "label": "Loads",
+          "value": "Fans, incandescent bulbs, motors",
+          "unit": "—",
+          "source": "catalogue"
+        },
+        {
+          "label": "Programming",
+          "value": "User programmable, on-board micro-USB",
+          "unit": "—",
+          "source": "catalogue"
+        },
+        {
+          "label": "PCB size",
+          "value": "140 × 80 × 23",
+          "unit": "mm",
+          "source": "datasheet"
+        }
+      ],
+      "conflicts": [
+        "Relay rating: catalogue 1000 W, datasheet 980 W"
+      ],
+      "verified": false,
+      "mcu": null,
+      "line": "BA",
+      "slug": "ba012",
+      "hotspots": []
+    },
+    {
+      "code": "BA014",
+      "name": "Wi-Fi 4T PWR board",
+      "tagline": "Four triac outputs (three switching, one dimming) with consolidated power monitoring.",
+      "power": "100–240 V AC, 50/60 Hz",
+      "interfaces": [
+        "Wi-Fi"
+      ],
+      "io": {
+        "di": 0,
+        "do": 4,
+        "ai": 0,
+        "aiType": null
+      },
+      "mounting": "Wall mount using screws",
+      "targets": [
+        "MQTT broker",
+        "Wi-Fi access point",
+        "Smartphone"
+      ],
+      "tasmota": true,
+      "datasheetUrl": "https://github.com/armtronix/ARMtronix_Product_Documents/blob/master/BA014_Wifi_4T_PWR%20.pdf",
+      "datasheetKind": "datasheet",
+      "specs": [
+        {
+          "label": "Power input",
+          "value": "100–240 V AC, 50/60 Hz (catalogue: 100–260 V AC)",
+          "unit": "V AC / Hz",
+          "source": "catalogue",
+          "verify": "Datasheets state 100–240 V AC; catalogue says 100–260 V AC"
+        },
+        {
+          "label": "Outputs",
+          "value": "4 AC, max 200 W/load; 3 switching and 1 dimming",
+          "unit": "W",
+          "source": "catalogue"
+        },
+        {
+          "label": "Power monitoring",
+          "value": "Consolidated (HLW8012)",
+          "unit": "—",
+          "source": "catalogue"
+        },
+        {
+          "label": "Loads",
+          "value": "Fans, incandescent bulbs, motors",
+          "unit": "—",
+          "source": "catalogue"
+        },
+        {
+          "label": "Programming",
+          "value": "User programmable via external USB-UART",
+          "unit": "—",
+          "source": "catalogue"
+        },
+        {
+          "label": "PCB size",
+          "value": "100 × 50 × 20",
+          "unit": "mm",
+          "source": "datasheet"
+        }
+      ],
+      "mcu": "ESP8266",
+      "verified": false,
+      "line": "BA",
+      "slug": "ba014",
+      "hotspots": [],
+      "conflicts": []
+    },
+    {
+      "code": "BA015",
+      "name": "Wi-Fi 2-relay module",
+      "tagline": "Two relays with power monitoring in a 55 × 55 × 21 mm body.",
+      "power": "100–240 V AC, 50/60 Hz",
+      "interfaces": [
+        "Wi-Fi"
+      ],
+      "io": {
+        "di": 0,
+        "do": 2,
+        "ai": 0,
+        "aiType": null
+      },
+      "mounting": "Inside a compatible switch box",
+      "targets": [
+        "MQTT broker",
+        "Wi-Fi access point",
+        "Smartphone"
+      ],
+      "tasmota": true,
+      "datasheetUrl": "https://github.com/armtronix/ARMtronix_Product_Documents/blob/master/BA015_Wifi_Two_Relay_Module.pdf",
+      "datasheetKind": "datasheet",
+      "specs": [
+        {
+          "label": "Power input",
+          "value": "100–240 V AC, 50/60 Hz (catalogue: 100–260 V AC)",
+          "unit": "V AC / Hz",
+          "source": "catalogue",
+          "verify": "Datasheets state 100–240 V AC; catalogue says 100–260 V AC"
+        },
+        {
+          "label": "Outputs",
+          "value": "2, max 1800 W/load (catalogue)",
+          "unit": "W",
+          "source": "catalogue",
+          "verify": "Datasheet rev A states 240 W in the feature list and 500 V / 500 W in the output table"
+        },
+        {
+          "label": "Power monitoring",
+          "value": "Yes (HLW8012)",
+          "unit": "—",
+          "source": "catalogue"
+        },
+        {
+          "label": "Loads",
+          "value": "Geysers, air conditioners, submersible water pumps",
+          "unit": "—",
+          "source": "catalogue"
+        },
+        {
+          "label": "Size",
+          "value": "55 × 55 × 21",
+          "unit": "mm",
+          "source": "catalogue"
+        },
+        {
+          "label": "Mounting",
+          "value": "Fits inside a compatible switch box",
+          "unit": "—",
+          "source": "catalogue"
+        },
+        {
+          "label": "Programming",
+          "value": "User programmable via external USB-UART",
+          "unit": "—",
+          "source": "catalogue"
+        }
+      ],
+      "conflicts": [
+        "Load rating: catalogue 1800 W/load, datasheet rev A 240 W / 500 W (document also carries the heavy-duty-relay title)"
+      ],
+      "verified": false,
+      "mcu": null,
+      "line": "BA",
+      "slug": "ba015",
+      "hotspots": []
+    },
+    {
+      "code": "BA019",
+      "name": "IoT HDR PM box",
+      "tagline": "One heavy-duty relay with power monitoring for house and hotel-room mains.",
+      "power": "100–240 V AC, 50/60 Hz",
+      "interfaces": [
+        "Wi-Fi"
+      ],
+      "io": {
+        "di": 8,
+        "do": 1,
+        "ai": 0,
+        "aiType": null
+      },
+      "mounting": "Wall mount using screws",
+      "targets": [
+        "MQTT broker",
+        "Wi-Fi access point",
+        "Smartphone"
+      ],
+      "tasmota": false,
+      "datasheetUrl": "https://github.com/armtronix/ARMtronix_Product_Documents/blob/master/BA019_Wifi_HDR_PM_Module.pdf",
+      "datasheetKind": "datasheet",
+      "specs": [
+        {
+          "label": "Power input",
+          "value": "100–240 V AC, 50/60 Hz (catalogue: 100–260 V AC)",
+          "unit": "V AC / Hz",
+          "source": "catalogue",
+          "verify": "Datasheets state 100–240 V AC; catalogue says 100–260 V AC"
+        },
+        {
+          "label": "Output",
+          "value": "1 AC, max 6900 W/load (catalogue)",
+          "unit": "W",
+          "source": "catalogue",
+          "verify": "Datasheet rev B: 240 V AC / 6000 W; 30 V DC / 600 W"
+        },
+        {
+          "label": "Power monitoring",
+          "value": "Yes, for loads (HLW8012)",
+          "unit": "—",
+          "source": "catalogue"
+        },
+        {
+          "label": "Digital inputs (optional)",
+          "value": "8, 0–3.3 V DC tolerant",
+          "unit": "V DC",
+          "source": "catalogue"
+        },
+        {
+          "label": "Loads",
+          "value": "House mains, hotel-room mains",
+          "unit": "—",
+          "source": "catalogue"
+        },
+        {
+          "label": "Extras",
+          "value": "Power-presence detection at input and output · AC virtual switch · optional DS1307 RTC · programmable via external USB-UART",
+          "unit": "—",
+          "source": "catalogue"
+        }
+      ],
+      "conflicts": [
+        "Max load: catalogue 6900 W, datasheet 6000 W",
+        "Catalogue has no firmware / Tasmota line for BA019"
+      ],
+      "verified": false,
+      "mcu": null,
+      "line": "BA",
+      "slug": "ba019",
+      "hotspots": []
+    }
+  ]
+}

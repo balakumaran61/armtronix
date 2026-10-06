@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ARMtronix · Style tile</title>
+<meta name="description" content="ARMtronix style tile: Control Room and Datasheet themes side by side, with computed contrast ratios.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="tokens.css">
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 400 var(--fs-body)/1.6 var(--font-body); }
+  a { color: var(--copper); }
+  :focus-visible { outline: 3px solid var(--copper); outline-offset: 3px; }
+  .wrap { max-width: 1440px; margin: 0 auto; padding: 0 var(--s6); }
+  header.top { display: flex; flex-wrap: wrap; gap: var(--s4); align-items: center; justify-content: space-between; padding: var(--s4) 0; border-bottom: 1px solid var(--line-strong); }
+  header.top b { font: 800 22px/1 var(--font-display); font-stretch: 112%; letter-spacing: 0.04em; }
+  header.top b i { font-style: normal; color: var(--copper); }
+  .intro { padding: var(--s12) 0 var(--s6); max-width: 78ch; }
+  .intro h1 { margin: 8px 0 12px; }
+  .grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s6); padding-bottom: var(--s16); }
+  /* Panels carry their own theme through data-theme */
+  .panel { background: var(--bg); color: var(--ink); border: 1px solid var(--line-strong); padding: var(--s6); background-image: linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px); background-size: var(--grid-cell) var(--grid-cell); }
+  .panel h2.t-h2 { margin: 0 0 var(--s4); }
+  .panel h3 { margin: var(--s8) 0 var(--s3); }
+  .sw { display: grid; grid-template-columns: 56px 1fr; gap: 12px; align-items: start; padding: 8px 0; border-top: 1px solid var(--line); }
+  .sw i { width: 56px; height: 56px; border: 1px solid var(--line-strong); display: block; }
+  .sw b { font: 600 13px/1.3 var(--font-mono); }
+  .sw p { margin: 2px 0 0; font: 400 13px/1.45 var(--font-body); color: var(--ink-dim); }
+  .sw p.r { color: var(--ink); font: 500 12px/1.4 var(--font-mono); }
+  table.ct { width: 100%; border-collapse: collapse; font: 500 12.5px/1.4 var(--font-mono); background: var(--surface); }
+  .ct th, .ct td { padding: 6px 8px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+  .ct th { font: 600 11px/1.3 var(--font-mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-dim); }
+  .pass { color: var(--signal); font-weight: 700; }
+  .fail { color: var(--fault); font-weight: 700; }
+  .spec-d { font: 800 var(--fs-h1)/1 var(--font-display); font-stretch: 125%; }
+  .reason { margin: 4px 0 0; font: 400 13px/1.45 var(--font-body); color: var(--ink-dim); }
+  .row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin: 8px 0; }
+  /* Components */
+  .btn { all: unset; box-sizing: border-box; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; min-height: 48px; padding: 0 24px; border-radius: var(--radius-pill); background: var(--copper); color: var(--copper-ink); font: 700 15px/1 var(--font-body); box-shadow: 0 4px 0 color-mix(in srgb, var(--copper) 55%, #000); transition: translate var(--dur-fast) var(--ease), box-shadow var(--dur-fast) var(--ease); }
+  .btn:active { translate: 0 var(--press-travel); box-shadow: 0 2px 0 color-mix(in srgb, var(--copper) 55%, #000); }
+  .btn:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
+  .btn.ghost { background: transparent; color: var(--ink); border: 1.5px solid var(--line-strong); box-shadow: 0 4px 0 var(--line-strong); }
+  .btn.ghost:active { box-shadow: 0 2px 0 var(--line-strong); }
+  .tog { all: unset; box-sizing: border-box; cursor: pointer; display: inline-flex; align-items: center; gap: 10px; min-height: 48px; font: 600 11px/1.2 var(--font-mono); letter-spacing: 0.06em; text-transform: uppercase; }
+  .tog:focus-visible { outline: 3px solid var(--copper); outline-offset: 3px; }
+  .tog .slot { position: relative; width: 54px; height: 28px; border: 2px solid var(--line-strong); border-radius: 14px; background: var(--surface-2); }
+  .tog .lever { position: absolute; top: 2px; left: 2px; width: 20px; height: 20px; border-radius: 50%; background: var(--ink); box-shadow: 0 2px 0 var(--line-strong); transition: translate var(--dur-ui) var(--ease); }
+  .tog[aria-checked="true"] .lever { translate: var(--switch-travel) 0; background: var(--copper); }
+  .chip { display: inline-flex; align-items: center; min-height: 32px; padding: 2px 12px; border: 1px solid var(--line-strong); border-radius: 999px; font: 500 13px/1.2 var(--font-mono); color: var(--ink); background: transparent; }
+  .chip.on { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+  .sim { display: inline-block; padding: 1px 6px; border: 1px solid currentColor; border-radius: 2px; font: 700 9.5px/1.4 var(--font-mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-dim); vertical-align: middle; }
+  table.spec { width: 100%; border-collapse: collapse; background: var(--surface); }
+  .spec th, .spec td { padding: 8px 10px; border-bottom: 1px solid var(--line); text-align: left; font: 500 13.5px/1.4 var(--font-mono); font-variant-numeric: tabular-nums slashed-zero; }
+  .spec th { width: 36%; font: 600 11.5px/1.4 var(--font-mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-dim); }
+  .leds { display: flex; gap: 24px; flex-wrap: wrap; }
+  .leds figure { margin: 0; text-align: center; font: 600 11px/1.3 var(--font-mono); }
+  .led { display: block; width: 18px; height: 18px; margin: 0 auto 6px; border-radius: 50%; border: 2px solid var(--line-strong); background: var(--surface-2); }
+  .led.on { background: var(--signal); border-color: var(--signal); box-shadow: 0 0 0 3px color-mix(in srgb, var(--signal) 25%, transparent), 0 0 10px var(--glow); }
+  .led.warn { background: var(--amber); border-color: var(--amber); box-shadow: 0 0 0 3px color-mix(in srgb, var(--amber) 25%, transparent); }
+  .led.fault { background: var(--fault); border-color: var(--fault); box-shadow: 0 0 0 3px color-mix(in srgb, var(--fault) 25%, transparent); }
+  .gauge { width: 100%; max-width: 280px; color: var(--ink); }
+  .readout { font: 600 28px/1.1 var(--font-mono); font-variant-numeric: tabular-nums; }
+  .readout small { font: 500 14px/1 var(--font-mono); color: var(--ink-dim); }
+  .trace { width: 100%; height: 64px; color: var(--copper); }
+  .section { padding: var(--s12) 0 0; }
+  .section h2 { margin: 0 0 var(--s4); }
+  .mot { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+  .mot div { border: 1px solid var(--line-strong); padding: 12px; background: var(--surface); font: 500 13px/1.5 var(--font-mono); }
+  .mot b { display: block; font: 700 12px/1.3 var(--font-mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--copper); }
+  footer.end { padding: var(--s12) 0 var(--s16); color: var(--ink-dim); font: 400 13px/1.6 var(--font-body); }
+  .vt-reveal::view-transition-old(root) { animation: none; }
+  ::view-transition-old(root), ::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
+  ::view-transition-new(root) { animation: reveal var(--dur-theme) var(--ease) both; }
+  @keyframes reveal { from { clip-path: circle(0 at var(--tx, 50%) var(--ty, 0)); } to { clip-path: circle(150vmax at var(--tx, 50%) var(--ty, 0)); } }
+  @media (prefers-reduced-motion: reduce) { ::view-transition-new(root) { animation: none; } }
+  @media (max-width: 1000px) { .grid2 { grid-template-columns: 1fr; } .wrap { padding: 0 var(--s4); } }
+  @media (max-width: 767px) { .sw { grid-template-columns: 44px 1fr; } .sw i { width: 44px; height: 44px; } table.ct th:nth-child(1), table.ct td:nth-child(1) { word-break: break-word; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <b>ARM<i>tronix</i> · Style tile</b>
+    <button class="tog" id="gtog" type="button" role="switch" aria-checked="false" aria-label="Page theme: Control Room (dark) or Datasheet (light)"><span class="slot"><span class="lever"></span></span><span id="gtl">Control Room</span></button>
+  </header>
+
+  <section class="intro">
+    <p class="t-label">ARM-13 · Design tokens and two themes</p>
+    <h1 class="t-h1">Copper carries the signal. Green means live.</h1>
+    <p class="t-body">Two first-class themes from one set of tokens. <b>Control Room</b> is how an engineer sees a panel at night. <b>Datasheet</b> is how a buyer reads a spec sheet. Both panels below are live: every ratio is computed from the rendered colours, not typed in. The switch above follows <code>prefers-color-scheme</code> on first load, then remembers your choice.</p>
+  </section>
+
+  <div class="grid2">
+    <!-- ============ CONTROL ROOM ============ -->
+    <section class="panel" data-theme="control-room" id="p-cr" aria-label="Control Room theme">
+      <p class="t-label" style="color:var(--ink-dim)">Theme 1 · default</p>
+      <h2 class="t-h2">Control Room</h2>
+      <p class="reason" style="margin-bottom:var(--s4)">Solder-mask black-green with copper traces and status-LED accents: an engineer's night view of a panel.</p>
+
+      <h3 class="t-label">Colour</h3>
+      <div class="swatches"></div>
+
+      <h3 class="t-label">Contrast, computed</h3>
+      <table class="ct"><thead><tr><th>Pair</th><th>Ratio</th><th>Needs</th><th></th></tr></thead><tbody></tbody></table>
+
+      <h3 class="t-label">Type</h3>
+      <div class="typebox"></div>
+
+      <h3 class="t-label">Components</h3>
+      <div class="comps"></div>
+    </section>
+
+    <!-- ============ DATASHEET ============ -->
+    <section class="panel" data-theme="datasheet" id="p-ds" aria-label="Datasheet theme">
+      <p class="t-label" style="color:var(--ink-dim)">Theme 2 · light</p>
+      <h2 class="t-h2">Datasheet</h2>
+      <p class="reason" style="margin-bottom:var(--s4)">Off-white paper and black ink, drawn like a technical sheet: how a buyer reads a spec.</p>
+
+      <h3 class="t-label">Colour</h3>
+      <div class="swatches"></div>
+
+      <h3 class="t-label">Contrast, computed</h3>
+      <table class="ct"><thead><tr><th>Pair</th><th>Ratio</th><th>Needs</th><th></th></tr></thead><tbody></tbody></table>
+
+      <h3 class="t-label">Type</h3>
+      <div class="typebox"></div>
+
+      <h3 class="t-label">Components</h3>
+      <div class="comps"></div>
+    </section>
+  </div>
+
+  <section class="section" style="padding-top:0">
+    <h2 class="t-h2">Line-art system</h2>
+    <div class="grid2" style="padding-bottom:var(--s8)">
+      <div class="panel" data-theme="control-room">
+        <svg class="trace" viewBox="0 0 320 64" fill="none" stroke="currentColor" stroke-width="1" role="img" aria-label="Circuit line art: a copper trace with 45 and 90 degree bends, vias and pads">
+          <path d="M8 48 H70 L100 18 H170 V48 H220 L240 28 H312" style="color:var(--copper)" stroke="currentColor" stroke-width="3" stroke-linejoin="round"/>
+          <path class="glow" d="M8 48 H70 L100 18" style="color:var(--signal)" stroke="currentColor" stroke-width="3" stroke-linejoin="round"/>
+          <circle cx="100" cy="18" r="2" style="color:var(--ink)"/><circle cx="170" cy="48" r="2" style="color:var(--ink)"/><circle cx="240" cy="28" r="2" style="color:var(--ink)"/>
+          <rect x="2" y="43" width="6" height="10" rx="2" style="color:var(--ink)"/><rect x="309" y="23" width="6" height="10" rx="2" style="color:var(--ink)"/>
+        </svg>
+        <p class="reason">Control Room: the live part of the trace glows signal green. Glow is a drop-shadow recipe, used on live traces only.</p>
+      </div>
+      <div class="panel" data-theme="datasheet">
+        <svg class="trace" viewBox="0 0 320 64" fill="none" stroke="currentColor" stroke-width="1" role="img" aria-label="The same line art in the Datasheet theme, without glow">
+          <path d="M8 48 H70 L100 18 H170 V48 H220 L240 28 H312" style="color:var(--copper)" stroke="currentColor" stroke-width="3" stroke-linejoin="round"/>
+          <path d="M8 48 H70 L100 18" style="color:var(--signal)" stroke="currentColor" stroke-width="3" stroke-linejoin="round"/>
+          <circle cx="100" cy="18" r="2" style="color:var(--ink)"/><circle cx="170" cy="48" r="2" style="color:var(--ink)"/><circle cx="240" cy="28" r="2" style="color:var(--ink)"/>
+          <rect x="2" y="43" width="6" height="10" rx="2" style="color:var(--ink)"/><rect x="309" y="23" width="6" height="10" rx="2" style="color:var(--ink)"/>
+        </svg>
+        <p class="reason">Datasheet: the same drawing, flat ink, no glow. Rules for both: 1 px strokes (3 px for the signal trace), 45° and 90° turns only, vias are 4 px rings, pads are 6×10 rounded rectangles, grid cell 32 px with an 8 px fine grid.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2 class="t-h2">Motion tokens</h2>
+    <div class="mot">
+      <div><b>Easing</b>cubic-bezier(.2,.8,.2,1)<br>Precise, quick out, no bounce.</div>
+      <div><b>Durations</b>fast 150 ms · ui 250 ms · theme 450 ms · story 600 ms · slow 800 ms</div>
+      <div><b>Spring: needle</b>stiffness 180 · damping 14 · mass 1<br>A slight overshoot: the only bounce.</div>
+      <div><b>Spring: switch</b>stiffness 420 · damping 30 · mass 1<br>Travel 22 px; buttons press 2 px.</div>
+      <div><b>MO-12 theme cross-fade</b>View Transitions: a circular clip-path reveal grows from the switch lever over 450 ms. Fallback and reduced motion: instant swap.</div>
+      <div><b>Reduced motion</b>All durations go to 0 ms in tokens.css; springs become a straight set.</div>
+    </div>
+  </section>
+
+  <footer class="end">Tokens: <a href="tokens.css">tokens.css</a> · <a href="tokens.json">tokens.json</a>. Both files carry identical values. Fonts load with <code>display=swap</code>: Archivo (display, width axis 62–125), IBM Plex Sans (body), IBM Plex Mono (data).</footer>
+</div>
+
+<script>
+(function () {
+  var REASON = {
+    bg: ['Substrate / paper', 'The page ground. Black-green reads as bare solder-mask; warm off-white reads as a datasheet page.'],
+    surface: ['Panels and widgets', 'One step lifted from the ground so widgets read as parts on a board.'],
+    line: ['Grid and dividers', 'The faint PCB cutting-mat grid. Decorative, so it stays quiet.'],
+    'line-strong': ['Borders and controls', 'Used where a boundary must be seen (inputs, switches): at least 3:1 on the ground.'],
+    copper: ['Brand, signal trace, CTAs', 'Copper literally carries signals on a PCB. It is the brand colour and the colour of every primary action.'],
+    signal: ['Live data only', 'Reserved for live telemetry, online status and packets, so green always means "alive".'],
+    amber: ['Warnings, status LEDs', 'The warning LED on a panel. Never used for decoration.'],
+    fault: ['Faults, e-stop', 'Appears only when something is wrong, so it is never ignored.'],
+    ink: ['Text (silkscreen / ink)', 'Primary text. Silkscreen white on black-green; black ink on paper.'],
+    'ink-dim': ['Secondary text', 'Captions, units and labels. Still above AA.']
+  };
+  function lum(rgb) { var f = function (c) { c /= 255; return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4); }; return 0.2126 * f(rgb[0]) + 0.7152 * f(rgb[1]) + 0.0722 * f(rgb[2]); }
+  function rgb(c) { var d = document.createElement('i'); d.style.color = c; document.body.appendChild(d); var m = getComputedStyle(d).color.match(/[\d.]+/g).map(Number); d.remove(); return m; }
+  function ratio(a, b) { var x = lum(a), y = lum(b); if (x < y) { var t = x; x = y; y = t; } return (x + 0.05) / (y + 0.05); }
+  var PAIRS = [['ink', 'bg', 4.5, 'Body text on ground'], ['ink', 'surface', 4.5, 'Body text on panel'], ['ink-dim', 'bg', 4.5, 'Secondary text on ground'], ['ink-dim', 'surface', 4.5, 'Secondary text on panel'],
+    ['copper', 'bg', 4.5, 'Copper text / links on ground'], ['copper', 'surface', 4.5, 'Copper text on panel'], ['signal', 'bg', 4.5, 'Live-data text on ground'], ['signal', 'surface', 4.5, 'Live-data text on panel'],
+    ['amber', 'bg', 4.5, 'Warning text on ground'], ['fault', 'bg', 4.5, 'Fault text on ground'], ['fault', 'surface', 4.5, 'Fault text on panel'], ['copper-ink', 'copper', 4.5, 'Button label on copper'], ['line-strong', 'bg', 3, 'Control borders on ground (UI, 3:1)'], ['line-strong', 'surface', 3, 'Control borders on panel (UI, 3:1)']];
+  function v(el, name) { return getComputedStyle(el).getPropertyValue('--' + name).trim(); }
+  function esc(t) { return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;'); }
+  function build(panel) {
+    var sw = '';
+    ['bg', 'surface', 'line', 'line-strong', 'copper', 'signal', 'amber', 'fault', 'ink', 'ink-dim'].forEach(function (k) {
+      var rows = [];
+      sw += '<div class="sw"><i style="background:var(--' + k + ')"></i><div><b>--' + k + ' · ' + esc(v(panel, k)) + '</b><p><b style="font:600 13px var(--font-body);color:var(--ink)">' + REASON[k][0] + '.</b> ' + REASON[k][1] + '</p></div></div>';
+    });
+    panel.querySelector('.swatches').innerHTML = sw;
+    var body = panel.querySelector('.ct tbody'), h = '';
+    PAIRS.forEach(function (p) { var r = ratio(rgb(v(panel, p[0])), rgb(v(panel, p[1]))); var ok = r >= p[2]; h += '<tr><td>' + p[3] + '<br><span style="color:var(--ink-dim)">' + p[0] + ' on ' + p[1] + '</span></td><td>' + r.toFixed(2) + ':1</td><td>' + p[2] + ':1</td><td class="' + (ok ? 'pass' : 'fail') + '">' + (ok ? 'PASS' : 'FAIL') + '</td></tr>'; });
+    body.innerHTML = h;
+    panel.querySelector('.typebox').innerHTML =
+      '<div class="spec-d">Make every machine talk.</div><p class="reason"><b>Archivo, width axis 62–125.</b> Expanded widths read as stencilled, engineered and industrial; the width axis can animate ("stretch to signal"). Headings use 100–125.</p>' +
+      '<p class="t-body" style="margin:var(--s4) 0 0">IBM Plex Sans body copy stays legible in dense specifications at 16–18 px.</p><p class="reason"><b>IBM Plex Sans.</b> Engineering heritage, very legible in dense spec text.</p>' +
+      '<p class="t-data" style="margin:var(--s4) 0 0">IA015 · 24 V DC @ 1 A · 4–20 mA · 862–878 MHz</p><p class="reason"><b>IBM Plex Mono, tabular and slashed zero.</b> The voice of a datasheet: telemetry values, part codes, MQTT topics and pin labels, so digits never jitter as they tick.</p>' +
+      '<p class="reason" style="margin-top:var(--s3)">Fluid scale, 390 to 1440: display 44–112 px · h1 34–72 · h2 26–44 · h3 20–28 · body 16–18 · data 13–14 · label 11–12.</p>';
+    panel.querySelector('.comps').innerHTML =
+      '<div class="row"><button class="btn" type="button">Request a quote</button><button class="btn ghost" type="button">Explore hardware</button></div><p class="reason">Primary button: copper face, 2 px press travel and a shadow squeeze (MO-11).</p>' +
+      '<div class="row"><button class="tog" type="button" role="switch" aria-checked="false"><span class="slot"><span class="lever"></span></span><span>Relay 1</span></button><span class="chip on">24 V DC</span><span class="chip">RS485</span><span class="chip">DIN rail</span></div><p class="reason">Toggle switch (travel 22 px), and spec chips.</p>' +
+      '<table class="spec"><tbody><tr><th>Power input</th><td>24 V DC @ 1 A</td></tr><tr><th>Analog in</th><td>4–20 mA <span class="sim">Simulated</span></td></tr><tr><th>Radio</th><td>802.11 b/g/n</td></tr></tbody></table><p class="reason">Spec table with units; every telemetry value carries a Simulated tag.</p>' +
+      '<div class="leds"><figure><i class="led"></i>OFF</figure><figure><i class="led on"></i>ON</figure><figure><i class="led warn"></i>WARN</figure><figure><i class="led fault"></i>FAULT</figure></div><p class="reason">Status LED: off, on (signal), warn (amber), fault (red). Colour is never the only cue: each LED is labelled.</p>' +
+      '<svg class="gauge" viewBox="0 0 200 120" role="img" aria-label="Gauge face, 12.4 milliamps, 52 per cent"><path d="M20 100 A80 80 0 0 1 180 100" fill="none" stroke="currentColor" stroke-width="2"/><path d="M20 100 A80 80 0 0 1 180 100" fill="none" stroke="var(--line-strong)" stroke-width="12" stroke-dasharray="2 12"/><path d="M20 100 A80 80 0 0 1 112 22" fill="none" stroke="var(--signal)" stroke-width="4"/><g style="transform-origin:100px 100px;transform:rotate(4deg)"><line x1="100" y1="100" x2="100" y2="34" stroke="var(--copper)" stroke-width="3"/><circle cx="100" cy="100" r="7" fill="currentColor"/></g><text x="14" y="116" font-size="9" font-family="var(--font-mono)" fill="currentColor">4 mA</text><text x="186" y="116" font-size="9" font-family="var(--font-mono)" fill="currentColor" text-anchor="end">20 mA</text></svg><div class="readout">12.4<small> mA</small> <span class="sim">Simulated</span></div><p class="reason">Gauge face: needle in copper, live arc in signal green.</p>';
+    Array.prototype.forEach.call(panel.querySelectorAll('.comps .tog'), function (t) { t.addEventListener('click', function () { t.setAttribute('aria-checked', String(t.getAttribute('aria-checked') !== 'true')); }); });
+  }
+  var panels = document.querySelectorAll('#p-cr, #p-ds');
+  Array.prototype.forEach.call(panels, build);
+  // Global theme switch: follows prefers-color-scheme on first load, then remembers the choice
+  var root = document.documentElement, g = document.getElementById('gtog'), gl = document.getElementById('gtl'), KEY = 'armtronix-theme';
+  function stored() { try { return localStorage.getItem(KEY); } catch (e) { return null; } }
+  function cur() { return root.getAttribute('data-theme') || (matchMedia('(prefers-color-scheme: light)').matches ? 'datasheet' : 'control-room'); }
+  function sync() { var t = cur(); g.setAttribute('aria-checked', String(t === 'datasheet')); gl.textContent = t === 'datasheet' ? 'Datasheet' : 'Control Room'; }
+  function set(t, x, y) {
+    var apply = function () { root.setAttribute('data-theme', t); try { localStorage.setItem(KEY, t); } catch (e) {} sync(); };
+    var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (document.startViewTransition && !reduce) { root.style.setProperty('--tx', x + 'px'); root.style.setProperty('--ty', y + 'px'); document.startViewTransition(apply); } else apply();
+  }
+  var s = stored(); if (s === 'datasheet' || s === 'control-room') root.setAttribute('data-theme', s);
+  sync();
+  g.addEventListener('click', function () { var r = g.querySelector('.lever').getBoundingClientRect(); set(cur() === 'datasheet' ? 'control-room' : 'datasheet', r.left + r.width / 2, r.top + r.height / 2); });
+})();
+</script>
+</body>
+</html>

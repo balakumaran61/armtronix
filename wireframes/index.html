@@ -1,0 +1,1201 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ARMtronix · Home wireframe</title>
+<meta name="description" content="Phase 1 greyscale wireframe of the Home signal-path story, sections H0 to H10.">
+<link rel="stylesheet" href="wireframe.css">
+<script src="assets/manifest.js"></script>
+<script src="kit.js" defer></script>
+</head>
+<body>
+<main class="wf-frame">
+
+<!-- region:NAV start -->
+<style>
+  #nav { position: sticky; top: var(--wf-toolbar-h); z-index: 50; padding: 0; height: var(--wf-nav-h); background: var(--wf-paper); border-bottom: 1px solid var(--wf-ink); }
+  #nav .nv-bar { height: 100%; display: flex; align-items: center; gap: var(--wf-24); padding: 0 var(--wf-32); max-width: var(--wf-content-max); margin: 0 auto; }
+  #nav .nv-mark { display: flex; flex-direction: column; justify-content: center; min-height: 44px; margin-left: 28px; text-decoration: none; line-height: 1; }
+  #nav .nv-mark b { font: 800 20px/1 var(--wf-sans); letter-spacing: 0.04em; }
+  #nav .nv-mark b i { font-style: normal; color: var(--wf-accent); }
+  #nav .nv-mark small { margin-top: 3px; font: 600 9.5px/1 var(--wf-mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--wf-grey-3); }
+  #nav .nv-links { display: flex; gap: var(--wf-24); margin: 0 auto 0 var(--wf-16); padding: 0; list-style: none; }
+  #nav .nv-links a { display: inline-flex; align-items: center; min-height: 44px; font: 600 15px/1 var(--wf-sans); text-decoration: none; }
+  #nav .nv-links a:hover { text-decoration: underline; }
+  #nav .nv-status { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; font: 600 11.5px/1 var(--wf-mono); text-decoration: none; white-space: nowrap; }
+  #nav .nv-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--wf-ink); }
+  /* The theme switch, drawn as a physical toggle */
+  #nav .nv-switch { all: unset; box-sizing: border-box; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 2px; font: 600 10px/1.1 var(--wf-mono); letter-spacing: 0.06em; text-transform: uppercase; }
+  #nav .nv-switch:focus-visible { outline: 3px solid var(--wf-accent); outline-offset: 2px; }
+  #nav .nv-slot { position: relative; width: 46px; height: 24px; border: 2px solid var(--wf-ink); border-radius: 12px; background: var(--wf-grey-2); }
+  #nav .nv-lever { position: absolute; top: 1px; left: 1px; width: 18px; height: 18px; border-radius: 50%; background: var(--wf-ink); box-shadow: 0 2px 0 var(--wf-grey-3); transition: translate .18s cubic-bezier(.2,.8,.2,1); }
+  #nav .nv-switch[aria-checked="true"] .nv-lever { translate: 22px 0; }
+  #nav .nv-quote { min-height: 44px; }
+  #nav .nv-btn { box-shadow: 0 3px 0 var(--wf-ink); transition: translate .1s, box-shadow .1s; }
+  #nav .nv-btn:active { translate: 0 2px; box-shadow: 0 1px 0 var(--wf-ink); }
+  #nav .nv-menu-btn { display: none; }
+  /* Signal trace progress (MO-01): fixed to the frame edge */
+  .nv-trace { position: fixed; left: 50%; translate: -50% 0; width: 100%; max-width: var(--wf-frame-w); top: calc(var(--wf-toolbar-h) + var(--wf-nav-h)); bottom: 0; pointer-events: none; z-index: 45; }
+  .nv-trace .rail { position: absolute; left: 14px; top: 8px; bottom: 8px; width: 2px; background: var(--wf-line); }
+  .nv-trace .fill { position: absolute; left: 14px; top: 8px; height: 38%; width: 2px; background: var(--wf-accent); }
+  .nv-trace .pkt { position: absolute; left: 10px; top: calc(8px + 38%); width: 10px; height: 10px; border-radius: 50%; background: var(--wf-accent); box-shadow: 0 0 0 4px var(--wf-accent-soft); }
+  .nv-trace .via { position: absolute; left: 11px; width: 8px; height: 8px; border: 2px solid var(--wf-ink); border-radius: 50%; background: var(--wf-paper); }
+  .nv-trace .tag { position: absolute; left: 24px; font: 600 9px/1 var(--wf-mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--wf-grey-3); }
+  /* Mobile menu overlay and sticky bar */
+  #nav-overlay { display: none; position: fixed; left: 50%; translate: -50% 0; width: 100%; max-width: var(--wf-frame-w); top: calc(var(--wf-toolbar-h) + var(--wf-nav-h)); bottom: 0; z-index: 49; padding: var(--wf-24) var(--wf-16); background: var(--wf-paper); overflow: auto; }
+  #nav-overlay.is-open { display: block; }
+  #nav-overlay ul { list-style: none; margin: 0 0 var(--wf-24); padding: 0; }
+  #nav-overlay li a { display: flex; align-items: center; min-height: 56px; border-bottom: 1px solid var(--wf-line); font: 700 22px/1 var(--wf-sans); text-decoration: none; }
+  #nav-overlay .nv-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: var(--wf-16); }
+  #nav-bar-m { display: none; }
+  @container wf (max-width: 767px) {
+    #nav .nv-bar { padding: 0 var(--wf-16); gap: var(--wf-8); }
+    #nav .nv-mark { margin-left: 18px; }
+    #nav .nv-links, #nav .nv-status-d, #nav .nv-switch-d, #nav .nv-quote { display: none; }
+    #nav .nv-menu-btn { display: inline-flex; margin-left: auto; min-height: 44px; }
+    .nv-trace { top: calc(var(--wf-toolbar-h) + var(--wf-nav-h)); bottom: auto; height: 6px; }
+    .nv-trace .rail { left: 0; right: 0; top: 2px; bottom: auto; width: auto; height: 2px; }
+    .nv-trace .fill { left: 0; top: 2px; height: 2px; width: 38%; }
+    .nv-trace .pkt { left: calc(38% - 5px); top: -1px; }
+    .nv-trace .via, .nv-trace .tag { display: none; }
+    #nav-bar-m { display: flex; position: fixed; left: 50%; translate: -50% 0; bottom: 0; width: 100%; max-width: var(--wf-frame-w); z-index: 60; gap: 8px; padding: 8px 12px; background: var(--wf-paper); border-top: 1px solid var(--wf-ink); }
+    #nav-bar-m a { flex: 1; min-height: 48px; }
+    #nav-bar-m a:first-child { flex: 2; }
+  }
+</style>
+<header class="wf-section" id="nav" data-section="NAV" data-title="Top bar" data-nojump>
+  <div class="nv-bar">
+    <a class="nv-mark" href="index.html" aria-label="ARMtronix home"><b>ARM<i>tronix</i></b><small>Hubballi · India</small></a>
+    <ul class="nv-links">
+      <li><a href="products.html">Products</a></li>
+      <li><a href="#h5">Solutions</a></li>
+      <li><a href="#h7">Engineering</a></li>
+      <li><a href="#h8">Proof</a></li>
+    </ul>
+    <a class="nv-status nv-status-d" href="#h4" title="Open the live console"><span class="nv-dot" aria-hidden="true"></span>3 boards online · <span class="wf-sim" style="margin-left:0">Simulated</span></a>
+    <button class="nv-switch nv-switch-d" type="button" role="switch" aria-checked="false" aria-label="Theme: Control Room (dark) or Datasheet (light)" data-nv-theme><span class="nv-slot"><span class="nv-lever"></span></span><span>Control Room<br>/ Datasheet</span></button>
+    <a class="wf-btn wf-btn--primary nv-btn nv-quote" href="rfq.html">Request a quote</a>
+    <button class="wf-btn nv-btn nv-menu-btn" type="button" aria-expanded="false" aria-controls="nav-overlay" data-nv-menu>Menu</button>
+  </div>
+  <div class="nv-trace" aria-hidden="true">
+    <span class="rail"></span><span class="fill"></span><span class="pkt"></span>
+    <span class="via" style="top:10%"></span><span class="tag" style="top:10%;margin-top:-1px">Physical</span>
+    <span class="via" style="top:28%"></span><span class="tag" style="top:28%;margin-top:-1px">Board</span>
+    <span class="via" style="top:46%"></span><span class="tag" style="top:46%;margin-top:-1px">Protocol</span>
+    <span class="via" style="top:64%"></span><span class="tag" style="top:64%;margin-top:-1px">Cloud</span>
+    <span class="via" style="top:82%"></span><span class="tag" style="top:82%;margin-top:-1px">Decision</span>
+  </div>
+  <nav id="nav-overlay" aria-label="Menu">
+    <ul>
+      <li><a href="products.html">Products</a></li>
+      <li><a href="#h5">Solutions</a></li>
+      <li><a href="#h7">Engineering</a></li>
+      <li><a href="#h8">Proof</a></li>
+    </ul>
+    <div class="nv-row"><a class="nv-status" href="#h4"><span class="nv-dot" aria-hidden="true"></span>3 boards online · <span class="wf-sim" style="margin-left:0">Simulated</span></a>
+      <button class="nv-switch" type="button" role="switch" aria-checked="false" aria-label="Theme: Control Room (dark) or Datasheet (light)" data-nv-theme><span class="nv-slot"><span class="nv-lever"></span></span><span>Theme</span></button></div>
+    <a class="wf-btn wf-btn--primary nv-btn" style="width:100%" href="rfq.html">Request a quote</a>
+  </nav>
+  <div id="nav-bar-m" class="wf-only-mobile">
+    <a class="wf-btn wf-btn--primary nv-btn" href="rfq.html">Request quote</a>
+    <a class="wf-btn nv-btn" href="tel:+919449567368">Call</a>
+  </div>
+  <script>
+    (function () {
+      var menu = document.querySelector('[data-nv-menu]'), ov = document.getElementById('nav-overlay');
+      function setMenu(open) { ov.classList.toggle('is-open', open); menu.setAttribute('aria-expanded', String(open)); menu.textContent = open ? 'Close' : 'Menu'; }
+      menu.addEventListener('click', function () { setMenu(!ov.classList.contains('is-open')); });
+      ov.addEventListener('click', function (e) { if (e.target.closest('a')) setMenu(false); });
+      document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setMenu(false); });
+      document.addEventListener('wf:viewport', function () { setMenu(false); });
+      function sync() { var dark = document.documentElement.classList.contains('wf-dark'); document.querySelectorAll('[data-nv-theme]').forEach(function (b) { b.setAttribute('aria-checked', String(dark)); }); }
+      document.querySelectorAll('[data-nv-theme]').forEach(function (b) { b.addEventListener('click', function () { window.WF.setDark(!document.documentElement.classList.contains('wf-dark')); sync(); }); });
+      document.addEventListener('wf:ready', sync);
+      new MutationObserver(sync).observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+    })();
+  </script>
+</header>
+<!-- region:NAV end -->
+
+<!-- region:H0 start -->
+<style>
+  #h0 { padding: 0; background: #0c0c0c; color: #e8e8e8; border-bottom: 1px solid var(--wf-ink); }
+  #h0 .b0-wrap { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: var(--wf-24); align-items: center; padding: 28px var(--wf-32) 14px; max-width: var(--wf-content-max); margin: 0 auto; }
+  #h0 .b0-log { margin: 0; padding: 12px 16px; border: 1px solid #666; font: 500 13px/1.55 var(--wf-mono); list-style: none; columns: 2; column-gap: 24px; }
+  #h0 .b0-log li { break-inside: avoid; white-space: nowrap; }
+  #h0 .b0-log .ok { color: #9be3b0; }
+  #h0 .b0-log .go { color: #fff; font-weight: 700; }
+  #h0 .b0-side { display: flex; flex-direction: column; gap: 8px; align-items: flex-start; font: 500 12.5px/1.45 var(--wf-sans); color: #cfcfcf; }
+  #h0 .b0-skip { all: unset; box-sizing: border-box; cursor: pointer; min-height: 44px; padding: 0 16px; display: inline-flex; align-items: center; gap: 8px; border: 1.5px solid #e8e8e8; border-radius: 999px; font: 600 13px/1 var(--wf-sans); color: #e8e8e8; }
+  #h0 .b0-skip:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
+  #h0 .b0-skip:active { translate: 0 2px; }
+  #h0 .b0-skip kbd { font: 600 11px/1 var(--wf-mono); padding: 2px 5px; border: 1px solid #aaa; border-radius: 3px; }
+  #h0 .wf-sim { color: #cfcfcf; }
+  @container wf (max-width: 767px) {
+    #h0 .b0-wrap { grid-template-columns: 1fr; gap: 8px; padding: 40px var(--wf-16) 10px; }
+    #h0 .b0-log { columns: 2; font-size: 11px; padding: 6px 10px; line-height: 1.5; }
+    #h0 .b0-side { position: absolute; right: 12px; top: 0; }
+    #h0 .b0-side p { display: none; }
+    #h0 .b0-skip { min-height: 44px; padding: 0 12px; }
+    #h0 .b0-wrap { padding-top: 40px; }
+  }
+</style>
+<section class="wf-section" id="h0" data-section="H0" data-title="Boot sequence">
+  <div class="b0-wrap">
+    <ol class="b0-log" aria-label="Boot log, decorative">
+      <li>init esp32 … <span class="ok">ok</span></li>
+      <li>wifi 802.11 b/g/n … <span class="ok">ok</span></li>
+      <li>can 2.0 … <span class="ok">ok</span></li>
+      <li>rs485 modbus … <span class="ok">ok</span></li>
+      <li>mqtt connect … <span class="ok">ok</span></li>
+      <li class="go">▶ ARMtronix online</li>
+    </ol>
+    <div class="b0-side">
+      <div class="wf-ph wf-only-desktop" data-label="LINE ART: ESP32 module outline" data-ratio="6/1" style="min-height:0;width:260px;border-color:#888;background-color:#1a1a1a"></div>
+      <button class="b0-skip" type="button" data-skip>Skip boot <kbd>Esc</kbd></button>
+      <p>Wireframe shows the final frame of the ~1.2 s boot. In the build it runs once per session, full screen. Decorative: <span class="wf-sim" style="margin-left:0">Simulated</span></p>
+    </div>
+  </div>
+  <script>
+    document.querySelector('#h0 [data-skip]').addEventListener('click', function () { document.getElementById('h1').scrollIntoView({ block: 'start' }); });
+  </script>
+</section>
+<!-- region:H0 end -->
+
+<!-- region:H1 start -->
+<style>
+  #h1 { padding-block: var(--wf-48) var(--wf-64); overflow: clip; }
+  #h1 .h1-tex { position: absolute; inset: 0; opacity: 0.12; z-index: 0; }
+  #h1 .h1-tex .wf-img__media, #h1 .h1-tex img { height: 100%; }
+  #h1 .h1-tex figcaption { display: none; }
+  #h1 .h1-gridlines { position: absolute; inset: 0; z-index: 0; background-image: linear-gradient(var(--wf-line) 1px, transparent 1px), linear-gradient(90deg, var(--wf-line) 1px, transparent 1px); background-size: 32px 32px; opacity: 0.45; }
+  #h1 .h1-wrap { position: relative; z-index: 1; padding-left: calc(var(--wf-32) + 24px); }
+  #h1 .h1-copy { display: flex; flex-direction: column; gap: var(--wf-24); justify-content: center; }
+  #h1 .h1-copy h1 { font-size: clamp(40px, 4.5cqi, 68px); text-wrap: balance; }
+  #h1 .h1-ctas { display: flex; flex-wrap: wrap; gap: var(--wf-16); }
+  #h1 .h1-ctas .wf-btn { box-shadow: 0 3px 0 var(--wf-ink); transition: translate .1s, box-shadow .1s; }
+  #h1 .h1-ctas .wf-btn:active { translate: 0 2px; box-shadow: 0 1px 0 var(--wf-ink); transform: none; }
+  #h1 .h1-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  #h1 .h1-chips .wf-chip { min-height: 28px; font: 600 12px/1.2 var(--wf-mono); }
+  /* Mini telemetry */
+  #h1 .h1-tele { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border: 1.5px solid var(--wf-ink); background: var(--wf-paper); max-width: 560px; }
+  #h1 .h1-tele > div { padding: 10px 12px; border-left: 1px solid var(--wf-line); }
+  #h1 .h1-tele > div:first-child { border-left: 0; }
+  #h1 .h1-tele b { display: block; font: 700 11px/1.3 var(--wf-mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--wf-grey-3); }
+  #h1 .h1-tele output { display: block; margin-top: 2px; font: 700 26px/1.1 var(--wf-mono); }
+  #h1 .h1-tele output small { font: 500 13px/1 var(--wf-mono); margin-left: 3px; }
+  #h1 .h1-tele .wf-sim { margin: 4px 0 0; }
+  #h1 .h1-cap { grid-column: 1 / -1; font: 500 12px/1.4 var(--wf-mono); color: var(--wf-grey-3); padding: 6px 12px; border-top: 1px solid var(--wf-line); }
+  /* Board stage */
+  #h1 .h1-stage { position: relative; display: flex; flex-direction: column; gap: 10px; }
+  #h1 .h1-board { position: relative; border: 1.5px solid var(--wf-ink); background: var(--wf-paper); }
+  #h1 .h1-board .wf-ph { border: 0; min-height: 0; }
+  #h1 .h1-board .wf-ph::after { max-width: 85%; }
+  #h1 .h1-led { position: absolute; width: 10px; height: 10px; border-radius: 50%; background: var(--wf-ink); box-shadow: 0 0 0 3px var(--wf-accent-soft); }
+  #h1 .h1-ant { position: absolute; right: 12px; top: 10px; font: 700 10px/1 var(--wf-mono); padding: 3px 6px; background: var(--wf-ink); color: var(--wf-paper); }
+  #h1 .h1-lens { display: inline-flex; align-self: flex-start; border: 1.5px solid var(--wf-ink); border-radius: 999px; overflow: hidden; }
+  #h1 .h1-lens button { all: unset; box-sizing: border-box; cursor: pointer; min-height: 44px; padding: 0 18px; display: inline-flex; align-items: center; font: 600 13px/1 var(--wf-sans); }
+  #h1 .h1-lens button[aria-pressed="true"] { background: var(--wf-ink); color: var(--wf-paper); }
+  #h1 .h1-lens button:focus-visible { outline: 3px solid var(--wf-accent); outline-offset: -3px; }
+  #h1 .h1-annos { position: relative; z-index: 2; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 var(--wf-24); margin-top: var(--wf-48); }
+  #h1 .h1-annos .wf-anno { max-width: none; margin: 0 0 var(--wf-16); }
+  @container wf (max-width: 767px) {
+    #h1 { padding-block: var(--wf-16) var(--wf-48); }
+    #h1 .h1-stage .h1-lens { position: absolute; left: 8px; bottom: 8px; background: var(--wf-paper); }
+    #h1 .h1-lens button { min-height: 44px; padding: 0 14px; }
+    #h1 .h1-board .wf-ph { aspect-ratio: 16 / 9 !important; }
+    #h1 .h1-copy .wf-eyebrow { display: none; }
+    #h1 .h1-wrap { padding-left: var(--wf-16); }
+    #h1 .h1-stage { order: -1; }
+    #h1 .h1-copy h1 { font-size: clamp(34px, 10cqi, 52px); line-height: 1; }
+    #h1 .h1-copy { gap: 12px; }
+    #h1 .h1-ctas .wf-btn { width: 100%; }
+    #h1 .h1-tele output { font-size: 18px; }
+    #h1 .h1-tele > div { padding: 8px; }
+    #h1 .h1-annos { grid-template-columns: 1fr; }
+    #h1 .h1-chips { display: none; }
+    #h1 .h1-copy .wf-body { font-size: 15px; }
+  }
+</style>
+<section class="wf-section" id="h1" data-section="H1" data-title="Hero">
+  <figure class="wf-img h1-tex" data-asset="IMG-05" data-caption="none" aria-hidden="true"></figure>
+  <div class="h1-gridlines" aria-hidden="true"></div>
+  <div class="wf-grid h1-wrap">
+    <div class="wf-col-6 h1-copy">
+      <p class="wf-eyebrow">Industrial IoT hardware · Hubballi, India</p>
+      <h1 class="wf-display-xl">Make every machine talk.</h1>
+      <p class="wf-body">Industrial IoT hardware, engineered in Hubballi, India: from 24 V DC DIN-rail controllers to Wi-Fi relay boards.</p>
+      <div class="h1-ctas">
+        <a class="wf-btn wf-btn--primary" href="#h6">Explore hardware</a>
+        <a class="wf-btn" href="rfq.html">Request a quote</a>
+      </div>
+      <div class="h1-tele" role="group" aria-label="Simulated telemetry">
+        <div><b>IA015 · AI1</b><output>12.4<small>mA</small></output><span class="wf-sim">Simulated</span></div>
+        <div><b>IA015 · VIN</b><output>24.1<small>V DC</small></output><span class="wf-sim">Simulated</span></div>
+        <div><b>BA015 · load</b><output>1 180<small>W</small></output><span class="wf-sim">Simulated</span></div>
+        <div class="h1-cap">3 values ticking at 1 Hz · pauses off-screen</div>
+      </div>
+    </div>
+    <div class="wf-col-6 h1-stage">
+      <div class="h1-board">
+        <div class="wf-ph" data-label="RENDER: IA015 Retro to IIoT · top-down · Photo lens" data-ratio="4/3"></div>
+        <span class="h1-led" style="left:14%;top:18%" title="Power LED"></span>
+        <span class="h1-led" style="left:14%;top:26%" title="Wi-Fi LED"></span>
+        <span class="h1-ant">ANT</span>
+      </div>
+      <div class="h1-lens" role="group" aria-label="Lens preview">
+        <button type="button" aria-pressed="true" data-lens="Photo">Photo</button>
+        <button type="button" aria-pressed="false" data-lens="X-ray">X-ray</button>
+      </div>
+    </div>
+  </div>
+  <div class="wf-container h1-annos">
+    <aside class="wf-anno" data-ids="MO-03 BR-02 BR-03">Pointer tilts the IA015 render in 3D (about ±8°); the status LEDs blink. Reduced motion: static board, steady LEDs. Mobile: no tilt.</aside>
+    <aside class="wf-anno" data-ids="MO-01 BR-02">A packet leaves the board's antenna and drops onto the signal trace on the page edge, starting the storyline. Reduced motion: the trace is drawn already filled.</aside>
+    <aside class="wf-anno" data-ids="MO-11 BR-08">CTAs are tactile switches: 2 px travel and a shadow squeeze on press. Reduced motion: a colour change only. "Request a quote" is also in the nav and the mobile bar.</aside>
+    <aside class="wf-anno" data-ids="MO-12 BR-05">The theme switch in the nav flips like a toggle; the theme cross-fades outward from the lever. Try it here: it drives the wireframe's dark mode. Reduced motion: instant.</aside>
+    <aside class="wf-anno" data-ids="MO-13 BR-04">Telemetry values count up as mono tickers when they enter the view, then tick at 1 Hz. Every one carries a unit and a Simulated tag. Reduced motion: the final value, no ticking.</aside>
+    <aside class="wf-anno" data-ids="MO-02 BR-01 BR-10">H0 above is the boot log (skippable, once per session, off under reduced motion). BR-10: a real board sits beside the headline and the grid is a PCB cutting mat, so hardware is visible before any copy is read.</aside>
+  </div>
+  <script>
+    document.querySelectorAll('#h1 [data-lens]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        document.querySelectorAll('#h1 [data-lens]').forEach(function (o) { o.setAttribute('aria-pressed', String(o === b)); });
+        document.querySelector('#h1 .h1-board .wf-ph').setAttribute('data-label', 'RENDER: IA015 Retro to IIoT · top-down · ' + b.dataset.lens + ' lens');
+      });
+    });
+  </script>
+</section>
+<!-- region:H1 end -->
+
+<!-- region:H2 start -->
+<style>
+  #h2 .h2-head { display: flex; flex-direction: column; gap: var(--wf-16); margin-bottom: var(--wf-48); max-width: 70ch; }
+  #h2 .h2-track { position: relative; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: var(--wf-16); padding-top: 34px; list-style: none; margin: 0; }
+  /* One continuous copper trace through all five stages */
+  #h2 .h2-track::before { content: ""; position: absolute; left: 0; right: 0; top: 11px; height: 3px; background: var(--wf-ink); }
+  #h2 .h2-track::after { content: ""; position: absolute; left: 0; width: 34%; top: 11px; height: 3px; background: var(--wf-accent); }
+  #h2 .h2-stage { position: relative; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+  #h2 .h2-via { position: absolute; top: -31px; left: 0; width: 22px; height: 22px; border: 3px solid var(--wf-ink); border-radius: 50%; background: var(--wf-paper); z-index: 1; }
+  #h2 .h2-stage.is-active .h2-via { background: var(--wf-accent); border-color: var(--wf-accent); }
+  #h2 .h2-n { font: 700 11px/1 var(--wf-mono); letter-spacing: 0.1em; color: var(--wf-grey-3); text-transform: uppercase; }
+  #h2 .h2-stage h3 { font: 800 20px/1.1 var(--wf-sans); }
+  #h2 .h2-stage p { font-size: 14px; line-height: 1.45; }
+  #h2 .h2-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  #h2 .h2-chips .wf-chip { min-height: 26px; padding: 2px 8px; font: 600 11px/1.2 var(--wf-mono); border-width: 1.5px; }
+  #h2 .h2-pkt { position: absolute; top: -26px; left: 34%; width: 12px; height: 12px; border-radius: 50%; background: var(--wf-accent); box-shadow: 0 0 0 5px var(--wf-accent-soft); z-index: 2; }
+  #h2 .h2-stage .wf-ph { min-height: 0; }
+  #h2 .h2-stage .wf-ph::after { font-size: 10.5px; max-width: 92%; }
+  #h2 .h2-stage .wf-img figcaption { font-size: 10.5px; }
+  #h2 .h2-pin { margin-top: var(--wf-32); padding: 10px 14px; border: 1.5px dashed var(--wf-grey-3); font: 500 12.5px/1.4 var(--wf-mono); }
+  #h2 .h2-annos { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 var(--wf-24); margin-top: var(--wf-32); }
+  #h2 .h2-annos .wf-anno { max-width: none; }
+  #h2 .h2-cta { margin-top: var(--wf-32); }
+  @container wf (max-width: 767px) {
+    #h2 .h2-track { grid-template-columns: 1fr; gap: var(--wf-32); padding: 0 0 0 36px; }
+    #h2 .h2-track::before { left: 10px; right: auto; top: 0; bottom: 0; width: 3px; height: auto; }
+    #h2 .h2-track::after { left: 10px; top: 0; width: 3px; height: 34%; }
+    #h2 .h2-via { top: 0; left: -36px; }
+    #h2 .h2-pkt { left: 4px; top: 34%; }
+    #h2 .h2-annos { grid-template-columns: 1fr; }
+  }
+</style>
+<section class="wf-section" id="h2" data-section="H2" data-title="Signal path">
+  <div class="wf-container">
+    <div class="h2-head">
+      <p class="wf-eyebrow">How a machine learns to talk</p>
+      <h2 class="wf-display-l">Physical. Board. Protocol. Cloud. Decision.</h2>
+      <p class="wf-body">One signal, five stops. Follow the copper.</p>
+    </div>
+    <ol class="h2-track" aria-label="The signal path in five stages">
+      <span class="h2-pkt" aria-hidden="true"></span>
+      <li class="h2-stage">
+        <span class="h2-via" aria-hidden="true"></span>
+        <span class="h2-n">1 · Physical</span>
+        <h3>A machine speaks in volts and milliamps.</h3>
+        <p>A 4–20 mA loop. A 24 V limit switch. Nothing reads it but the PLC.</p>
+        <figure class="wf-img" data-asset="IMG-07" data-ratio="4/3"></figure>
+        <div class="h2-chips"><span class="wf-chip">4–20 mA</span><span class="wf-chip">24 V DC</span></div>
+      </li>
+      <li class="h2-stage is-active">
+        <span class="h2-via" aria-hidden="true"></span>
+        <span class="h2-n">2 · Board</span>
+        <h3>An ARMtronix board catches it.</h3>
+        <p>IA015 reads 4–20 mA, 24 V inputs, CAN and RS485 on a DIN rail.</p>
+        <div class="wf-ph" data-label="RENDER: IA015 · Photo lens" data-ratio="4/3"></div>
+        <div class="h2-chips"><span class="wf-chip">IA015</span><span class="wf-chip">IA009</span></div>
+      </li>
+      <li class="h2-stage">
+        <span class="h2-via" aria-hidden="true"></span>
+        <span class="h2-n">3 · Protocol</span>
+        <h3>It leaves in a standard language.</h3>
+        <p>MQTT, Modbus RTU, Modbus TCP or LoRa, with no gateway you don't own.</p>
+        <figure class="wf-img" data-asset="IMG-12" data-ratio="4/3"></figure>
+        <div class="h2-chips"><span class="wf-chip">MQTT</span><span class="wf-chip">Modbus RTU</span><span class="wf-chip">Modbus TCP</span><span class="wf-chip">LoRa</span></div>
+      </li>
+      <li class="h2-stage">
+        <span class="h2-via" aria-hidden="true"></span>
+        <span class="h2-n">4 · Cloud</span>
+        <h3>A broker catches the packet.</h3>
+        <p>Your broker, your dashboard, your rules.</p>
+        <div class="wf-ph" data-label="LINE ART: MQTT broker and dashboard" data-ratio="4/3"></div>
+        <div class="h2-chips"><span class="wf-chip">Broker</span><span class="wf-chip">Dashboard</span></div>
+      </li>
+      <li class="h2-stage">
+        <span class="h2-via" aria-hidden="true"></span>
+        <span class="h2-n">5 · Decision</span>
+        <h3>Someone, or something, acts.</h3>
+        <p>An alert. A relay that switches. A pump that stops.</p>
+        <figure class="wf-img" data-asset="IMG-15" data-ratio="4/3"></figure>
+        <div class="h2-chips"><span class="wf-chip">Alert</span><span class="wf-chip">Relay</span></div>
+      </li>
+    </ol>
+    <p class="h2-pin"><b>Example flow, not live data.</b> Values on this path are <span class="wf-sim" style="margin-left:0">Simulated</span> in the build.</p>
+    <div class="h2-annos">
+      <aside class="wf-anno" data-ids="MO-04 BR-02">Desktop: the section pins while scroll scrubs a packet along the trace, stage to stage; the active via fills copper and its panel lifts. Reduced motion: no pin; the five stages show as a plain ordered list with a static filled trace.</aside>
+      <aside class="wf-anno" data-ids="BR-06 BR-02">The trace is 1 px circuit line art with 45° and 90° turns only in the build; vias are 4 px rings. It is the same copper trace as the page-edge progress, so the storyline stays one line.</aside>
+      <aside class="wf-anno" data-ids="BR-09 BR-10">Protocol chips sit on the trace because the protocol is the product: MQTT, Modbus RTU, Modbus TCP, LoRa. Every stage shows hardware or a schematic. Mobile: vertical trace, stacked stages, no pinning.</aside>
+    </div>
+    <div class="h2-cta"><a class="wf-btn" href="#h3">See it on a real board</a></div>
+  </div>
+</section>
+<!-- region:H2 end -->
+
+<!-- region:H3 start -->
+<style>
+  #h3 .h3-head { display: flex; flex-direction: column; gap: var(--wf-16); margin-bottom: var(--wf-32); max-width: 70ch; }
+  #h3 .h3-sel { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--wf-12); margin-bottom: var(--wf-24); }
+  #h3 .h3-sel button { all: unset; box-sizing: border-box; cursor: pointer; display: grid; grid-template-columns: 56px 1fr; gap: 10px; align-items: center; min-height: 56px; padding: 6px 10px; border: 1.5px solid var(--wf-grey-3); }
+  #h3 .h3-sel button[aria-pressed="true"] { border-color: var(--wf-ink); border-width: 3px; padding: 4.5px 8.5px; background: var(--wf-grey-1); }
+  #h3 .h3-sel button:focus-visible { outline: 3px solid var(--wf-accent); outline-offset: 2px; }
+  #h3 .h3-sel .mini { height: 40px; border: 1px solid var(--wf-grey-3); background: linear-gradient(135deg, transparent 48%, var(--wf-line) 49%, var(--wf-line) 51%, transparent 52%), var(--wf-grey-1); }
+  #h3 .h3-sel b { display: block; font: 700 14px/1.2 var(--wf-mono); }
+  #h3 .h3-sel small { display: block; font: 400 12px/1.3 var(--wf-sans); color: var(--wf-grey-3); }
+  #h3 .h3-main { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: var(--wf-32); align-items: start; }
+  #h3 .h3-lens { display: inline-flex; border: 1.5px solid var(--wf-ink); border-radius: 999px; overflow: hidden; margin-bottom: var(--wf-12); }
+  #h3 .h3-lens button { all: unset; box-sizing: border-box; cursor: pointer; min-height: 44px; padding: 0 20px; display: inline-flex; align-items: center; font: 600 14px/1 var(--wf-sans); }
+  #h3 .h3-lens button[aria-pressed="true"] { background: var(--wf-ink); color: var(--wf-paper); }
+  #h3 .h3-lens button:focus-visible { outline: 3px solid var(--wf-accent); outline-offset: -3px; }
+  #h3 .h3-stage { position: relative; border: 1.5px solid var(--wf-ink); background: var(--wf-paper); }
+  #h3 .h3-stage .wf-ph { border: 0; }
+  #h3 .h3-mk { all: unset; box-sizing: border-box; position: absolute; z-index: 3; width: 28px; height: 28px; margin: -14px 0 0 -14px; border-radius: 50%; background: var(--wf-paper); border: 2px solid var(--wf-ink); display: grid; place-items: center; font: 700 12px/1 var(--wf-mono); cursor: pointer; }
+  #h3 .h3-mk::before { content: ""; position: absolute; inset: -6px; border-radius: 50%; border: 1.5px dashed var(--wf-accent); opacity: 0; }
+  #h3 .h3-mk.is-on { background: var(--wf-accent); border-color: var(--wf-accent); color: #fff; }
+  html.wf-dark #h3 .h3-mk.is-on { color: #111; }
+  #h3 .h3-mk.is-on::before { opacity: 1; }
+  #h3 .h3-mk:focus-visible { outline: 3px solid var(--wf-accent); outline-offset: 3px; }
+  #h3 .h3-lines { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none; overflow: visible; }
+  #h3 .h3-layers { display: none; padding: 20px; gap: 0; }
+  #h3 .h3-stage[data-lens="Layers"] .h3-layers { display: flex; flex-direction: column; }
+  #h3 .h3-stage[data-lens="Layers"] .wf-ph, #h3 .h3-stage[data-lens="Layers"] .h3-mk, #h3 .h3-stage[data-lens="Layers"] .h3-lines { display: none; }
+  #h3 .h3-slab { height: 44px; margin-top: -6px; border: 1.5px solid var(--wf-ink); background: var(--wf-grey-1); transform: skewX(-30deg); display: flex; align-items: center; padding-left: 28px; font: 600 12px/1 var(--wf-mono); }
+  #h3 .h3-slab span { transform: skewX(30deg); }
+  #h3 .h3-slab:nth-child(even) { background: var(--wf-grey-2); }
+  #h3 .h3-slab:nth-child(1) { margin-left: 0; } #h3 .h3-slab:nth-child(2) { margin-left: 18px; } #h3 .h3-slab:nth-child(3) { margin-left: 36px; } #h3 .h3-slab:nth-child(4) { margin-left: 54px; } #h3 .h3-slab:nth-child(5) { margin-left: 72px; }
+  #h3 .h3-hint { margin-top: 8px; font: 500 12.5px/1.4 var(--wf-mono); color: var(--wf-grey-3); }
+  #h3 .h3-list { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--wf-ink); }
+  #h3 .h3-list li { border-bottom: 1px solid var(--wf-line); }
+  #h3 .h3-item { all: unset; box-sizing: border-box; cursor: pointer; width: 100%; display: grid; grid-template-columns: 30px 1fr; gap: 10px; align-items: center; min-height: 44px; padding: 8px 6px; font: 600 15px/1.3 var(--wf-sans); }
+  #h3 .h3-item:focus-visible { outline: 3px solid var(--wf-accent); outline-offset: -3px; }
+  #h3 .h3-item i { display: grid; place-items: center; width: 26px; height: 26px; border: 2px solid var(--wf-ink); border-radius: 50%; font: 700 12px/1 var(--wf-mono); font-style: normal; }
+  #h3 .h3-item[aria-expanded="true"] i { background: var(--wf-accent); border-color: var(--wf-accent); color: #fff; }
+  html.wf-dark #h3 .h3-item[aria-expanded="true"] i { color: #111; }
+  #h3 .h3-card { margin: 0 6px 12px 46px; padding: 10px 12px; border: 1.5px solid var(--wf-ink); background: var(--wf-paper); font: 500 13.5px/1.5 var(--wf-mono); }
+  #h3 .h3-card[hidden] { display: none; }
+  #h3 .h3-strip { margin-top: var(--wf-48); display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: var(--wf-32); align-items: start; }
+  #h3 .h3-strip .wf-row { margin-top: var(--wf-12); }
+  #h3 .h3-annos { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 var(--wf-24); margin-top: var(--wf-48); }
+  #h3 .h3-annos .wf-anno { max-width: none; }
+  #h3 .h3-alt { margin-top: 10px; font-size: 13px; color: var(--wf-grey-3); }
+  @container wf (max-width: 767px) {
+    #h3 .h3-sel { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    #h3 .h3-main, #h3 .h3-strip { grid-template-columns: 1fr; gap: var(--wf-24); }
+    #h3 .h3-lens { display: flex; width: 100%; }
+    #h3 .h3-lens button { flex: 1; justify-content: center; }
+    #h3 .h3-lines { display: none; }
+    #h3 .h3-mk { width: 44px; height: 44px; margin: -22px 0 0 -22px; font-size: 14px; }
+    #h3 .h3-annos { grid-template-columns: 1fr; }
+    #h3 .h3-card { margin-left: 6px; }
+    #h3 .h3-strip .wf-btn { width: 100%; }
+  }
+</style>
+<section class="wf-section" id="h3" data-section="H3" data-title="Board explorer">
+  <div class="wf-container">
+    <div class="h3-head">
+      <p class="wf-eyebrow">Board explorer</p>
+      <h2 class="wf-display-l">Open the board. Read the engineering.</h2>
+      <p class="wf-body">Photo, X-ray and layers of the real boards, with the real specs on every part.</p>
+    </div>
+    <div class="h3-sel" role="group" aria-label="Choose a board" id="h3-sel"></div>
+    <div class="h3-main">
+      <div>
+        <div class="h3-lens" role="group" aria-label="Lens" id="h3-lens">
+          <button type="button" aria-pressed="true" data-lens="Photo">Photo</button>
+          <button type="button" aria-pressed="false" data-lens="X-ray">X-ray</button>
+          <button type="button" aria-pressed="false" data-lens="Layers">Layers</button>
+        </div>
+        <div class="h3-stage" id="h3-stage" data-lens="Photo">
+          <div class="wf-ph" id="h3-ph" data-label="RENDER: IA015 · Photo lens" data-ratio="16/10"></div>
+          <svg class="h3-lines" id="h3-lines" aria-hidden="true"></svg>
+          <div id="h3-marks"></div>
+          <div class="h3-layers" id="h3-layers"></div>
+        </div>
+        <p class="h3-hint"><span class="wf-only-desktop">Hover or focus a part. Drag the Layers lens to separate it.</span><span class="wf-only-mobile">Tap a number.</span></p>
+        <p class="h3-alt" id="h3-alt" aria-live="polite"></p>
+      </div>
+      <ol class="h3-list" id="h3-list" aria-label="Parts of the selected board"></ol>
+    </div>
+    <div class="h3-strip">
+      <div>
+        <table class="wf-spec" id="h3-spec"><caption id="h3-cap"></caption><tbody></tbody></table>
+      </div>
+      <div class="wf-stack">
+        <p class="wf-small">Renders are drawn from the datasheets. Not photographs.</p>
+        <div class="wf-row">
+          <a class="wf-btn wf-btn--primary" id="h3-full" href="product.html#ia015">Open the full datasheet page</a>
+          <a class="wf-btn" id="h3-rfq" href="rfq.html?need=sample&amp;product=ia015">Request a sample of this board</a>
+        </div>
+        <a class="wf-btn wf-btn--ghost" href="rfq.html?who=engineer&amp;topic=tech">Talk to an engineer</a>
+      </div>
+    </div>
+    <div class="h3-annos">
+      <aside class="wf-anno" data-ids="MO-05 BR-02 BR-06">Lens tabs: Photo ⇄ X-ray wipes left to right over about 400 ms, the same board, same hotspots. Layers explodes the stack (enclosure, PCB top, components, PCB bottom, mount) on drag or scroll. Reduced motion: instant swap, stack shown already separated.</aside>
+      <aside class="wf-anno" data-ids="MO-06 BR-03 GR-02">Hotspots pulse on hover or focus and a leader line draws from the part to its spec card (about 200 ms). Open state shown: IA015 · ESP32. Specs come from the catalogue and datasheets, with [VERIFY] where they disagree. Reduced motion: static markers, line already drawn.</aside>
+      <aside class="wf-anno" data-ids="BR-10 GR-04">Accessibility: tab order is board selector, lens, then the parts list. Each part is a button with <code>aria-expanded</code>; the numbered markers are a pointer shortcut (<code>tabindex="-1"</code>). Exploded view has a text alternative (below the board). Mobile: board full width, lenses as a segmented control, parts as a numbered list; tapping highlights the marker.</aside>
+    </div>
+  </div>
+  <script>
+    (function () {
+      var D = {"IA015": {"name": "Retro to IIoT", "url": "product.html#ia015", "mount": "DIN rail (C-type)", "last": "DIN clip", "hot": [{"id": "mcu", "label": "ESP32 Wi-Fi / BT module", "spec": "Wi-Fi 802.11 b/g/n · BT 4.2 BR/EDR · Arduino IDE compatible · MQTT or HTTP mode", "x": 36, "y": 38}, {"id": "power", "label": "Power input VDC_IN", "spec": "24 V DC @ 1 A (12–24 V DC range) · on-board DC-DC to 3.3 V", "x": 7, "y": 45}, {"id": "di", "label": "Digital inputs DI1–DI3", "spec": "3× opto-isolated · 12–24 V DC · GPIO32 / GPIO33 / GPIO15", "x": 52, "y": 12}, {"id": "do", "label": "Digital outputs DO1–DO3", "spec": "3× opto-isolated · 24 V DC / 300 mA · open collector", "x": 70, "y": 12}, {"id": "ai", "label": "Analog inputs AI", "spec": "4–20 mA · AI1–AI3 on ESP32 ADC39 / 36 / 34 · 4th input [VERIFY]", "x": 86, "y": 36}, {"id": "eth", "label": "Ethernet (RJ45)", "spec": "Ethernet MAC with IEEE 1588 PTP · Modbus TCP", "x": 88, "y": 72}, {"id": "can", "label": "CAN port", "spec": "CANH / CANL · CAN bus 2.0", "x": 64, "y": 86}, {"id": "rs485", "label": "RS485 / Modbus", "spec": "Terminals A / B · 2-wire Modbus", "x": 42, "y": 86}, {"id": "ui", "label": "Buttons and LEDs", "spec": "S1 config · S3 reset · D3 power-presence LED · dual-colour Wi-Fi status LED", "x": 22, "y": 14}], "specs": [{"l": "Power input", "v": "24 V DC @ 1 A", "u": "V DC / A", "verify": null}, {"l": "Wi-Fi", "v": "IEEE 802.11 b/g/n", "u": "—", "verify": null}, {"l": "Digital inputs", "v": "3, opto-isolated, 24 V DC tolerant", "u": "V DC", "verify": null}, {"l": "Analog inputs", "v": "4× 4–20 mA (catalogue)", "u": "mA", "verify": "Datasheet rev B pin table lists AI1–AI3 only (ADC39/36/34): confirm 3 vs 4"}, {"l": "PCB size", "v": "130 × 70 × 74", "u": "mm", "verify": null}]}, "IA013": {"name": "Wi-Fi ⇄ RS485 ⇄ LoRa", "url": "product.html#ia013", "mount": "Screw mount", "last": "Screw-mount tabs", "hot": [{"id": "esp32", "label": "ESP32 Wi-Fi / BT module", "spec": "Wi-Fi 802.11 b/g/n · BT 4.2 · MQTT or HTTP", "x": 34, "y": 30}, {"id": "stm32", "label": "STM32F103CBT6 MCU", "spec": "Runs the LoRa stack · optional on some models", "x": 52, "y": 48}, {"id": "lora", "label": "LoRa module DRF1276G", "spec": "LoRaWAN · 862–878 MHz · SPI to ESP32 / STM32", "x": 72, "y": 30}, {"id": "antenna", "label": "External LoRa antenna", "spec": "Supplied with the device", "x": 90, "y": 14}, {"id": "rs485", "label": "RS485 header J8", "spec": "A / B · 2-wire Modbus", "x": 14, "y": 84}, {"id": "dip", "label": "Address DIP switch D6", "spec": "4 switches set the RS485 device ID", "x": 40, "y": 84}, {"id": "power", "label": "AC input J1 and PSU", "spec": "Phase / neutral in · HLK-PM05 5 V / 1 A · 100–250 V AC", "x": 8, "y": 50}, {"id": "usb", "label": "Micro-USB programming J6", "spec": "On-board USB-UART · J5 selects ESP or MCU", "x": 62, "y": 86}, {"id": "gpio", "label": "GPIO header J2", "spec": "Most MCU GPIOs broken out for user code", "x": 80, "y": 70}], "specs": [{"l": "Power input", "v": "24 V DC @ 1 A; AC 230 V / 1 A in a different variant", "u": "V DC / A / V AC", "verify": null}, {"l": "LoRa", "v": "LoRaWAN, 862–878 MHz (868 MHz typ), configurable in program", "u": "MHz", "verify": null}, {"l": "RS485 / Modbus", "v": "2-wire, DIP-switch device address (4 switches)", "u": "—", "verify": null}, {"l": "MCU", "v": "STM32F103CBT6 (optional on some models)", "u": "—", "verify": null}, {"l": "PCB size", "v": "96 × 47 × 28", "u": "mm", "verify": null}]}, "BA011": {"name": "Wi-Fi BT quad relay board", "url": "product.html#ba011", "mount": "Wall mount using screws", "last": "Wall-mount feet", "hot": [{"id": "esp32", "label": "ESP32S Wi-Fi / BT module", "spec": "Wi-Fi + Bluetooth · MQTT or HTTP firmware · Tasmota compatible", "x": 48, "y": 22}, {"id": "psu", "label": "AC-DC supply HLK-PM01", "spec": "100–240 V AC in · 5 V / 0.6 A out · 3 W max", "x": 14, "y": 30}, {"id": "acin", "label": "AC input terminal", "spec": "Phase and neutral · 50/60 Hz", "x": 7, "y": 70}, {"id": "relays", "label": "Relays 1–4 (J5–J8)", "spec": "Dry contact COM / NO / NC · 240 V AC · 980 W [datasheet]", "x": 76, "y": 50}, {"id": "driver", "label": "Opto-isolated relay drivers", "spec": "5 V coils · optocoupler between mains and logic", "x": 64, "y": 74}, {"id": "usb", "label": "Micro-USB U5", "spec": "On-board USB-UART programming", "x": 24, "y": 88}, {"id": "buttons", "label": "Buttons S1 and S2", "spec": "S1 = GPIO0 (boot / config) · S2 = reset", "x": 86, "y": 88}, {"id": "headers", "label": "NodeMCU headers J2 / J3", "spec": "Free ESP32 GPIOs", "x": 48, "y": 48}, {"id": "jumpers", "label": "Relay select J4", "spec": "Removable jumpers link GPIO4/12/13/14 to relays 1–4", "x": 30, "y": 56}], "specs": [{"l": "Power input", "v": "100–240 V AC, 50/60 Hz (catalogue: 100–260 V AC)", "u": "V AC / Hz", "verify": "Datasheets state 100–240 V AC; catalogue says 100–260 V AC"}, {"l": "Relay outputs", "v": "4 dry contact, COM / NO / NC, max 1000 W/load (catalogue)", "u": "W", "verify": "Datasheet rev B: 240 V AC / 3 A / 980 W; 24 V DC / 3 A"}, {"l": "Wi-Fi", "v": "Yes, ESP32S module", "u": "—", "verify": null}, {"l": "Programming", "v": "User programmable, on-board micro-USB (U5)", "u": "—", "verify": null}, {"l": "PCB size", "v": "140 × 60 × 20", "u": "mm", "verify": null}]}, "IA003": {"name": "RPi 4-DIO UPS board", "url": "product.html#ia003", "mount": "Stack-up or FRC cable, screw mount", "last": "40-pin stack header", "hot": [{"id": "pi", "label": "Raspberry Pi header J11", "spec": "40-pin stack-up or FRC (variant 2)", "x": 50, "y": 16}, {"id": "power", "label": "24 V DC input J2", "spec": "24 V DC @ 1 A · buck to 5 V for the Pi", "x": 8, "y": 46}, {"id": "lipo", "label": "Li-Po connector BT2 and charger", "spec": "Single cell · up to 500 mA charge · mains-presence detection", "x": 22, "y": 80}, {"id": "boost", "label": "Boost converter MT3608", "spec": "Lifts the 4.2 V cell to 5 V for the Pi", "x": 40, "y": 66}, {"id": "di", "label": "Digital inputs J3–J6", "spec": "4× opto-isolated · up to 24 V DC", "x": 70, "y": 30}, {"id": "do", "label": "Digital outputs J7–J10", "spec": "4× opto-isolated · 24 V DC / 300 mA", "x": 88, "y": 48}, {"id": "ai", "label": "Analog inputs AIN1–AIN3", "spec": "4–20 mA via ADS1115 · AIN0 monitors the battery [VERIFY vs catalogue]", "x": 72, "y": 72}, {"id": "rtc", "label": "Real-time clock BT1", "spec": "DS1307 · CR1220 cell · I2C", "x": 52, "y": 48}, {"id": "restart", "label": "Restart SW1 and J15", "spec": "Power-recycle button · external switch or auto-reboot jumper", "x": 90, "y": 86}], "specs": [{"l": "Power input", "v": "24 V DC @ 1 A (datasheet: 12–24 V DC)", "u": "V DC / A", "verify": null}, {"l": "Digital inputs", "v": "4, opto-isolated, 24 V DC tolerant", "u": "V DC", "verify": null}, {"l": "Digital outputs", "v": "4, opto-isolated, 24 V DC / 300 mA", "u": "V DC / mA", "verify": null}, {"l": "Analog inputs", "v": "3× 4–20 mA via ADS1115 (datasheet rev D)", "u": "mA", "verify": "Catalogue lists 2× 0–5 V; datasheet rev D lists 3× 4–20 mA"}, {"l": "PCB size", "v": "85 × 60 × 12", "u": "mm", "verify": null}]}};
+      var order = ['IA015', 'IA013', 'BA011', 'IA003'];
+      var st = { board: 'IA015', lens: 'Photo', open: 0 };
+      var $ = function (id) { return document.getElementById(id); };
+      function esc(t) { return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;'); }
+      function verifyHtml(t) { return /\[VERIFY\]/.test(t) ? '<mark class="wf-verify">' + esc(t.replace(/\s*\[VERIFY\]/, '')) + '</mark>' : esc(t); }
+      function build() {
+        var sel = $('h3-sel'); sel.innerHTML = '';
+        order.forEach(function (c) {
+          var b = document.createElement('button'); b.type = 'button'; b.setAttribute('aria-pressed', String(c === st.board)); b.dataset.code = c;
+          b.innerHTML = '<span class="mini" aria-hidden="true"></span><span><b>' + c + '</b><small>' + esc(D[c].name) + '</small></span>';
+          b.addEventListener('click', function () { st.board = c; st.open = 0; render(); });
+          sel.appendChild(b);
+        });
+        document.querySelectorAll('#h3-lens button').forEach(function (b) {
+          b.addEventListener('click', function () { st.lens = b.dataset.lens; render(); });
+        });
+      }
+      function render() {
+        var d = D[st.board];
+        document.querySelectorAll('#h3-sel button').forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.code === st.board)); });
+        document.querySelectorAll('#h3-lens button').forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.lens === st.lens)); });
+        $('h3-stage').dataset.lens = st.lens;
+        $('h3-ph').setAttribute('data-label', 'RENDER: ' + st.board + ' · ' + st.lens + ' lens' );
+        $('h3-ph').setAttribute('aria-label', 'Placeholder: render of ' + st.board + ', ' + st.lens + ' lens');
+        // markers
+        var m = $('h3-marks'); m.innerHTML = '';
+        d.hot.forEach(function (h, i) {
+          var b = document.createElement('button'); b.type = 'button'; b.className = 'h3-mk' + (i === st.open ? ' is-on' : ''); b.tabIndex = -1;
+          b.style.left = h.x + '%'; b.style.top = h.y + '%'; b.textContent = String(i + 1); b.setAttribute('aria-label', 'Part ' + (i + 1) + ': ' + h.label);
+          b.addEventListener('click', function () { st.open = i; render(); });
+          m.appendChild(b);
+        });
+        // list
+        var l = $('h3-list'); l.innerHTML = '';
+        d.hot.forEach(function (h, i) {
+          var li = document.createElement('li'); var open = i === st.open;
+          li.innerHTML = '<button class="h3-item" type="button" aria-expanded="' + open + '" aria-controls="h3-card-' + i + '"><i>' + (i + 1) + '</i><span>' + esc(h.label) + '</span></button>' +
+            '<div class="h3-card" id="h3-card-' + i + '"' + (open ? '' : ' hidden') + '>' + verifyHtml(h.spec) + '</div>';
+          li.querySelector('button').addEventListener('click', function () { st.open = open ? -1 : i; render(); });
+          l.appendChild(li);
+        });
+        // layers
+        var ly = ['Enclosure', 'PCB top', 'Components', 'PCB bottom', d.last];
+        $('h3-layers').innerHTML = ly.map(function (t, i) { return '<div class="h3-slab"><span>' + (i + 1) + ' · ' + esc(t) + '</span></div>'; }).join('');
+        $('h3-alt').textContent = st.lens === 'Layers' ? 'Text alternative: five layers from top to bottom: ' + ly.join(', ') + '.' : '';
+        // spec strip
+        $('h3-cap').textContent = st.board + ' · ' + d.name + ' · key specs';
+        $('h3-spec').querySelector('tbody').innerHTML = d.specs.map(function (s) {
+          return '<tr><th>' + esc(s.l) + '</th><td>' + (s.verify ? '<mark class="wf-verify">' + esc(s.v) + '</mark>' : esc(s.v)) + ' <small>(' + esc(s.u) + ')</small></td></tr>';
+        }).join('');
+        $('h3-full').href = d.url; $('h3-rfq').href = 'rfq.html?need=sample&product=' + st.board.toLowerCase();
+        drawLine();
+      }
+      function drawLine() {
+        var svg = $('h3-lines'); svg.innerHTML = '';
+        var stage = $('h3-stage');
+        if (st.open < 0 || st.lens === 'Layers' || stage.clientWidth === 0) return;
+        var mk = $('h3-marks').children[st.open], item = $('h3-list').children[st.open];
+        if (!mk || !item || getComputedStyle(svg).display === 'none') return;
+        var sr = stage.getBoundingClientRect(), ir = item.querySelector('.h3-item').getBoundingClientRect(), mr = mk.getBoundingClientRect();
+        var x1 = mr.left + mr.width / 2 - sr.left, y1 = mr.top + mr.height / 2 - sr.top;
+        var x2 = sr.width, y2 = Math.min(Math.max(ir.top + ir.height / 2 - sr.top, 0), sr.height);
+        var ns = 'http://www.w3.org/2000/svg', p = document.createElementNS(ns, 'polyline');
+        p.setAttribute('points', x1 + ',' + y1 + ' ' + (x2 - 24) + ',' + y1 + ' ' + (x2 - 24) + ',' + y2 + ' ' + x2 + ',' + y2);
+        p.setAttribute('fill', 'none'); p.setAttribute('stroke', 'currentColor'); p.setAttribute('stroke-width', '1.5'); p.setAttribute('style', 'color:var(--wf-accent)');
+        svg.appendChild(p);
+      }
+      build(); render();
+      document.addEventListener('wf:viewport', function () { setTimeout(drawLine, 50); });
+      window.addEventListener('resize', drawLine);
+    })();
+  </script>
+</section>
+<!-- region:H3 end -->
+
+<!-- region:H4 start -->
+<style>
+  #h4 .h4-head { display: flex; flex-direction: column; gap: var(--wf-16); margin-bottom: var(--wf-32); max-width: 70ch; }
+  #h4 .h4-panel { position: relative; border: 3px solid var(--wf-ink); background: var(--wf-paper); background-image: linear-gradient(var(--wf-line) 1px, transparent 1px), linear-gradient(90deg, var(--wf-line) 1px, transparent 1px); background-size: 24px 24px; background-position: -1px -1px; }
+  #h4 .h4-bar { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; align-items: center; padding: 10px 16px; background: var(--wf-ink); color: var(--wf-paper); font: 700 12px/1.3 var(--wf-mono); letter-spacing: 0.06em; text-transform: uppercase; }
+  #h4 .h4-bar .wf-sim { color: var(--wf-paper); }
+  #h4 .h4-alarm { display: none; padding: 12px 16px; background: repeating-linear-gradient(45deg, var(--wf-accent) 0 14px, var(--wf-ink) 14px 28px); color: #fff; font: 800 15px/1.3 var(--wf-mono); text-transform: uppercase; }
+  #h4 .h4-alarm span { display: inline-block; padding: 2px 8px; background: var(--wf-ink); }
+  #h4 .h4-alarm.is-on { display: block; }
+  #h4 .h4-ok { display: none; padding: 10px 16px; border-bottom: 2px solid var(--wf-ink); font: 700 13px/1.3 var(--wf-mono); background: var(--wf-paper); }
+  #h4 .h4-ok.is-on { display: block; }
+  #h4 .h4-grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--wf-16); padding: var(--wf-24); }
+  #h4 .h4-w { background: var(--wf-paper); border: 1.5px solid var(--wf-ink); padding: 14px 16px; min-width: 0; }
+  #h4 .h4-w > h3 { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 10px; font: 700 12px/1.3 var(--wf-mono); letter-spacing: 0.08em; text-transform: uppercase; }
+  #h4 .w-gauge { grid-column: span 4; } #h4 .w-relay { grid-column: span 5; } #h4 .w-board { grid-column: span 3; }
+  #h4 .w-di { grid-column: span 4; } #h4 .w-power { grid-column: span 5; } #h4 .w-fault { grid-column: span 3; }
+  #h4 .w-log { grid-column: span 12; }
+  #h4 .g-svg { width: 100%; max-width: 280px; margin: 0 auto; }
+  #h4 .g-read { text-align: center; font: 700 28px/1.1 var(--wf-mono); }
+  #h4 .g-read small { font: 500 14px/1 var(--wf-mono); }
+  #h4 .g-cap { text-align: center; font: 500 12px/1.4 var(--wf-mono); color: var(--wf-grey-3); }
+  #h4 .rl-row { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+  #h4 .rl { all: unset; box-sizing: border-box; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 6px; min-height: 96px; padding: 8px 4px; border: 1.5px solid var(--wf-ink); text-align: center; font: 600 12px/1.3 var(--wf-mono); }
+  #h4 .rl:focus-visible { outline: 3px solid var(--wf-accent); outline-offset: 2px; }
+  #h4 .rl[aria-disabled="true"] { opacity: 0.45; cursor: not-allowed; }
+  #h4 .rl-track { position: relative; width: 64px; height: 56px; border: 2px solid var(--wf-ink); border-radius: 8px; background: var(--wf-grey-2); }
+  #h4 .rl-knob { position: absolute; left: 4px; right: 4px; bottom: 4px; height: 24px; border-radius: 5px; background: var(--wf-ink); box-shadow: 0 3px 0 var(--wf-grey-3); transition: translate .12s cubic-bezier(.2,.8,.2,1); }
+  #h4 .rl[aria-checked="true"] .rl-knob { translate: 0 -22px; background: var(--wf-accent); }
+  #h4 .rl-state { font-weight: 700; }
+  #h4 .rl small { color: var(--wf-grey-3); font-weight: 500; }
+  #h4 .di-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+  #h4 .di-list li { display: flex; align-items: center; gap: 10px; min-height: 36px; font: 600 14px/1.3 var(--wf-sans); }
+  #h4 .led { width: 16px; height: 16px; border-radius: 50%; border: 2px solid var(--wf-ink); background: var(--wf-paper); flex: none; }
+  #h4 .led.on { background: var(--wf-ink); box-shadow: 0 0 0 3px var(--wf-accent-soft), 0 0 0 4px var(--wf-ink); }
+  #h4 .led.is-fault.on { background: var(--wf-accent); border-color: var(--wf-accent); }
+  #h4 .di-list .st { margin-left: auto; font: 700 12px/1 var(--wf-mono); }
+  #h4 .pw-row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+  #h4 .pw-row div b { display: block; font: 600 11px/1.3 var(--wf-mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--wf-grey-3); }
+  #h4 .pw-row output { font: 700 22px/1.2 var(--wf-mono); }
+  #h4 .pw-row output small { font: 500 12px/1 var(--wf-mono); }
+  #h4 .spark { width: 100%; height: 56px; margin-top: 8px; border: 1px dashed var(--wf-grey-3); }
+  #h4 .mini .wf-ph { min-height: 0; }
+  #h4 .mini .wf-ph::after { max-width: 92%; font-size: 10.5px; }
+  #h4 .mini-led { display: flex; justify-content: space-around; margin-top: 10px; }
+  #h4 .mini-led span { display: flex; flex-direction: column; align-items: center; gap: 4px; font: 700 11px/1 var(--wf-mono); }
+  #h4 .btn-fault { all: unset; box-sizing: border-box; cursor: pointer; display: flex; align-items: center; justify-content: center; width: 100%; min-height: 56px; padding: 0 16px; border: 3px solid var(--wf-ink); border-radius: 8px; background: var(--wf-paper); font: 800 15px/1.2 var(--wf-sans); box-shadow: 0 4px 0 var(--wf-ink); text-align: center; }
+  #h4 .btn-fault:active { translate: 0 3px; box-shadow: 0 1px 0 var(--wf-ink); }
+  #h4 .btn-fault:focus-visible { outline: 3px solid var(--wf-accent); outline-offset: 3px; }
+  #h4 .btn-fault.is-reset { background: var(--wf-accent); color: #fff; border-color: var(--wf-ink); }
+  #h4 .log { margin: 0; padding: 10px 12px; min-height: 140px; max-height: 190px; overflow: auto; list-style: none; border: 1px solid var(--wf-ink); background: var(--wf-grey-1); font: 500 12.5px/1.6 var(--wf-mono); }
+  #h4 .log li { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  #h4 .log .t { color: var(--wf-grey-3); }
+  #h4 .h4-toggles { display: flex; gap: 12px; align-items: center; margin-top: 10px; font: 500 12.5px/1.3 var(--wf-sans); }
+  #h4 .h4-cta { margin-top: var(--wf-24); }
+  #h4 .h4-annos { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 var(--wf-24); margin-top: var(--wf-32); }
+  #h4 .h4-annos .wf-anno { max-width: none; }
+  @container wf (max-width: 767px) {
+    #h4 .h4-grid { grid-template-columns: 1fr; padding: var(--wf-12); gap: var(--wf-12); }
+    #h4 .h4-grid > * { grid-column: 1 / -1 !important; }
+    #h4 .w-relay { order: 1; } #h4 .w-gauge { order: 2; } #h4 .w-di { order: 3; } #h4 .w-power { order: 4; } #h4 .w-board { order: 5; } #h4 .w-fault { order: 6; } #h4 .w-log { order: 7; }
+    #h4 .rl-row { gap: 8px; } #h4 .rl { min-height: 104px; }
+    #h4 .log li:not(:nth-last-child(-n+3)) { display: none; }
+    #h4 .log { min-height: 0; }
+    #h4 .pw-row output { font-size: 17px; }
+    #h4 .h4-annos { grid-template-columns: 1fr; }
+  }
+</style>
+<section class="wf-section" id="h4" data-section="H4" data-title="Live telemetry console">
+  <div class="wf-container">
+    <div class="h4-head">
+      <p class="wf-eyebrow">Live console · Simulated</p>
+      <h2 class="wf-display-l">Flip a relay. Watch the board answer.</h2>
+      <p class="wf-body">A control panel running on simulated data. No network is touched.</p>
+    </div>
+    <div class="h4-panel" id="h4-panel">
+      <div class="h4-bar"><span>ARMtronix console · BA011-001 + IA015-001</span><span>Simulated telemetry · no live connection <span class="wf-sim">Simulated</span></span></div>
+      <div class="h4-alarm" id="h4-alarm" role="alert"><span>ALARM</span> E-stop pressed · outputs held off</div>
+      <div class="h4-ok" id="h4-ok" role="status">Recovered · E-stop released · outputs restored</div>
+      <div class="h4-grid">
+        <section class="h4-w w-gauge" aria-labelledby="h4-g">
+          <h3 id="h4-g">Analog in <span class="wf-sim">Simulated</span></h3>
+          <svg class="g-svg" viewBox="0 0 200 120" role="img" aria-label="Gauge: 12.4 milliamps, 52 per cent">
+            <path d="M20 100 A80 80 0 0 1 180 100" fill="none" stroke="currentColor" stroke-width="3"/>
+            <path d="M20 100 A80 80 0 0 1 180 100" fill="none" stroke="currentColor" stroke-width="12" stroke-dasharray="2 12" opacity=".35"/>
+            <g id="h4-needle" style="transform-origin:100px 100px;transform:rotate(4deg)"><line x1="100" y1="100" x2="100" y2="34" stroke="currentColor" stroke-width="3" style="color:var(--wf-accent)"/><circle cx="100" cy="100" r="7" fill="currentColor"/></g>
+            <text x="14" y="116" font-size="9" font-family="monospace" fill="currentColor">4 mA</text><text x="186" y="116" font-size="9" font-family="monospace" fill="currentColor" text-anchor="end">20 mA</text>
+          </svg>
+          <p class="g-read"><output>12.4<small> mA</small></output> = <output>52<small> %</small></output></p>
+          <p class="g-cap">AI1 · tank level · 4–20 mA · IA015</p>
+        </section>
+        <section class="h4-w w-relay" aria-labelledby="h4-r">
+          <h3 id="h4-r">Relay out · BA011 <span class="wf-sim">Simulated</span></h3>
+          <div class="rl-row" id="h4-relays">
+            <button class="rl" type="button" role="switch" aria-checked="false" data-i="0" data-w="100" aria-label="Relay 1, lamp, 100 W"><span class="rl-track"><span class="rl-knob"></span></span><span>Relay 1</span><span class="rl-state">OFF</span><small>Lamp · 100 W</small></button>
+            <button class="rl" type="button" role="switch" aria-checked="true" data-i="1" data-w="75" aria-label="Relay 2, fan, 75 W"><span class="rl-track"><span class="rl-knob"></span></span><span>Relay 2</span><span class="rl-state">ON</span><small>Fan · 75 W</small></button>
+            <button class="rl" type="button" role="switch" aria-checked="false" data-i="2" data-w="750" aria-label="Relay 3, pump, 750 W"><span class="rl-track"><span class="rl-knob"></span></span><span>Relay 3</span><span class="rl-state">OFF</span><small>Pump · 750 W</small></button>
+            <button class="rl" type="button" role="switch" aria-checked="false" data-i="3" data-w="1000" aria-label="Relay 4, heater, 1000 W"><span class="rl-track"><span class="rl-knob"></span></span><span>Relay 4</span><span class="rl-state">OFF</span><small>Heater · 1000 W</small></button>
+          </div>
+          <div class="h4-toggles"><label><input type="checkbox" id="h4-snd"> Relay click sound (opt-in)</label></div>
+        </section>
+        <section class="h4-w w-board mini" aria-labelledby="h4-b">
+          <h3 id="h4-b">Board · live lens</h3>
+          <div class="wf-ph" data-label="RENDER: BA011 · Live lens" data-ratio="4/3"></div>
+          <div class="mini-led" id="h4-leds" aria-label="Board relay LEDs mirror the switches"><span><i class="led"></i>R1</span><span><i class="led on"></i>R2</span><span><i class="led"></i>R3</span><span><i class="led"></i>R4</span></div>
+        </section>
+        <section class="h4-w w-di" aria-labelledby="h4-d">
+          <h3 id="h4-d">Digital in · IA015 <span class="wf-sim">Simulated</span></h3>
+          <ul class="di-list">
+            <li><i class="led on"></i>Door closed<span class="st">ON</span></li>
+            <li><i class="led"></i>Limit switch<span class="st">OFF</span></li>
+            <li><i class="led is-fault" id="h4-estop-led"></i>E-stop<span class="st" id="h4-estop-st">OFF</span></li>
+            <li><i class="led on"></i>Machine running<span class="st">ON</span></li>
+          </ul>
+        </section>
+        <section class="h4-w w-power" aria-labelledby="h4-p">
+          <h3 id="h4-p">Power · BA015 <span class="wf-sim">Simulated</span></h3>
+          <div class="pw-row"><div><b>Voltage</b><output>230.8<small> V</small></output></div><div><b>Load</b><output id="h4-w">80<small> W</small></output></div><div><b>Energy</b><output>4.62<small> kWh</small></output></div></div>
+          <svg class="spark" viewBox="0 0 300 56" preserveAspectRatio="none" aria-label="Load sparkline placeholder, last 60 seconds"><polyline points="0,40 30,38 60,30 90,34 120,20 150,24 180,16 210,28 240,22 270,26 300,18" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+        </section>
+        <section class="h4-w w-fault" aria-labelledby="h4-f">
+          <h3 id="h4-f">Fault injection</h3>
+          <button class="btn-fault" id="h4-fault" type="button">Simulate e-stop</button>
+          <p class="wf-small" style="margin-top:8px">Raises an alarm, holds the relays off, then recovers on reset.</p>
+        </section>
+        <section class="h4-w w-log" aria-labelledby="h4-l">
+          <h3 id="h4-l">MQTT log · example format <span class="wf-sim">Simulated</span></h3>
+          <ol class="log" id="h4-log" aria-label="MQTT log, example format"></ol>
+        </section>
+      </div>
+    </div>
+    <div class="wf-sr-only" id="h4-live" aria-live="polite"></div>
+    <div class="h4-cta"><a class="wf-btn wf-btn--primary" href="rfq.html?who=plant&amp;need=retro">Monitor my own machines</a> <span class="wf-small">Simulated. Seeded, 1 Hz, no network.</span></div>
+    <div class="h4-annos">
+      <aside class="wf-anno" data-ids="MO-07 BR-07 GR-02">Relay switches are physical-style toggles, at least 56 px: the knob travels about 22 px with a shadow squeeze; an opt-in click sound plays; the matching LED on the board render lights; a log line is added. Reduced motion: no travel, instant state. Keyboard: Space or Enter on a focused switch.</aside>
+      <aside class="wf-anno" data-ids="MO-08 MO-09 BR-04">Needle: spring physics to each new value (a slight overshoot, the only bounce here). Sparkline draws left to right. Log lines type in at 1 Hz. Reduced motion: numeric values only, lines appear instantly. Simulation: seeded random walk, 1 Hz, pauses when off-screen or the tab is hidden, no network calls.</aside>
+      <aside class="wf-anno" data-ids="MO-10 BR-10">Fault: a red-hatched sweep crosses the panel, the alarm banner and E-stop LED latch, relays are held off, then Reset plays the recovery banner. Reduced motion: a static banner. <code>aria-live="polite"</code> announces only relay changes and alarms, throttled to one message per second. BR-10: this is an instrument panel, a gauge, LEDs and toggles around a board, not a grid of SaaS cards.</aside>
+    </div>
+  </div>
+  <script>
+    (function () {
+      var relays = Array.prototype.slice.call(document.querySelectorAll('#h4-relays .rl')), leds = document.querySelectorAll('#h4-leds .led');
+      var log = document.getElementById('h4-log'), alarm = false, held = null, lastLive = 0;
+      var seq = 4000;
+      function ts() { var d = new Date(2026, 9, 5, 10, 0, 0); d.setSeconds(d.getSeconds() + seq++); return d.toTimeString().slice(0, 8); }
+      function addLog(topic, payload) {
+        var li = document.createElement('li'); li.innerHTML = '<span class="t">' + ts() + '</span> ' + topic + '  ' + payload; log.appendChild(li);
+        while (log.children.length > 8) log.removeChild(log.firstChild); log.scrollTop = log.scrollHeight;
+      }
+      function say(t) { var n = Date.now(); if (n - lastLive < 1000) return; lastLive = n; document.getElementById('h4-live').textContent = t; }
+      function power() { var w = 5; relays.forEach(function (r) { if (r.getAttribute('aria-checked') === 'true') w += +r.dataset.w; }); document.getElementById('h4-w').innerHTML = w.toLocaleString('en-US').replace(',', ' ') + '<small> W</small>'; }
+      function set(r, on, silent) {
+        r.setAttribute('aria-checked', String(on)); r.querySelector('.rl-state').textContent = on ? 'ON' : 'OFF';
+        leds[+r.dataset.i].classList.toggle('on', on); power();
+        if (!silent) { var n = +r.dataset.i + 1; addLog('armtronix/ba011-001/relay' + n + '/set', on ? 'ON' : 'OFF'); addLog('armtronix/ba011-001/relay' + n, on ? 'ON' : 'OFF'); say('Relay ' + n + ' ' + (on ? 'on' : 'off')); }
+      }
+      function click() { if (!document.getElementById('h4-snd').checked) return; try { var c = new (window.AudioContext || window.webkitAudioContext)(), o = c.createOscillator(), g = c.createGain(); o.frequency.value = 1800; g.gain.value = 0.05; o.connect(g); g.connect(c.destination); o.start(); o.stop(c.currentTime + 0.03); } catch (e) {} }
+      relays.forEach(function (r) { r.addEventListener('click', function () { if (alarm) return; click(); set(r, r.getAttribute('aria-checked') !== 'true'); }); });
+      var fb = document.getElementById('h4-fault'), al = document.getElementById('h4-alarm'), ok = document.getElementById('h4-ok');
+      fb.addEventListener('click', function () {
+        if (!alarm) {
+          alarm = true; held = relays.map(function (r) { return r.getAttribute('aria-checked') === 'true'; });
+          relays.forEach(function (r) { set(r, false, true); r.setAttribute('aria-disabled', 'true'); });
+          al.classList.add('is-on'); ok.classList.remove('is-on'); fb.textContent = 'Reset'; fb.classList.add('is-reset');
+          document.getElementById('h4-estop-led').classList.add('on'); document.getElementById('h4-estop-st').textContent = 'ON';
+          addLog('armtronix/ia015-001/di3', 'ON'); addLog('armtronix/ba011-001/alarm', 'ESTOP'); say('Alarm. E-stop pressed. Outputs held off.');
+        } else {
+          alarm = false; al.classList.remove('is-on'); ok.classList.add('is-on'); fb.textContent = 'Simulate e-stop'; fb.classList.remove('is-reset');
+          document.getElementById('h4-estop-led').classList.remove('on'); document.getElementById('h4-estop-st').textContent = 'OFF';
+          relays.forEach(function (r, i) { r.removeAttribute('aria-disabled'); set(r, held[i], true); });
+          addLog('armtronix/ia015-001/di3', 'OFF'); addLog('armtronix/ba011-001/alarm', 'CLEAR'); say('Recovered. Outputs restored.');
+          setTimeout(function () { ok.classList.remove('is-on'); }, 4000);
+        }
+      });
+      ['armtronix/ia015-001/ai1  {"v":12.4,"unit":"mA"}', 'armtronix/ia015-001/di1  ON', 'armtronix/ba015-001/power  {"w":80,"v":230.8}', 'armtronix/ba011-001/relay2  ON', 'armtronix/ia015-001/ai1  {"v":12.5,"unit":"mA"}'].forEach(function (l) { var p = l.split('  '); addLog(p[0], p[1]); });
+      power();
+    })();
+  </script>
+</section>
+<!-- region:H4 end -->
+
+<!-- region:H5 start -->
+<style>
+  #h5 .h5-head { display: flex; flex-direction: column; gap: var(--wf-16); margin-bottom: var(--wf-32); max-width: 70ch; }
+  #h5 .h5-stage { --p: 50%; position: relative; border: 1.5px solid var(--wf-ink); }
+  #h5 .h5-stage > .wf-img { margin: 0; }
+  #h5 .h5-silent { position: absolute; inset: 0; clip-path: inset(0 calc(100% - var(--p)) 0 0); background: var(--wf-paper); z-index: 2; }
+  #h5 .h5-silent .wf-img { height: 100%; }
+  #h5 .h5-silent .wf-img__media, #h5 .h5-silent img { height: 100%; }
+  #h5 .h5-silent img { filter: grayscale(1) brightness(0.55) contrast(0.8); }
+  #h5 .h5-silent figcaption { display: none; }
+  #h5 .h5-silent::after { content: "SILENT · no data · no alerts"; position: absolute; left: 12px; top: 12px; padding: 4px 8px; background: var(--wf-ink); color: var(--wf-paper); font: 700 11px/1.3 var(--wf-mono); letter-spacing: 0.06em; text-transform: uppercase; }
+  #h5 .h5-talk-label { position: absolute; right: 12px; top: 12px; z-index: 1; padding: 4px 8px; border: 1.5px solid var(--wf-ink); background: var(--wf-paper); font: 700 11px/1.3 var(--wf-mono); letter-spacing: 0.06em; text-transform: uppercase; }
+  #h5 .h5-data { position: absolute; z-index: 1; padding: 4px 8px; background: var(--wf-paper); border: 1.5px solid var(--wf-ink); font: 700 13px/1.2 var(--wf-mono); }
+  #h5 .h5-data small { font-weight: 500; }
+  #h5 .h5-data .wf-sim { margin-left: 4px; }
+  #h5 .h5-range { position: absolute; inset: 0; z-index: 4; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: ew-resize; }
+  #h5 .h5-handle { position: absolute; z-index: 3; top: 0; bottom: 0; left: var(--p); width: 3px; margin-left: -1.5px; background: var(--wf-paper); box-shadow: 0 0 0 1.5px var(--wf-ink); pointer-events: none; }
+  #h5 .h5-handle::after { content: "⟷"; position: absolute; top: 50%; left: 50%; translate: -50% -50%; width: 48px; height: 48px; display: grid; place-items: center; border-radius: 50%; background: var(--wf-ink); color: var(--wf-paper); font: 700 20px/1 var(--wf-mono); box-shadow: 0 3px 0 var(--wf-grey-3); }
+  #h5 .h5-range:focus-visible ~ .h5-handle::after { outline: 3px solid var(--wf-accent); outline-offset: 3px; }
+  #h5 .h5-bottom { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)) auto; gap: var(--wf-16); align-items: stretch; margin-top: var(--wf-24); }
+  #h5 .h5-stat { padding: 12px 14px; border: 1.5px solid var(--wf-ink); font: 700 16px/1.3 var(--wf-sans); opacity: 0.25; transition: opacity .25s; }
+  #h5 .h5-stat.is-on { opacity: 1; }
+  #h5 .h5-stat small { display: block; margin-top: 4px; font: 500 12px/1.4 var(--wf-mono); color: var(--wf-grey-3); }
+  #h5 .h5-notes { display: grid; grid-template-columns: 1fr 1fr; gap: var(--wf-24); margin-top: var(--wf-16); font-size: 14px; }
+  #h5 .h5-annos { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 var(--wf-24); margin-top: var(--wf-32); }
+  #h5 .h5-annos .wf-anno { max-width: none; }
+  @container wf (max-width: 767px) {
+    #h5 .h5-bottom { grid-template-columns: 1fr; }
+    #h5 .h5-notes { grid-template-columns: 1fr; gap: 8px; }
+    #h5 .h5-annos { grid-template-columns: 1fr; }
+    #h5 .h5-data { font-size: 11px; padding: 3px 6px; }
+    #h5 .h5-handle::after { width: 48px; height: 48px; }
+    #h5 .h5-bottom .wf-btn { width: 100%; }
+  }
+</style>
+<section class="wf-section" id="h5" data-section="H5" data-title="Retro to IIoT">
+  <div class="wf-container">
+    <div class="h5-head">
+      <p class="wf-eyebrow">Retro to IIoT · IA015</p>
+      <h2 class="wf-display-l">Don't replace the machine. Connect it.</h2>
+      <p class="wf-body">Drag to turn a silent cabinet into one that reports.</p>
+    </div>
+    <div class="h5-stage" id="h5-stage">
+      <figure class="wf-img" data-asset="IMG-20" data-ratio="16/9">
+        <span class="h5-talk-label">Talking</span>
+        <span class="h5-data" style="right:6%;top:30%">AI1 12.4<small> mA</small><span class="wf-sim">Simulated</span></span>
+        <span class="h5-data" style="right:10%;top:48%">DI2 ON<span class="wf-sim">Simulated</span></span>
+        <span class="h5-data" style="right:4%;top:66%">24.1<small> V DC</small><span class="wf-sim">Simulated</span></span>
+        <div class="h5-silent"><figure class="wf-img" data-asset="IMG-20" data-ratio="16/9" data-caption="none"></figure></div>
+        <input class="h5-range" type="range" min="0" max="100" value="50" aria-label="Before and after. 50 per cent silent." aria-valuetext="50 per cent silent, 50 per cent talking">
+        <span class="h5-handle" aria-hidden="true"></span>
+      </figure>
+    </div>
+    <div class="h5-notes"><p><b>Silent.</b> No data. No alerts. A walk to the panel.</p><p><b>Talking.</b> Inputs, outputs and 4–20 mA, visible from anywhere on your network.</p></div>
+    <div class="h5-bottom">
+      <div class="h5-stat" data-th="20">Works with Siemens and Beckhoff PLCs<small>IA015 catalogue</small></div>
+      <div class="h5-stat" data-th="45">DIN rail · 24 V DC<small>C-type rail · 24 V DC @ 1 A</small></div>
+      <div class="h5-stat" data-th="70">Wi-Fi · BT · RS485 · CAN · Ethernet<small>IA015 catalogue</small></div>
+      <a class="wf-btn wf-btn--primary" href="rfq.html?who=plant&amp;need=retro">Assess my machines</a>
+    </div>
+    <div class="h5-annos">
+      <aside class="wf-anno" data-ids="MO-04 BR-02">The handle drags (mouse, touch, and arrow keys on the range input; 48 px target). The Silent side is dimmed and labelled; the Talking side shows data chips, each with a unit and a Simulated tag. Reduced motion: stats appear instantly; no easing.</aside>
+      <aside class="wf-anno" data-ids="BR-09">Stats are capabilities from the IA015 catalogue, not ROI numbers. They light up as the Talking side grows (at 20, 45 and 70 per cent), so the proof arrives as the user explores. No invented percentages.</aside>
+      <aside class="wf-anno" data-ids="BR-08">CTA "Assess my machines" opens the RFQ pre-set to Plant / facility and Need = Retro to IIoT assessment (<code>?who=plant&amp;need=retro</code>). Mobile: full-width slider, 48 px handle, stats stack.</aside>
+    </div>
+  </div>
+  <script>
+    (function () {
+      var stage = document.getElementById('h5-stage'), r = stage.querySelector('.h5-range'), stats = document.querySelectorAll('#h5 .h5-stat');
+      function upd() {
+        var v = +r.value; stage.style.setProperty('--p', v + '%');
+        r.setAttribute('aria-valuetext', v + ' per cent silent, ' + (100 - v) + ' per cent talking');
+        r.setAttribute('aria-label', 'Before and after. ' + v + ' per cent silent.');
+        stats.forEach(function (s) { s.classList.toggle('is-on', (100 - v) >= +s.dataset.th); });
+      }
+      r.addEventListener('input', upd); upd();
+    })();
+  </script>
+</section>
+<!-- region:H5 end -->
+
+<!-- region:H6 start -->
+<style>
+  #h6 .h6-head { display: flex; flex-direction: column; gap: var(--wf-16); margin-bottom: var(--wf-24); max-width: 70ch; }
+  #h6 .h6-filters { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: var(--wf-24); align-items: center; }
+  #h6 .h6-filters .wf-chip { min-height: 44px; }
+  #h6 .h6-count { margin-left: 8px; font: 600 12px/1 var(--wf-mono); color: var(--wf-grey-3); }
+  #h6 .h6-drawer { border: 2px solid var(--wf-ink); margin-bottom: var(--wf-16); background: var(--wf-paper); }
+  #h6 .h6-handle { all: unset; box-sizing: border-box; cursor: pointer; width: 100%; display: grid; grid-template-columns: auto 1fr auto; gap: 16px; align-items: center; min-height: 64px; padding: 10px 20px; background: var(--wf-grey-1); }
+  #h6 .h6-handle:focus-visible { outline: 3px solid var(--wf-accent); outline-offset: -3px; }
+  #h6 .h6-handle b { font: 800 22px/1.1 var(--wf-sans); }
+  #h6 .h6-handle .tag { font: 700 12px/1 var(--wf-mono); padding: 4px 8px; background: var(--wf-ink); color: var(--wf-paper); }
+  #h6 .h6-handle .knob { width: 56px; height: 14px; border: 2px solid var(--wf-ink); border-radius: 7px; background: var(--wf-grey-2); }
+  #h6 .h6-handle .st { font: 600 12px/1 var(--wf-mono); }
+  #h6 .h6-body { padding: 20px; border-top: 2px solid var(--wf-ink); }
+  #h6 .h6-body[hidden] { display: none; }
+  #h6 .h6-row { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 14px; }
+  #h6 .h6-bin { display: flex; flex-direction: column; gap: 6px; padding: 10px; border: 1.5px solid var(--wf-grey-3); background: var(--wf-paper); text-decoration: none; }
+  #h6 .h6-bin:hover { border-color: var(--wf-ink); background: var(--wf-grey-1); }
+  #h6 .h6-bin[hidden] { display: none; }
+  #h6 .h6-bin .wf-ph { min-height: 0; }
+  #h6 .h6-bin .wf-ph::after { font-size: 10px; padding: 3px 6px; }
+  #h6 .h6-bin b { font: 800 18px/1.1 var(--wf-mono); }
+  #h6 .h6-bin .nm { font: 500 14px/1.3 var(--wf-sans); }
+  #h6 .h6-bin .chips { display: flex; flex-wrap: wrap; gap: 4px; margin-top: auto; }
+  #h6 .h6-bin .wf-chip { min-height: 24px; padding: 1px 8px; font: 600 11px/1.3 var(--wf-mono); }
+  #h6 .h6-empty { display: none; padding: 16px; border: 1.5px dashed var(--wf-grey-3); font: 500 14px/1.4 var(--wf-mono); }
+  #h6 .h6-foot { display: flex; flex-wrap: wrap; gap: var(--wf-16); align-items: center; margin-top: var(--wf-24); }
+  #h6 .h6-annos { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 var(--wf-24); margin-top: var(--wf-32); }
+  #h6 .h6-annos .wf-anno { max-width: none; }
+  @container wf (max-width: 767px) {
+    #h6 .h6-row { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 12px; padding-bottom: 8px; }
+    #h6 .h6-bin { flex: 0 0 72%; scroll-snap-align: start; }
+    #h6 .h6-body { padding: 12px; }
+    #h6 .h6-handle { padding: 8px 12px; gap: 10px; } #h6 .h6-handle b { font-size: 17px; } #h6 .h6-handle .knob { width: 32px; }
+    #h6 .h6-annos { grid-template-columns: 1fr; }
+  }
+</style>
+<section class="wf-section" id="h6" data-section="H6" data-title="Product lines: parts drawer">
+  <div class="wf-container">
+    <div class="h6-head">
+      <p class="wf-eyebrow">Parts drawer</p>
+      <h2 class="wf-display-l">Seventeen boards. Two drawers.</h2>
+      <p class="wf-body">Industrial Automation and Building Automation, each with real specs.</p>
+    </div>
+    <div class="h6-filters" role="group" aria-label="Filter boards" id="h6-filters">
+      <button class="wf-chip" type="button" aria-pressed="false" data-f="wifi">Wi-Fi</button><button class="wf-chip" type="button" aria-pressed="false" data-f="bt">Bluetooth</button><button class="wf-chip" type="button" aria-pressed="false" data-f="lora">LoRa</button><button class="wf-chip" type="button" aria-pressed="false" data-f="rs485">RS485 / Modbus</button><button class="wf-chip" type="button" aria-pressed="false" data-f="can">CAN</button><button class="wf-chip" type="button" aria-pressed="false" data-f="eth">Ethernet</button><button class="wf-chip" type="button" aria-pressed="false" data-f="rpi">Raspberry Pi</button><button class="wf-chip" type="button" aria-pressed="false" data-f="dc">24 V DC</button><button class="wf-chip" type="button" aria-pressed="false" data-f="ac">100–240 V AC</button>
+      <span class="h6-count" id="h6-count" aria-live="polite">17 of 17 boards</span>
+    </div>
+    <div class="h6-drawer">
+      <button class="h6-handle" type="button" aria-expanded="true" aria-controls="h6-ia"><span class="tag">IA</span><b>Industrial Automation · 9 boards</b><span class="st">Open <span class="knob" style="display:inline-block;vertical-align:middle;margin-left:6px"></span></span></button>
+      <div class="h6-body" id="h6-ia"><div class="h6-row">
+<a class="h6-bin" href="product.html#ia015" data-f="bt can dc eth rs485 wifi"><span class="wf-ph" data-label="RENDER: IA015" data-ratio="16/9"></span><b>IA015</b><span class="nm">Retro to IIoT</span><span class="chips"><span class="wf-chip">24 V DC</span><span class="wf-chip">Wi-Fi · Bluetooth</span><span class="wf-chip">3 DI · 3 DO · 4 AI</span></span></a>
+<a class="h6-bin" href="product.html#ia013" data-f="bt dc lora rs485 wifi"><span class="wf-ph" data-label="RENDER: IA013" data-ratio="16/9"></span><b>IA013</b><span class="nm">Wi-Fi ⇄ RS485 ⇄ LoRa</span><span class="chips"><span class="wf-chip">24 V DC</span><span class="wf-chip">Wi-Fi · Bluetooth</span><span class="wf-chip">Screw mount</span></span></a>
+<a class="h6-bin" href="product.html#ia010" data-f="bt dc eth rs485 wifi"><span class="wf-ph" data-label="RENDER: IA010" data-ratio="16/9"></span><b>IA010</b><span class="nm">Modbus to IIoT</span><span class="chips"><span class="wf-chip">24 V DC</span><span class="wf-chip">Wi-Fi · Bluetooth</span><span class="wf-chip">1 DO</span></span></a>
+<a class="h6-bin" href="product.html#ia009" data-f="dc wifi"><span class="wf-ph" data-label="RENDER: IA009" data-ratio="16/9"></span><b>IA009</b><span class="nm">Wi-Fi 12-DIO</span><span class="chips"><span class="wf-chip">24 V DC</span><span class="wf-chip">Wi-Fi</span><span class="wf-chip">12 DI · 12 DO</span></span></a>
+<a class="h6-bin" href="product.html#ia008" data-f="dc wifi"><span class="wf-ph" data-label="RENDER: IA008" data-ratio="16/9"></span><b>IA008</b><span class="nm">Wi-Fi 2-DIO</span><span class="chips"><span class="wf-chip">24 V DC</span><span class="wf-chip">Wi-Fi</span><span class="wf-chip">2 DI · 2 DO</span></span></a>
+<a class="h6-bin" href="product.html#ia005" data-f="dc lora"><span class="wf-ph" data-label="RENDER: IA005" data-ratio="16/9"></span><b>IA005</b><span class="nm">LoRaWAN, STM MCU</span><span class="chips"><span class="wf-chip">5 V DC</span><span class="wf-chip">LoRa · USB</span><span class="wf-chip">Drop-in / wired</span></span></a>
+<a class="h6-bin" href="product.html#ia003" data-f="dc rpi"><span class="wf-ph" data-label="RENDER: IA003" data-ratio="16/9"></span><b>IA003</b><span class="nm">RPi 4-DIO UPS board</span><span class="chips"><span class="wf-chip">24 V DC</span><span class="wf-chip">Raspberry Pi</span><span class="wf-chip">4 DI · 4 DO · 3 AI</span></span></a>
+<a class="h6-bin" href="product.html#ia002" data-f="dc rpi"><span class="wf-ph" data-label="RENDER: IA002" data-ratio="16/9"></span><b>IA002</b><span class="nm">RPi 4-DIO</span><span class="chips"><span class="wf-chip">24 V DC</span><span class="wf-chip">Raspberry Pi</span><span class="wf-chip">4 DI · 4 DO</span></span></a>
+<a class="h6-bin" href="product.html#ia001" data-f="dc wifi"><span class="wf-ph" data-label="RENDER: IA001" data-ratio="16/9"></span><b>IA001</b><span class="nm">Wi-Fi industrial button</span><span class="chips"><span class="wf-chip">24 V DC</span><span class="wf-chip">Wi-Fi</span><span class="wf-chip">1 DI · 1 DO</span></span></a>
+      </div></div>
+    </div>
+    <div class="h6-drawer">
+      <button class="h6-handle" type="button" aria-expanded="false" aria-controls="h6-ba"><span class="tag">BA</span><b>Building Automation · 8 boards</b><span class="st">Closed <span class="knob" style="display:inline-block;vertical-align:middle;margin-left:6px"></span></span></button>
+      <div class="h6-body" id="h6-ba" hidden><div class="h6-row">
+<a class="h6-bin" href="product.html#ba001" data-f="ac wifi"><span class="wf-ph" data-label="RENDER: BA001" data-ratio="16/9"></span><b>BA001</b><span class="nm">Wi-Fi dual dimmer module</span><span class="chips"><span class="wf-chip">100–240 V AC</span><span class="wf-chip">Wi-Fi</span><span class="wf-chip">2 outputs · 2 AI</span></span></a>
+<a class="h6-bin" href="product.html#ba004" data-f="ac wifi"><span class="wf-ph" data-label="RENDER: BA004" data-ratio="16/9"></span><b>BA004</b><span class="nm">Wi-Fi single dimmer module</span><span class="chips"><span class="wf-chip">100–240 V AC</span><span class="wf-chip">Wi-Fi</span><span class="wf-chip">1 outputs · 1 AI</span></span></a>
+<a class="h6-bin" href="product.html#ba006" data-f="ac wifi"><span class="wf-ph" data-label="RENDER: BA006" data-ratio="16/9"></span><b>BA006</b><span class="nm">Wi-Fi single relay board</span><span class="chips"><span class="wf-chip">100–240 V AC</span><span class="wf-chip">Wi-Fi</span><span class="wf-chip">1 relays</span></span></a>
+<a class="h6-bin" href="product.html#ba011" data-f="ac bt wifi"><span class="wf-ph" data-label="RENDER: BA011" data-ratio="16/9"></span><b>BA011</b><span class="nm">Wi-Fi BT quad relay board</span><span class="chips"><span class="wf-chip">100–240 V AC</span><span class="wf-chip">Wi-Fi · Bluetooth</span><span class="wf-chip">4 relays</span></span></a>
+<a class="h6-bin" href="product.html#ba012" data-f="ac wifi"><span class="wf-ph" data-label="RENDER: BA012" data-ratio="16/9"></span><b>BA012</b><span class="nm">Wi-Fi eight relay module</span><span class="chips"><span class="wf-chip">100–240 V AC</span><span class="wf-chip">Wi-Fi</span><span class="wf-chip">8 relays</span></span></a>
+<a class="h6-bin" href="product.html#ba014" data-f="ac wifi"><span class="wf-ph" data-label="RENDER: BA014" data-ratio="16/9"></span><b>BA014</b><span class="nm">Wi-Fi 4T PWR board</span><span class="chips"><span class="wf-chip">100–240 V AC</span><span class="wf-chip">Wi-Fi</span><span class="wf-chip">4 outputs</span></span></a>
+<a class="h6-bin" href="product.html#ba015" data-f="ac wifi"><span class="wf-ph" data-label="RENDER: BA015" data-ratio="16/9"></span><b>BA015</b><span class="nm">Wi-Fi 2-relay module</span><span class="chips"><span class="wf-chip">100–240 V AC</span><span class="wf-chip">Wi-Fi</span><span class="wf-chip">2 relays</span></span></a>
+<a class="h6-bin" href="product.html#ba019" data-f="ac wifi"><span class="wf-ph" data-label="RENDER: BA019" data-ratio="16/9"></span><b>BA019</b><span class="nm">IoT HDR PM box</span><span class="chips"><span class="wf-chip">100–240 V AC</span><span class="wf-chip">Wi-Fi</span><span class="wf-chip">8 DI · 1 relays</span></span></a>
+      </div></div>
+    </div>
+    <p class="h6-empty" id="h6-empty">No board matches those filters. Clear a filter.</p>
+    <div class="h6-foot"><a class="wf-btn wf-btn--primary" href="products.html">See the full catalogue</a><span class="wf-small">Availability: <mark class="wf-verify">confirm with sales</mark></span></div>
+    <div class="h6-annos">
+      <aside class="wf-anno" data-ids="MO-15 BR-03 BR-10">Drawers slide open on rails (about 350 ms, the handle pulls out); the other drawer stays shut so the parts bins feel like a rack, not an accordion of cards. Reduced motion: instant open. Each bin is a part: code, name, three spec chips, a mini render.</aside>
+      <aside class="wf-anno" data-ids="BR-09">Filter chips narrow the bins by interface and power (they work here; counts update). Power chips read 24 V DC and 100–240 V AC: the datasheets state 100–240 V AC for the BA line, the catalogue says 100–260 V AC (see FACTS §4).</aside>
+      <aside class="wf-anno" data-ids="GR-04">Mobile: the drawers stack and the bins become a horizontal snap row inside each drawer (the page itself never scrolls sideways). Every bin links to <code>product.html#code</code>.</aside>
+    </div>
+  </div>
+  <script>
+    (function () {
+      var drawers = document.querySelectorAll('#h6 .h6-handle');
+      drawers.forEach(function (h) { h.addEventListener('click', function () { var o = h.getAttribute('aria-expanded') !== 'true'; h.setAttribute('aria-expanded', String(o)); document.getElementById(h.getAttribute('aria-controls')).hidden = !o; h.querySelector('.st').firstChild.nodeValue = o ? 'Open ' : 'Closed '; }); });
+      var chips = document.querySelectorAll('#h6-filters [data-f]'), bins = document.querySelectorAll('#h6 .h6-bin');
+      function apply() {
+        var on = Array.prototype.filter.call(chips, function (c) { return c.getAttribute('aria-pressed') === 'true'; }).map(function (c) { return c.dataset.f; }), n = 0;
+        bins.forEach(function (b) { var f = b.dataset.f.split(' '), show = on.every(function (k) { return f.indexOf(k) > -1; }); b.hidden = !show; if (show) n++; });
+        document.getElementById('h6-count').textContent = n + ' of ' + bins.length + ' boards'; document.getElementById('h6-empty').style.display = n ? 'none' : 'block';
+        if (on.length && n) document.querySelectorAll('#h6 .h6-body').forEach(function (b) { b.hidden = !b.querySelector('.h6-bin:not([hidden])'); var h = document.querySelector('[aria-controls="' + b.id + '"]'); h.setAttribute('aria-expanded', String(!b.hidden)); h.querySelector('.st').firstChild.nodeValue = b.hidden ? 'Closed ' : 'Open '; });
+      }
+      chips.forEach(function (c) { c.addEventListener('click', function () { c.setAttribute('aria-pressed', String(c.getAttribute('aria-pressed') !== 'true')); apply(); }); });
+    })();
+  </script>
+</section>
+<!-- region:H6 end -->
+
+<!-- region:H7 start -->
+<style>
+  #h7 .h7-head { display: flex; flex-direction: column; gap: var(--wf-16); margin-bottom: var(--wf-32); max-width: 70ch; }
+  #h7 .h7-grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: var(--wf-48); align-items: start; }
+  #h7 .h7-steps { counter-reset: s; list-style: none; margin: 0; padding: 0; position: relative; }
+  #h7 .h7-steps::before { content: ""; position: absolute; left: 15px; top: 16px; bottom: 16px; width: 3px; background: var(--wf-ink); }
+  #h7 .h7-steps li { position: relative; padding: 0 0 22px 52px; counter-increment: s; }
+  #h7 .h7-steps li::before { content: counter(s); position: absolute; left: 0; top: 0; width: 34px; height: 34px; display: grid; place-items: center; border: 3px solid var(--wf-ink); border-radius: 50%; background: var(--wf-paper); font: 800 14px/1 var(--wf-mono); }
+  #h7 .h7-steps li[aria-current="step"]::before { background: var(--wf-accent); border-color: var(--wf-accent); color: #fff; }
+  #h7 .h7-steps button { all: unset; cursor: pointer; display: block; min-height: 44px; font: 800 18px/1.2 var(--wf-sans); }
+  #h7 .h7-steps button:focus-visible { outline: 3px solid var(--wf-accent); outline-offset: 2px; }
+  #h7 .h7-steps small { display: block; font: 400 13.5px/1.4 var(--wf-sans); color: var(--wf-grey-3); }
+  #h7 .h7-pcb { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--wf-12); }
+  #h7 .h7-stage { border: 1.5px solid var(--wf-grey-3); padding: 6px; background: var(--wf-paper); opacity: 0.5; }
+  #h7 .h7-stage.is-on { opacity: 1; border-color: var(--wf-ink); border-width: 2.5px; padding: 4.5px; }
+  #h7 .h7-stage .wf-ph { min-height: 0; } #h7 .h7-stage .wf-ph::after { font-size: 10px; padding: 3px 6px; }
+  #h7 .h7-stage b { display: block; margin-top: 6px; font: 700 11.5px/1.3 var(--wf-mono); letter-spacing: 0.05em; text-transform: uppercase; }
+  #h7 .h7-photos { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--wf-12); margin-top: var(--wf-24); }
+  #h7 .h7-caps { margin-top: var(--wf-32); display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 var(--wf-32); list-style: none; padding: 0; }
+  #h7 .h7-caps li { padding: 10px 0; border-bottom: 1px solid var(--wf-line); font: 500 15px/1.4 var(--wf-sans); }
+  #h7 .h7-caps b { font: 700 13px/1.4 var(--wf-mono); }
+  #h7 .h7-cta { margin-top: var(--wf-24); display: flex; gap: var(--wf-16); flex-wrap: wrap; align-items: center; }
+  #h7 .h7-annos { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 var(--wf-24); margin-top: var(--wf-32); }
+  #h7 .h7-annos .wf-anno { max-width: none; }
+  @container wf (max-width: 767px) {
+    #h7 .h7-grid { grid-template-columns: 1fr; gap: var(--wf-24); }
+    #h7 .h7-caps { grid-template-columns: 1fr; }
+    #h7 .h7-annos { grid-template-columns: 1fr; }
+    #h7 .h7-pcb, #h7 .h7-photos { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    #h7 .h7-cta .wf-btn { width: 100%; }
+  }
+</style>
+<section class="wf-section" id="h7" data-section="H7" data-title="Engineering services">
+  <div class="wf-container">
+    <div class="h7-head">
+      <p class="wf-eyebrow">Custom hardware design</p>
+      <h2 class="wf-display-l">From schematic to shipment.</h2>
+      <p class="wf-body">One team takes a board from idea to a production run. <mark class="wf-verify">Scope and lead times</mark></p>
+    </div>
+    <div class="h7-grid">
+      <ol class="h7-steps" id="h7-steps" aria-label="Design process">
+        <li aria-current="step"><button type="button" data-s="0">Requirement<small>You tell us the I/O, protocol and power.</small></button></li>
+        <li><button type="button" data-s="1">Schematic<small>Circuit design and component choice.</small></button></li>
+        <li><button type="button" data-s="2">Layout<small>PCB layout and routing.</small></button></li>
+        <li><button type="button" data-s="3">Firmware<small>Arduino, Tasmota-compatible, MQTT, OTA <mark class="wf-verify">OTA</mark>.</small></button></li>
+        <li><button type="button" data-s="4">Prototype and validation<small>Assemble, test, measure.</small></button></li>
+        <li><button type="button" data-s="5">Production<small>Build, test, box and ship.</small></button></li>
+      </ol>
+      <div>
+        <div class="h7-pcb" id="h7-pcb" role="group" aria-label="PCB build-up, six stages">
+          <div class="h7-stage is-on"><div class="wf-ph" data-label="STAGE: bare FR4" data-ratio="4/3"></div><b>1 Bare FR4</b></div>
+          <div class="h7-stage"><div class="wf-ph" data-label="STAGE: copper" data-ratio="4/3"></div><b>2 Copper</b></div>
+          <div class="h7-stage"><div class="wf-ph" data-label="STAGE: solder mask" data-ratio="4/3"></div><b>3 Solder mask</b></div>
+          <div class="h7-stage"><div class="wf-ph" data-label="STAGE: silkscreen" data-ratio="4/3"></div><b>4 Silkscreen</b></div>
+          <div class="h7-stage"><div class="wf-ph" data-label="STAGE: assembled" data-ratio="4/3"></div><b>5 Assembled</b></div>
+          <div class="h7-stage"><div class="wf-ph" data-label="STAGE: boxed" data-ratio="4/3"></div><b>6 Boxed</b></div>
+        </div>
+        <div class="h7-photos">
+          <figure class="wf-img" data-asset="IMG-16" data-ratio="4/3"></figure>
+          <figure class="wf-img" data-asset="IMG-17" data-ratio="4/3"></figure>
+          <figure class="wf-img" data-asset="IMG-18" data-ratio="4/3"></figure>
+        </div>
+      </div>
+    </div>
+    <ul class="h7-caps" aria-label="Capabilities">
+      <li><b>Custom I/O boards</b> from the IA and BA line</li>
+      <li><b>Protocol gateways</b> Modbus ⇄ MQTT ⇄ LoRa (IA013)</li>
+      <li><b>Raspberry Pi industrial HATs</b> (IA002, IA003)</li>
+      <li><b>Firmware</b> Arduino, Tasmota-compatible, MQTT</li>
+      <li><b>Enclosures and DIN mounting</b> <mark class="wf-verify">custom enclosures</mark></li>
+      <li><b>Open documentation</b> design descriptions on GitHub</li>
+    </ul>
+    <div class="h7-cta"><a class="wf-btn wf-btn--primary" href="rfq.html?who=oem&amp;need=custom">Start a custom design</a><span class="wf-small">Capabilities follow the catalogue and public repos; unconfirmed items are marked.</span></div>
+    <div class="h7-annos">
+      <aside class="wf-anno" data-ids="MO-14 BR-09">Scroll builds the board up: the active process step lights its PCB stage (bare FR4, copper, solder mask, silkscreen, assembled, boxed) and the board image accumulates layers. Click a step to jump (works here). Reduced motion: all six stages sit in a row, no build.</aside>
+      <aside class="wf-anno" data-ids="BR-08 BR-09">Only capabilities backed by the catalogue or the public repos are claimed; the rest carry a visible [VERIFY]. CTA opens the RFQ pre-set to Need = Full custom design (<code>?who=oem&amp;need=custom</code>). Mobile: vertical stepper above a 2-up stage grid.</aside>
+    </div>
+  </div>
+  <script>
+    (function () {
+      var steps = document.querySelectorAll('#h7-steps li'), st = document.querySelectorAll('#h7-pcb .h7-stage');
+      document.querySelectorAll('#h7-steps button').forEach(function (b) { b.addEventListener('click', function () { var n = +b.dataset.s; steps.forEach(function (li, i) { if (i === n) li.setAttribute('aria-current', 'step'); else li.removeAttribute('aria-current'); }); st.forEach(function (s, i) { s.classList.toggle('is-on', i === n); }); }); });
+    })();
+  </script>
+</section>
+<!-- region:H7 end -->
+
+<!-- region:H8 start -->
+<style>
+  #h8 .h8-head { display: flex; flex-direction: column; gap: var(--wf-16); margin-bottom: var(--wf-32); max-width: 70ch; }
+  #h8 .h8-wall { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--wf-16); }
+  #h8 .h8-t { border: 2px solid var(--wf-ink); background: var(--wf-paper); padding: 16px; min-width: 0; display: flex; flex-direction: column; gap: 8px; }
+  #h8 .h8-t h3 { font: 700 12px/1.3 var(--wf-mono); letter-spacing: 0.08em; text-transform: uppercase; }
+  #h8 .h8-src { margin-top: auto; font: 500 11.5px/1.4 var(--wf-mono); color: var(--wf-grey-3); }
+  #h8 .t-gh { grid-column: span 5; } #h8 .t-tindie { grid-column: span 3; } #h8 .t-tasmota { grid-column: span 4; }
+  #h8 .t-video { grid-column: span 7; } #h8 .t-cnx { grid-column: span 5; }
+  #h8 .big { font: 800 56px/1 var(--wf-mono); }
+  #h8 .big small { font: 600 14px/1.2 var(--wf-mono); margin-left: 6px; }
+  #h8 .seg { display: inline-flex; gap: 6px; }
+  #h8 .seg i { display: inline-block; width: 36px; height: 60px; border: 3px solid var(--wf-ink); font: 800 38px/54px var(--wf-mono); text-align: center; font-style: normal; background: var(--wf-grey-1); }
+  #h8 .contrib { display: grid; grid-template-columns: repeat(26, 1fr); gap: 2px; margin-top: 4px; }
+  #h8 .contrib i { aspect-ratio: 1; background: var(--wf-grey-2); }
+  #h8 .contrib i.l1 { background: var(--wf-line); } #h8 .contrib i.l2 { background: var(--wf-grey-3); } #h8 .contrib i.l3 { background: var(--wf-ink); }
+  #h8 .badge { display: inline-flex; align-self: flex-start; align-items: center; gap: 8px; padding: 8px 12px; border: 2px solid var(--wf-ink); border-radius: 6px; font: 800 15px/1.2 var(--wf-sans); }
+  #h8 .badge b { padding: 2px 6px; background: var(--wf-ink); color: var(--wf-paper); font: 700 12px/1.2 var(--wf-mono); }
+  #h8 .h8-where { display: grid; grid-template-columns: 120px 1fr; gap: 12px; align-items: center; }
+  #h8 .h8-cta { margin-top: var(--wf-24); display: flex; flex-wrap: wrap; gap: var(--wf-16); align-items: center; }
+  #h8 .h8-annos { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 var(--wf-24); margin-top: var(--wf-32); }
+  #h8 .h8-annos .wf-anno { max-width: none; }
+  @container wf (max-width: 767px) {
+    #h8 .h8-wall { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+    #h8 .h8-wall > * { grid-column: span 1 !important; }
+    #h8 .t-gh, #h8 .t-video, #h8 .t-cnx, #h8 .t-tasmota { grid-column: 1 / -1 !important; }
+    #h8 .big { font-size: 38px; } #h8 .seg i { width: 28px; height: 48px; font-size: 30px; line-height: 42px; }
+    #h8 .h8-annos { grid-template-columns: 1fr; }
+    #h8 .h8-cta .wf-btn { width: 100%; }
+  }
+</style>
+<section class="wf-section" id="h8" data-section="H8" data-title="Proof: built in the open">
+  <div class="wf-container">
+    <div class="h8-head">
+      <p class="wf-eyebrow">The test bench</p>
+      <h2 class="wf-display-l">Built in the open since 2015.</h2>
+      <p class="wf-body">Public repos, public docs and third-party reviews.</p>
+    </div>
+    <div class="h8-wall">
+      <article class="h8-t t-gh"><h3>GitHub · public repos</h3><p class="big">32<small>repos</small></p><p>Most-starred: <b>arduino-LoRa-STM32</b>, 52 ★</p>
+        <div class="contrib" aria-hidden="true"></div><p class="wf-small">Decorative grid, not real activity.</p><p class="h8-src">Source: GitHub API, 5 Oct 2026</p></article>
+      <article class="h8-t t-tindie"><h3>Tindie orders</h3><p class="seg" role="img" aria-label="504 orders"><i>5</i><i>0</i><i>4</i></p><p>orders since Jun 2015</p><p class="h8-src">Source: Tindie store page, early Oct 2026 · <mark class="wf-verify">re-check</mark></p></article>
+      <article class="h8-t t-tasmota"><h3>Tasmota</h3><span class="badge"><b>TASMOTA</b>Armtronix dimmers listed</span><p class="wf-small">The Tasmota device docs list the Armtronix single and dual dimmers (since Tasmota 6.4.0). The BA catalogue marks most BA boards Tasmota compatible.</p><p class="h8-src">Source: tasmota.github.io, 5 Oct 2026</p></article>
+      <article class="h8-t t-video"><h3>Third-party review</h3><div class="wf-video" data-video="VID-01"></div><p class="wf-small">A review of the ESP8266 dimmer and relay by Samir Sogay. Not an ARMtronix video.</p></article>
+      <article class="h8-t t-cnx"><h3>Press · CNX Software, Jun 2016</h3><div class="h8-where"><figure class="wf-img" data-asset="IMG-03" data-ratio="1/1"></figure><p>"Armtronix AC Powered WiFi Quad Relay Board is Powered by ESP8266 SoC (Crowdfunding)". Where it started: the ESP8266 board of 2015–16.</p></div><p class="h8-src">Source: cnx-software.com, 23 Jun 2016</p></article>
+    </div>
+    <p style="margin-top:var(--wf-16)">Talks to the PLCs that run your robots. <span class="wf-small">Integration only: no robotics products are claimed. No certifications are claimed.</span></p>
+    <div class="h8-cta"><a class="wf-btn wf-btn--primary" href="https://github.com/armtronix" rel="noopener">Browse the repos</a><a class="wf-btn" href="rfq.html?who=developer&amp;need=sample">Request a sample</a></div>
+    <div class="h8-annos">
+      <aside class="wf-anno" data-ids="MO-13 BR-01">The Tindie figure is a 7-segment counter that ticks up to its final value when it enters the view. Reduced motion: the final value. Every number shows its source and date in small print (FACTS §3).</aside>
+      <aside class="wf-anno" data-ids="BR-09 BR-10">A "test bench" wall of instrument tiles instead of logo walls: nothing here names a client or a certification because none is verified. Robotics and Industry 4.0 appear only as integration.</aside>
+      <aside class="wf-anno" data-ids="BR-01">The video loads on click (YouTube no-cookie) and is third-party. GitHub activity is not shown as "active": the last public push was Jul 2021 (FACTS §3), so the grid is labelled decorative.</aside>
+    </div>
+  </div>
+  <script>
+    (function () { var g = document.querySelector('#h8 .contrib'), s = 7; for (var i = 0; i < 26 * 7; i++) { s = (s * 1103515245 + 12345) % 2147483648; var r = s % 10, e = document.createElement('i'); if (r > 7) e.className = 'l3'; else if (r > 5) e.className = 'l2'; else if (r > 3) e.className = 'l1'; g.appendChild(e); } })();
+  </script>
+</section>
+<!-- region:H8 end -->
+
+<!-- region:H9 start -->
+<style>
+  #h9 .h9-grid { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: var(--wf-48); align-items: start; }
+  #h9 .h9-head { display: flex; flex-direction: column; gap: var(--wf-16); margin-bottom: var(--wf-24); }
+  #h9 .h9-q { font: 700 12px/1.3 var(--wf-mono); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 10px; }
+  #h9 .h9-tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: var(--wf-12); }
+  #h9 .h9-tile { display: flex; flex-direction: column; justify-content: space-between; gap: 6px; min-height: 96px; padding: 14px 16px; border: 1.5px solid var(--wf-ink); background: var(--wf-paper); text-decoration: none; font: 800 18px/1.2 var(--wf-sans); box-shadow: 0 3px 0 var(--wf-ink); transition: translate .1s, box-shadow .1s; }
+  #h9 .h9-tile small { font: 400 13px/1.35 var(--wf-sans); color: var(--wf-grey-3); }
+  #h9 .h9-tile:active { translate: 0 2px; box-shadow: 0 1px 0 var(--wf-ink); }
+  #h9 .h9-tile:hover { background: var(--wf-grey-1); }
+  #h9 .h9-micro { margin-top: var(--wf-16); font: 500 13px/1.4 var(--wf-mono); color: var(--wf-grey-3); }
+  #h9 .h9-side { border: 1.5px solid var(--wf-ink); padding: var(--wf-24); background: var(--wf-paper); display: flex; flex-direction: column; gap: var(--wf-16); }
+  #h9 .h9-side h3 { font: 700 12px/1.3 var(--wf-mono); letter-spacing: 0.08em; text-transform: uppercase; }
+  #h9 .h9-side a.c { display: flex; align-items: center; min-height: 44px; font: 600 16px/1.3 var(--wf-mono); overflow-wrap: anywhere; }
+  #h9 .h9-annos { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 var(--wf-24); margin-top: var(--wf-32); }
+  #h9 .h9-annos .wf-anno { max-width: none; }
+  @container wf (max-width: 767px) {
+    #h9 .h9-grid { grid-template-columns: 1fr; gap: var(--wf-32); }
+    #h9 .h9-tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    #h9 .h9-tile { min-height: 88px; padding: 10px 12px; font-size: 16px; }
+    #h9 .h9-annos { grid-template-columns: 1fr; }
+    #h9 .h9-side .wf-btn { width: 100%; }
+  }
+</style>
+<section class="wf-section" id="h9" data-section="H9" data-title="Request a quote">
+  <div class="wf-container">
+    <div class="h9-grid">
+      <div>
+        <div class="h9-head">
+          <p class="wf-eyebrow">Request a quote</p>
+          <h2 class="wf-display-l">Tell us what to connect.</h2>
+          <p class="wf-body">Five short steps. No account.</p>
+        </div>
+        <p class="h9-q">Step 1 of 5 · I am an…</p>
+        <div class="h9-tiles">
+          <a class="h9-tile" href="rfq.html?who=oem">OEM<small>Build ARMtronix hardware into your product</small></a>
+          <a class="h9-tile" href="rfq.html?who=integrator">System integrator<small>Deliver systems to your clients</small></a>
+          <a class="h9-tile" href="rfq.html?who=plant">Plant or facility<small>Connect machines you already run</small></a>
+          <a class="h9-tile" href="rfq.html?who=engineer">Engineer<small>Specify and test boards</small></a>
+          <a class="h9-tile" href="rfq.html?who=developer">Developer<small>Build on open firmware</small></a>
+        </div>
+        <p class="h9-micro">Nothing is sent until you review it. Each tile opens the wizard at step 2, with your answer kept.</p>
+      </div>
+      <aside class="h9-side" aria-label="Direct contact">
+        <h3>Prefer to talk?</h3>
+        <a class="c" href="mailto:sales@armtronix.in">sales@armtronix.in <mark class="wf-verify" style="margin-left:6px">email</mark></a>
+        <a class="c" href="tel:+919449567368">+91 94495 67368 <mark class="wf-verify" style="margin-left:6px">phone</mark></a>
+        <a class="wf-btn" href="rfq.html?who=engineer&amp;topic=tech">Talk to an engineer</a>
+        <div class="wf-ph" data-label="LINE ART: IA015 terminal map" data-ratio="16/6"></div>
+        <a class="wf-btn wf-btn--ghost" href="https://github.com/armtronix/ARMtronix_Product_Documents/blob/master/ARMtronix_IA_ProdcutCatalogue.pdf" rel="noopener">Download the catalogue (PDF)</a>
+        <p class="wf-small">Contacts are from the ARMtronix catalogues and are not yet confirmed as current.</p>
+      </aside>
+    </div>
+    <div class="h9-annos">
+      <aside class="wf-anno" data-ids="BR-08">Clicking a tile opens the full wizard (overlay on desktop, <code>rfq.html</code> here) with <code>?who=…</code> pre-filled, so the first answer is never asked twice. Every CTA on the site lands in this same wizard (see flow.html).</aside>
+      <aside class="wf-anno" data-ids="BR-08 BR-10">Direct contacts and a catalogue download sit beside the wizard for the buyer who wants a person or a PDF, not a form. The contact details are flagged until ARMtronix confirms they are current.</aside>
+    </div>
+  </div>
+</section>
+<!-- region:H9 end -->
+
+<!-- region:H10 start -->
+<style>
+  #h10 { background: var(--wf-ink); color: var(--wf-paper); padding-block: var(--wf-64) var(--wf-96); }
+  html.wf-dark #h10 { background: #000; color: #ECECEC; }
+  #h10 .f-grid { display: grid; grid-template-columns: 5fr 3fr 4fr; gap: var(--wf-48); }
+  #h10 .f-mark b { display: block; font: 800 34px/1 var(--wf-sans); letter-spacing: 0.04em; }
+  #h10 .f-mark p { margin-top: 10px; font: 600 13px/1.4 var(--wf-mono); letter-spacing: 0.08em; text-transform: uppercase; }
+  #h10 .f-mark address { margin-top: 16px; font: normal 400 14px/1.6 var(--wf-sans); }
+  #h10 h3 { font: 700 12px/1.3 var(--wf-mono); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 8px; opacity: 0.85; }
+  #h10 ul { list-style: none; margin: 0; padding: 0; }
+  #h10 a { display: inline-flex; align-items: center; min-height: 44px; }
+  #h10 .wf-verify { background: transparent; }
+  #h10 .f-sw { all: unset; box-sizing: border-box; cursor: pointer; display: inline-flex; align-items: center; gap: 10px; min-height: 44px; font: 600 11px/1.2 var(--wf-mono); letter-spacing: 0.06em; text-transform: uppercase; }
+  #h10 .f-sw:focus-visible { outline: 3px solid currentColor; outline-offset: 3px; }
+  #h10 .f-slot { position: relative; width: 46px; height: 24px; border: 2px solid currentColor; border-radius: 12px; }
+  #h10 .f-lever { position: absolute; top: 1px; left: 1px; width: 18px; height: 18px; border-radius: 50%; background: currentColor; transition: translate .18s; }
+  #h10 .f-sw[aria-checked="true"] .f-lever { translate: 22px 0; }
+  #h10 .f-base { margin-top: var(--wf-48); padding-top: 16px; border-top: 1px solid currentColor; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; font: 500 12px/1.4 var(--wf-mono); }
+  #h10 .f-annos { margin-top: var(--wf-32); display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 var(--wf-24); }
+  #h10 .f-annos .wf-anno { max-width: none; }
+  #h10 .wf-sim { color: inherit; }
+  @container wf (max-width: 767px) {
+    #h10 .f-grid { grid-template-columns: 1fr; gap: var(--wf-32); }
+    #h10 .f-annos { grid-template-columns: 1fr; }
+    #h10 { padding-bottom: 96px; }
+  }
+</style>
+<footer class="wf-section" id="h10" data-section="H10" data-title="Footer">
+  <div class="wf-container">
+    <div class="wf-ph" data-label="LINE ART: PCB trace divider with vias" data-ratio="24/1" style="min-height:0;margin-bottom:var(--wf-32);border-color:currentColor;background-color:transparent"></div>
+    <div class="f-grid">
+      <div class="f-mark">
+        <b>ARMtronix</b>
+        <p>Engineered in Hubballi, India.</p>
+        <address>CTS No. 2650, Ankush Arcade, 2nd Floor, Station Road,<br>Hubballi, Karnataka 580020 <mark class="wf-verify">address</mark><br>ARMtronix Technologies LLP <mark class="wf-verify">legal name</mark></address>
+        <p style="text-transform:none;letter-spacing:0;font-weight:500;margin-top:12px">contactus@armtronix.in · sales@armtronix.in · +91 94495 67368 · +91 836 4265368 <mark class="wf-verify">contacts</mark></p>
+      </div>
+      <nav aria-label="Footer">
+        <h3>Site</h3>
+        <ul>
+          <li><a href="products.html">Products</a></li>
+          <li><a href="#h7">Engineering</a></li>
+          <li><a href="#h8">Proof</a></li>
+          <li><a href="rfq.html">Request a quote</a></li>
+          <li><a href="https://github.com/armtronix" rel="noopener">GitHub</a></li>
+          <li><a href="credits.html">Credits</a></li>
+        </ul>
+      </nav>
+      <div>
+        <h3>Theme</h3>
+        <button class="f-sw" type="button" role="switch" aria-checked="false" aria-label="Theme: Control Room (dark) or Datasheet (light)" data-f-theme><span class="f-slot"><span class="f-lever"></span></span><span>Control Room / Datasheet</span></button>
+        <h3 style="margin-top:20px">Status</h3>
+        <p class="wf-small" style="color:inherit">uptime 99.98 % · decorative <span class="wf-sim">Simulated</span></p>
+        <p class="wf-small" style="color:inherit;margin-top:12px">Photos and renders: see credits.</p>
+      </div>
+    </div>
+    <div class="f-base"><span>© ARMtronix · Wireframe, not a live site</span><span>No certifications are claimed.</span></div>
+    <div class="f-annos">
+      <aside class="wf-anno" data-ids="BR-05 MO-12">The theme switch is repeated here and stays in sync with the nav one. Footer details are flagged until ARMtronix confirms the address, legal name and contacts are current.</aside>
+      <aside class="wf-anno" data-ids="BR-08">"Request a quote" stays in the footer so the funnel is open to the last pixel. The uptime line is decorative and labelled Simulated. Mobile: columns stack, space left for the sticky bar.</aside>
+    </div>
+  </div>
+  <script>
+    (function () {
+      var b = document.querySelector('[data-f-theme]');
+      function sync() { b.setAttribute('aria-checked', String(document.documentElement.classList.contains('wf-dark'))); }
+      b.addEventListener('click', function () { window.WF.setDark(!document.documentElement.classList.contains('wf-dark')); sync(); });
+      document.addEventListener('wf:ready', sync); new MutationObserver(sync).observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+    })();
+  </script>
+</footer>
+<!-- region:H10 end -->
+
+
+<!-- shell: page links (ARM-01) -->
+<nav class="wf-pagelinks" aria-label="Wireframe pages">
+  <span>Wireframe pages:</span>
+  <a href="index.html">Home</a>
+  <a href="products.html">Products</a>
+  <a href="product.html">Product detail</a>
+  <a href="rfq.html">RFQ</a>
+  <a href="flow.html">Flow</a>
+  <a href="credits.html">Credits</a>
+</nav>
+</main>
+</body>
+</html>

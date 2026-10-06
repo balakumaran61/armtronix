@@ -1,0 +1,6 @@
+node_modules/
+dist/
+.vercel/
+# internal work notes, not part of the submission
+tasks/
+AGENTS.md

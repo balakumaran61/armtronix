@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ARMtronix · RFQ wireframe</title>
+<meta name="description" content="Phase 1 wireframe of the RFQ wizard.">
+<link rel="stylesheet" href="wireframe.css">
+<script src="assets/manifest.js"></script>
+<script src="kit.js" defer></script>
+</head>
+<body>
+<main class="wf-frame">
+
+<!-- region:RFQ start -->
+<style>
+  #rfq .rq-wrap { display: grid; grid-template-columns: minmax(0, 8fr) minmax(0, 4fr); gap: var(--wf-48); align-items: start; }
+  #rfq .rq-head { display: flex; flex-direction: column; gap: var(--wf-12); margin-bottom: var(--wf-24); }
+  /* Progress: a copper trace with 5 vias */
+  #rfq .rq-trace { position: relative; display: flex; justify-content: space-between; margin: 8px 0 var(--wf-32); padding: 0 6px; list-style: none; }
+  #rfq .rq-trace::before { content: ""; position: absolute; left: 14px; right: 14px; top: 13px; height: 3px; background: var(--wf-line); }
+  #rfq .rq-trace::after { content: ""; position: absolute; left: 14px; top: 13px; height: 3px; width: calc((100% - 28px) * var(--prog, 0)); background: var(--wf-accent); transition: width .3s cubic-bezier(.2,.8,.2,1); }
+  #rfq .rq-via { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; gap: 6px; min-width: 44px; font: 600 10.5px/1.2 var(--wf-mono); text-transform: uppercase; letter-spacing: 0.05em; color: var(--wf-grey-3); }
+  #rfq .rq-via i { display: block; width: 28px; height: 28px; border: 3px solid var(--wf-ink); border-radius: 50%; background: var(--wf-paper); }
+  #rfq .rq-via.is-done i { background: var(--wf-accent); border-color: var(--wf-accent); }
+  #rfq .rq-via.is-now i { border-color: var(--wf-accent); box-shadow: 0 0 0 4px var(--wf-accent-soft); }
+  #rfq .rq-via.is-now, #rfq .rq-via.is-done { color: var(--wf-ink); }
+  #rfq .rq-note { margin: 0 0 var(--wf-16); padding: 8px 12px; border: 1.5px dashed var(--wf-grey-3); font: 500 13px/1.4 var(--wf-mono); }
+  #rfq .rq-note[hidden] { display: none; }
+  #rfq .rq-step { border: 1.5px solid var(--wf-ink); background: var(--wf-paper); padding: var(--wf-32); }
+  #rfq .rq-step h2 { font: 800 clamp(26px, 3cqi, 40px)/1.05 var(--wf-sans); letter-spacing: -0.02em; margin: 6px 0 var(--wf-24); }
+  #rfq .rq-tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: var(--wf-12); border: 0; padding: 0; margin: 0; }
+  #rfq .rq-tile { position: relative; display: block; }
+  #rfq .rq-tile input { position: absolute; opacity: 0; inset: 0; width: 100%; height: 100%; margin: 0; cursor: pointer; }
+  #rfq .rq-tile span { display: flex; flex-direction: column; gap: 4px; min-height: 96px; padding: 14px 16px; border: 1.5px solid var(--wf-grey-3); font: 700 17px/1.2 var(--wf-sans); }
+  #rfq .rq-tile span small { font: 400 13px/1.35 var(--wf-sans); color: var(--wf-grey-3); }
+  #rfq .rq-tile input:checked + span { border: 3px solid var(--wf-ink); padding: 12.5px 14.5px; background: var(--wf-grey-1); }
+  #rfq .rq-tile input:focus-visible + span { outline: 3px solid var(--wf-accent); outline-offset: 2px; }
+  #rfq .rq-tile input:checked + span::after { content: "✓ Selected"; font: 700 11px/1 var(--wf-mono); letter-spacing: 0.06em; text-transform: uppercase; margin-top: auto; }
+  #rfq fieldset { border: 0; padding: 0; margin: 0 0 var(--wf-24); }
+  #rfq legend, #rfq .rq-l { padding: 0; margin-bottom: 8px; font: 700 12px/1.3 var(--wf-mono); letter-spacing: 0.08em; text-transform: uppercase; }
+  #rfq .rq-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  #rfq .rq-chips label { position: relative; }
+  #rfq .rq-chips input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
+  #rfq .rq-chips span { display: inline-flex; align-items: center; min-height: 44px; padding: 4px 14px; border: 1.5px solid var(--wf-grey-3); border-radius: 999px; font: 600 13px/1.2 var(--wf-mono); }
+  #rfq .rq-chips input:checked + span { background: var(--wf-ink); color: var(--wf-paper); border-color: var(--wf-ink); }
+  #rfq .rq-chips input:focus-visible + span { outline: 3px solid var(--wf-accent); outline-offset: 2px; }
+  #rfq .rq-row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--wf-12); }
+  #rfq .rq-f { display: flex; flex-direction: column; gap: 6px; margin-bottom: var(--wf-16); }
+  #rfq .rq-f label { font: 600 13px/1.3 var(--wf-sans); }
+  #rfq input[type="text"], #rfq input[type="email"], #rfq input[type="tel"], #rfq input[type="number"], #rfq select, #rfq textarea { width: 100%; min-height: 48px; padding: 8px 12px; border: 1.5px solid var(--wf-ink); background: var(--wf-paper); border-radius: 0; }
+  #rfq textarea { min-height: 96px; resize: vertical; }
+  #rfq [aria-invalid="true"] { border: 3px solid var(--wf-accent); }
+  #rfq .rq-err { display: none; font: 700 12.5px/1.3 var(--wf-mono); color: var(--wf-accent); }
+  #rfq .rq-err.is-on { display: block; }
+  #rfq .rq-err::before { content: "✕ "; }
+  #rfq .rq-actions { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-top: var(--wf-32); }
+  #rfq .rq-btn { box-shadow: 0 3px 0 var(--wf-ink); }
+  #rfq .rq-btn:active { translate: 0 2px; box-shadow: 0 1px 0 var(--wf-ink); transform: none; }
+  #rfq .rq-sum { margin: 0 0 var(--wf-16); }
+  #rfq .rq-sum div { display: grid; grid-template-columns: 120px 1fr auto; gap: 12px; align-items: baseline; padding: 10px 0; border-bottom: 1px solid var(--wf-line); }
+  #rfq .rq-sum dt { font: 700 11.5px/1.3 var(--wf-mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--wf-grey-3); }
+  #rfq .rq-sum dd { margin: 0; font: 500 14px/1.45 var(--wf-sans); overflow-wrap: anywhere; }
+  #rfq .rq-sum button { all: unset; cursor: pointer; min-height: 44px; min-width: 44px; display: inline-flex; align-items: center; justify-content: center; font: 700 13px/1 var(--wf-sans); text-decoration: underline; }
+  #rfq .rq-sum button:focus-visible { outline: 3px solid var(--wf-accent); }
+  #rfq .rq-done .ref { display: inline-block; margin: 8px 0 16px; padding: 8px 14px; border: 2px solid var(--wf-ink); font: 800 24px/1 var(--wf-mono); }
+  #rfq .rq-side { display: flex; flex-direction: column; gap: var(--wf-16); position: sticky; top: calc(var(--wf-toolbar-h) + var(--wf-nav-h) + 16px); }
+  #rfq .rq-side .wf-anno { max-width: none; margin: 0; }
+  #rfq .rq-clear { all: unset; cursor: pointer; text-decoration: underline; font: 500 13px/1.4 var(--wf-sans); min-height: 44px; display: inline-flex; align-items: center; }
+  @container wf (max-width: 767px) {
+    #rfq .rq-wrap { grid-template-columns: 1fr; gap: var(--wf-24); }
+    #rfq .rq-step { padding: var(--wf-16); border-width: 0; padding-bottom: 96px; }
+    #rfq .rq-tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    #rfq .rq-tile span { min-height: 88px; padding: 10px 12px; font-size: 15px; }
+    #rfq .rq-row { grid-template-columns: 1fr; }
+    #rfq .rq-actions { position: fixed; left: 50%; translate: -50% 0; bottom: 0; width: 100%; max-width: var(--wf-frame-w); z-index: 55; margin: 0; padding: 10px 12px; background: var(--wf-paper); border-top: 1px solid var(--wf-ink); }
+    #rfq .rq-actions .wf-btn { flex: 1; }
+    #rfq .rq-sum div { grid-template-columns: 1fr auto; } #rfq .rq-sum dt { grid-column: 1 / -1; }
+    #rfq .rq-via { font-size: 0; } #rfq .rq-via i { width: 24px; height: 24px; }
+    #rfq .rq-side { position: static; }
+  }
+</style>
+<section class="wf-section" id="rfq" data-section="RFQ" data-title="Request a quote">
+  <div class="wf-container rq-wrap">
+    <div>
+      <div class="rq-head">
+        <p class="wf-eyebrow" id="rq-eyebrow">Request a quote</p>
+      </div>
+      <ol class="rq-trace" id="rq-trace" aria-label="Progress"></ol>
+      <p class="rq-note" id="rq-note" hidden></p>
+      <form class="rq-step" id="rq-form" novalidate></form>
+      <p style="margin-top:12px"><span class="wf-small" id="rq-draft">Draft saved on this device.</span> <button type="button" class="rq-clear" id="rq-clear">Clear draft</button></p>
+    </div>
+    <aside class="rq-side" aria-label="Notes on this wizard">
+      <aside class="wf-anno" data-ids="MO-16 BR-08">Progress is a signal trace with 5 vias that light copper as each step is answered; the trace fills between them (about 300 ms). Reduced motion: the vias change colour with no fill animation, plus the text "Step n of 5".</aside>
+      <aside class="wf-anno" data-ids="BR-08 BR-10">Why a wizard: five small decisions are quicker than one long form, each answer qualifies the lead (who, need, spec, volume), and Developer gets a shorter step 3. Sales receives a structured request. Pre-fill works from the URL: <code>?who=</code>, <code>?need=</code>, <code>?product=ia015,ba011</code>, <code>?topic=tech</code>.</aside>
+      <aside class="wf-anno" data-ids="BR-08 GR-04">FE only. Send shows a success state with a reference number and a <code>mailto:sales@armtronix.in</code> fallback; nothing goes to a server. The draft is stored in localStorage (try/catch) on this device. Keyboard: tiles and chips are native radios and checkboxes, Enter advances, errors are announced and focus moves to the first invalid field. Mobile: full-screen steps, sticky Next, 2 tiles per row.</aside>
+    </aside>
+  </div>
+  <script>
+    (function () {
+      var CODES = [["IA015", "Retro to IIoT"], ["IA013", "Wi-Fi ⇄ RS485 ⇄ LoRa"], ["IA010", "Modbus to IIoT"], ["IA009", "Wi-Fi 12-DIO"], ["IA008", "Wi-Fi 2-DIO"], ["IA005", "LoRaWAN, STM MCU"], ["IA003", "RPi 4-DIO UPS board"], ["IA002", "RPi 4-DIO"], ["IA001", "Wi-Fi industrial button"], ["BA001", "Wi-Fi dual dimmer module"], ["BA004", "Wi-Fi single dimmer module"], ["BA006", "Wi-Fi single relay board"], ["BA011", "Wi-Fi BT quad relay board"], ["BA012", "Wi-Fi eight relay module"], ["BA014", "Wi-Fi 4T PWR board"], ["BA015", "Wi-Fi 2-relay module"], ["BA019", "IoT HDR PM box"]];
+      var WHO = [['oem', 'OEM', 'Build ARMtronix hardware into your product'], ['integrator', 'System integrator', 'Deliver systems to your clients'], ['plant', 'Plant or facility', 'Connect machines you already run'], ['engineer', 'Engineer', 'Specify and test boards'], ['developer', 'Developer', 'Build on open firmware']];
+      var NEED = [['product', 'Off-the-shelf product', 'Catalogue boards as they are'], ['customised', 'Customised product', 'A catalogue board, changed'], ['custom', 'Full custom design', 'A new board from your requirements'], ['retro', 'Retro to IIoT assessment', 'Connect your existing PLCs']];
+      var IFACE = ['Wi-Fi', 'Bluetooth', 'LoRa', 'RS485 / Modbus', 'CAN', 'Ethernet', 'Raspberry Pi'];
+      var QTY = ['1–10', '10–100', '100–1 000', '1 000+'];
+      var STEPS = ['Who', 'Need', 'Spec', 'Volume', 'Contact'];
+      var KEY = 'armtronix-rfq-draft';
+      var S = { who: '', need: '', sample: false, tech: false, products: [], ifaces: [], di: '', dout: '', ai: '', power: '', env: '', qty: '', timeline: '', proto: '', name: '', company: '', email: '', phone: '', city: '', msg: '' };
+      var step = 1, done = false, ref = '', fromUrl = false;
+      var $ = function (id) { return document.getElementById(id); };
+      function esc(t) { return String(t == null ? '' : t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;'); }
+      function load() { try { var d = JSON.parse(localStorage.getItem(KEY) || 'null'); if (d) for (var k in S) if (k in d) S[k] = d[k]; } catch (e) {} }
+      function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
+      function params() {
+        var q = new URLSearchParams(location.search), any = false;
+        var w = q.get('who'); if (w && WHO.some(function (x) { return x[0] === w; })) { S.who = w; any = true; }
+        var n = q.get('need'); if (n === 'sample') { S.need = 'product'; S.sample = true; S.proto = 'yes'; any = true; } else if (n && NEED.some(function (x) { return x[0] === n; })) { S.need = n; any = true; }
+        var p = q.get('product'); if (p) { S.products = p.split(',').map(function (c) { return c.trim().toUpperCase(); }).filter(function (c) { return CODES.some(function (x) { return x[0] === c; }); }); any = true; }
+        if (q.get('topic') === 'tech') { S.tech = true; if (!S.msg) S.msg = 'Technical question: '; any = true; }
+        fromUrl = any; if (any) { step = !S.who ? 1 : (!S.need ? 2 : 3); }
+      }
+      function tiles(name, list, cur) {
+        return '<fieldset class="rq-tiles"><legend class="wf-sr-only">' + name + '</legend>' + list.map(function (t) {
+          return '<label class="rq-tile"><input type="radio" name="' + name + '" value="' + t[0] + '"' + (cur === t[0] ? ' checked' : '') + '><span>' + esc(t[1]) + '<small>' + esc(t[2]) + '</small></span></label>';
+        }).join('') + '</fieldset>';
+      }
+      function chips(name, list, sel, valFn) {
+        return '<div class="rq-chips">' + list.map(function (t) { var v = valFn ? valFn(t) : t, lab = valFn ? t[0] : t;
+          return '<label><input type="checkbox" name="' + name + '" value="' + esc(v) + '"' + (sel.indexOf(v) > -1 ? ' checked' : '') + '><span>' + esc(lab) + '</span></label>'; }).join('') + '</div>';
+      }
+      function field(id, label, type, val, err, extra) {
+        return '<div class="rq-f"><label for="f-' + id + '">' + label + '</label><input id="f-' + id + '" name="' + id + '" type="' + type + '" value="' + esc(val) + '" ' + (extra || '') + ' aria-describedby="e-' + id + '"><span class="rq-err" id="e-' + id + '" role="alert">' + err + '</span></div>';
+      }
+      var COPY = {
+        1: ['Who are you?', 'Changes the questions that follow.'],
+        2: ['What do you need?', ''],
+        3: S.who === 'developer' ? ['What are you building?', ''] : ['What must it connect?', ''],
+        4: ['How many, and by when?', ''], 5: ['Where do we reply?', '']
+      };
+      function body() {
+        if (step === 1) return tiles('who', WHO, S.who) + '<span class="rq-err" id="e-who" role="alert">Choose one to continue.</span>';
+        if (step === 2) return tiles('need', NEED, S.need) + '<span class="rq-err" id="e-need" role="alert">Choose one to continue.</span>';
+        if (step === 3) {
+          var dev = S.who === 'developer';
+          var h = '<fieldset><legend>Product codes (select any)</legend>' + chips('products', CODES, S.products, function (t) { return t[0]; }) + '<p class="wf-small" style="margin-top:6px">' + (S.products.length ? S.products.length + ' selected' : 'No product selected yet. You can add codes later.') + '</p></fieldset>';
+          h += '<fieldset><legend>Interfaces</legend>' + chips('ifaces', IFACE, S.ifaces) + '</fieldset>';
+          if (!dev) {
+            h += '<fieldset><legend>I/O counts</legend><div class="rq-row">' + [['di', 'Digital in'], ['dout', 'Digital out'], ['ai', 'Analog in']].map(function (x) { return '<div class="rq-f"><label for="f-' + x[0] + '">' + x[1] + '</label><input id="f-' + x[0] + '" name="' + x[0] + '" type="number" min="0" max="64" inputmode="numeric" value="' + esc(S[x[0]]) + '"></div>'; }).join('') + '</div></fieldset>';
+            h += '<fieldset><legend>Power</legend><div class="rq-chips">' + ['24 V DC', '230 V AC'].map(function (v) { return '<label><input type="radio" name="power" value="' + v + '"' + (S.power === v ? ' checked' : '') + '><span>' + v + '</span></label>'; }).join('') + '</div></fieldset>';
+            h += '<div class="rq-f"><label for="f-env">Environment notes</label><textarea id="f-env" name="env" placeholder="Temperature, panel, enclosure, standards">' + esc(S.env) + '</textarea></div>';
+          }
+          return h;
+        }
+        if (step === 4) {
+          return '<fieldset><legend>Quantity</legend><div class="rq-chips">' + QTY.map(function (q) { return '<label><input type="radio" name="qty" value="' + q + '"' + (S.qty === q ? ' checked' : '') + '><span>' + q + '</span></label>'; }).join('') + '</div><span class="rq-err" id="e-qty" role="alert">Choose one to continue.</span></fieldset>' +
+            '<div class="rq-f"><label for="f-timeline">Timeline</label><select id="f-timeline" name="timeline">' + ['', 'Within 1 month', '1–3 months', '3–6 months', 'Just exploring'].map(function (t) { return '<option' + (S.timeline === t ? ' selected' : '') + ' value="' + t + '">' + (t || 'Choose…') + '</option>'; }).join('') + '</select></div>' +
+            '<fieldset><legend>Prototype needed?</legend><div class="rq-chips">' + [['yes', 'Yes'], ['no', 'No']].map(function (v) { return '<label><input type="radio" name="proto" value="' + v[0] + '"' + (S.proto === v[0] ? ' checked' : '') + '><span>' + v[1] + '</span></label>'; }).join('') + '</div></fieldset>';
+        }
+        if (step === 5) {
+          return '<div class="rq-row">' + field('name', 'Name', 'text', S.name, 'Enter your name.', 'autocomplete="name"') + field('company', 'Company', 'text', S.company, '', 'autocomplete="organization"') + field('city', 'City', 'text', S.city, '') + '</div>' +
+            '<div class="rq-row">' + field('email', 'Email', 'email', S.email, 'Enter a valid email, like name@company.com.', 'autocomplete="email"') + field('phone', 'Phone (optional)', 'tel', S.phone, 'Enter digits only, 8–15 characters.', 'autocomplete="tel"') + '</div>' +
+            '<div class="rq-f"><label for="f-msg">Message</label><textarea id="f-msg" name="msg">' + esc(S.msg) + '</textarea></div>';
+        }
+        return '';
+      }
+      function lab(list, v) { var x = list.filter(function (t) { return t[0] === v; })[0]; return x ? x[1] : ''; }
+      function summary() {
+        var rows = [
+          ['Who', lab(WHO, S.who) || '—', 1], ['Need', (lab(NEED, S.need) || '—') + (S.sample ? ' · sample request' : '') + (S.tech ? ' · technical question' : ''), 2],
+          ['Spec', [S.products.join(', ') || 'no product codes', S.ifaces.join(', '), [S.di && S.di + ' DI', S.dout && S.dout + ' DO', S.ai && S.ai + ' AI'].filter(Boolean).join(' · '), S.power, S.env].filter(Boolean).join(' · '), 3],
+          ['Volume', [S.qty, S.timeline, S.proto && 'prototype: ' + S.proto].filter(Boolean).join(' · ') || '—', 4],
+          ['Contact', [S.name, S.company, S.email, S.phone, S.city].filter(Boolean).join(' · ') + (S.msg ? ' — ' + S.msg : ''), 5]
+        ];
+        return '<dl class="rq-sum">' + rows.map(function (r) { return '<div><dt>' + r[0] + '</dt><dd>' + esc(r[1]) + '</dd><button type="button" data-edit="' + r[2] + '" aria-label="Edit ' + r[0] + '">Edit</button></div>'; }).join('') + '</dl>';
+      }
+      function mailto() {
+        var sub = 'RFQ ' + ref + (S.products.length ? ' · ' + S.products.join(', ') : ''), b = ['Reference: ' + ref, 'Who: ' + lab(WHO, S.who), 'Need: ' + lab(NEED, S.need), 'Products: ' + S.products.join(', '), 'Interfaces: ' + S.ifaces.join(', '), 'Volume: ' + S.qty + ' · ' + S.timeline, 'Contact: ' + [S.name, S.company, S.email, S.phone, S.city].filter(Boolean).join(' · '), '', S.msg].join('\n');
+        return 'mailto:sales@armtronix.in?subject=' + encodeURIComponent(sub) + '&body=' + encodeURIComponent(b);
+      }
+      function render() {
+        var f = $('rq-form'), review = step === 6;
+        var prog = done ? 1 : Math.min(step - 1, 5) / 5;
+        $('rq-trace').style.setProperty('--prog', String(prog));
+        $('rq-trace').innerHTML = STEPS.map(function (s, i) { var n = i + 1, c = (done || n < step) ? 'is-done' : (n === step ? 'is-now' : ''); return '<li class="rq-via ' + c + '"' + (n === step && !done ? ' aria-current="step"' : '') + '><i></i>' + s + '</li>'; }).join('');
+        var nt = $('rq-note'); nt.hidden = !(fromUrl && !done); nt.textContent = 'Pre-filled from the page you came from.';
+        if (done) {
+          $('rq-eyebrow').textContent = 'Request noted';
+          f.innerHTML = '<div class="rq-done"><p class="wf-eyebrow">Done</p><h2>Request noted.</h2><span class="ref">' + ref + '</span><p>Our engineers reply within <mark class="wf-verify">2</mark> business days. Nothing was sent to a server: email it to <b>sales@armtronix.in</b> to reach the team.</p><div class="wf-row" style="margin-top:16px"><a class="wf-btn wf-btn--primary rq-btn" href="' + mailto() + '">Open email</a><button class="wf-btn rq-btn" type="button" id="rq-new">New request</button></div></div>';
+          $('rq-new').addEventListener('click', function () { for (var k in S) S[k] = Array.isArray(S[k]) ? [] : (typeof S[k] === 'boolean' ? false : ''); done = false; step = 1; fromUrl = false; save(); render(); });
+          return;
+        }
+        $('rq-eyebrow').textContent = review ? 'Review' : 'Step ' + step + ' of 5 · ' + STEPS[step - 1];
+        var title = review ? 'Check and send.' : (step === 3 && S.who === 'developer' ? 'What are you building?' : COPY[step][0]);
+        var sub = (!review && step === 1) ? '<p class="wf-small" style="margin:-12px 0 20px">Changes the questions that follow.</p>' : '';
+        f.innerHTML = '<p class="wf-eyebrow">' + (review ? 'Review' : 'Step ' + step + ' of 5') + '</p><h2 id="rq-h" tabindex="-1">' + title + '</h2>' + sub + (review ? summary() + '<p class="wf-small">This is a front-end demo. Nothing leaves your browser.</p>' : body()) +
+          '<div class="rq-actions"><button class="wf-btn rq-btn" type="button" id="rq-back"' + (step === 1 ? ' style="visibility:hidden"' : '') + '>Back</button><button class="wf-btn wf-btn--primary rq-btn" type="submit">' + (review ? 'Send' : (step === 5 ? 'Review' : 'Next')) + '</button></div>';
+        var b = $('rq-back'); if (b) b.addEventListener('click', function () { collect(); step = Math.max(1, step - 1); save(); render(); window.scrollTo({ top: $('rfq').offsetTop }); });
+        Array.prototype.forEach.call(f.querySelectorAll('[data-edit]'), function (e) { e.addEventListener('click', function () { step = +e.dataset.edit; render(); }); });
+        Array.prototype.forEach.call(f.querySelectorAll('input[type=radio][name=who],input[type=radio][name=need]'), function (r) { r.addEventListener('change', function () { collect(); if (step < 3 && !(step === 1 && !S.need)) { /* stay; Next advances */ } }); });
+      }
+      function collect() {
+        var f = $('rq-form');
+        function v(n) { var e = f.elements[n]; return e ? e.value : undefined; }
+        function checked(n) { var e = f.querySelector('input[name="' + n + '"]:checked'); return e ? e.value : ''; }
+        function all(n) { return Array.prototype.map.call(f.querySelectorAll('input[name="' + n + '"]:checked'), function (e) { return e.value; }); }
+        if (step === 1) S.who = checked('who');
+        if (step === 2) { var nn = checked('need'); if (nn !== S.need) S.sample = false; S.need = nn; }
+        if (step === 3) { S.products = all('products'); S.ifaces = all('ifaces'); if (S.who !== 'developer') { S.di = v('di'); S.dout = v('dout'); S.ai = v('ai'); S.power = checked('power'); S.env = v('env'); } }
+        if (step === 4) { S.qty = checked('qty'); S.timeline = v('timeline'); S.proto = checked('proto'); }
+        if (step === 5) { ['name', 'company', 'city', 'email', 'phone', 'msg'].forEach(function (k) { S[k] = v(k); }); }
+      }
+      function setErr(id, on) { var e = $('e-' + id); if (e) e.classList.toggle('is-on', on); var inp = $('f-' + id); if (inp) inp.setAttribute('aria-invalid', String(on)); return on; }
+      function validate() {
+        var bad = '';
+        if (step === 1 && !S.who) { setErr('who', true); bad = 'who'; } else setErr('who', false);
+        if (step === 2 && !S.need) { setErr('need', true); bad = bad || 'need'; } else setErr('need', false);
+        if (step === 4 && !S.qty) { setErr('qty', true); bad = bad || 'qty'; } else setErr('qty', false);
+        if (step === 5) {
+          if (!S.name.trim()) { setErr('name', true); bad = bad || 'f-name'; } else setErr('name', false);
+          if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(S.email.trim())) { setErr('email', true); bad = bad || 'f-email'; } else setErr('email', false);
+          var ph = S.phone.replace(/[\s+()-]/g, ''); if (ph && !/^\d{8,15}$/.test(ph)) { setErr('phone', true); bad = bad || 'f-phone'; } else setErr('phone', false);
+        }
+        if (bad) { var t = $(bad) || $('rq-form').querySelector('input'); if (t) t.focus(); }
+        return !bad;
+      }
+      $('rq-form').addEventListener('submit', function (e) {
+        e.preventDefault();
+        if (step === 6) { ref = 'RFQ-2026-' + String(Math.floor(Math.random() * 9000) + 1000); done = true; try { localStorage.removeItem(KEY); } catch (x) {} render(); return; }
+        collect(); if (!validate()) return; save();
+        step = Math.min(6, step + 1); render(); var h = $('rq-h'); if (h) h.focus({ preventScroll: true }); window.scrollTo({ top: $('rfq').offsetTop });
+      });
+      $('rq-clear').addEventListener('click', function () { try { localStorage.removeItem(KEY); } catch (e) {} for (var k in S) S[k] = Array.isArray(S[k]) ? [] : (typeof S[k] === 'boolean' ? false : ''); step = 1; fromUrl = false; render(); $('rq-draft').textContent = 'Draft cleared.'; });
+      load(); params(); render();
+    })();
+  </script>
+</section>
+<!-- region:RFQ end -->
+
+<!-- shell: page links (ARM-01) -->
+<nav class="wf-pagelinks" aria-label="Wireframe pages">
+  <span>Wireframe pages:</span>
+  <a href="index.html">Home</a>
+  <a href="products.html">Products</a>
+  <a href="product.html">Product detail</a>
+  <a href="rfq.html">RFQ</a>
+  <a href="flow.html">Flow</a>
+  <a href="credits.html">Credits</a>
+</nav>
+</main>
+</body>
+</html>

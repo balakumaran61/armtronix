@@ -1,0 +1,112 @@
+/* ARMtronix design tokens (ARM-13). Mirrors tokens.json: edit both together.
+   Theme mechanics: no data-theme attribute = follow prefers-color-scheme (Control Room is the fallback);
+   data-theme="control-room" or "datasheet" on <html> (or any container) forces a theme. */
+:root, [data-theme="control-room"] {
+  color-scheme: dark;
+  --bg: #0A0F0D;
+  --surface: #0F1A16;
+  --surface-2: #15241E;
+  --line: #1E3A30;
+  --line-strong: #4F7A68;
+  --copper: #C8783A;
+  --copper-ink: #0A0F0D;
+  --signal: #38E2B8;
+  --amber: #FFB21E;
+  --fault: #FF4D4F;
+  --ink: #E6ECE9;
+  --ink-dim: #8FA39A;
+  --grid: #16291F;
+  --glow: rgb(56 226 184 / 0.55);
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme]) {
+    color-scheme: light;
+    --bg: #F4F2EC;
+    --surface: #FFFFFF;
+    --surface-2: #ECE9E0;
+    --line: #CFCAC0;
+    --line-strong: #857F74;
+    --copper: #A35A22;
+    --copper-ink: #FFFFFF;
+    --signal: #0A7A5E;
+    --amber: #8A5C00;
+    --fault: #C62828;
+    --ink: #121614;
+    --ink-dim: #5A615D;
+    --grid: #E4E0D5;
+    --glow: rgb(10 122 94 / 0);
+}
+}
+[data-theme="datasheet"] {
+  color-scheme: light;
+  --bg: #F4F2EC;
+  --surface: #FFFFFF;
+  --surface-2: #ECE9E0;
+  --line: #CFCAC0;
+  --line-strong: #857F74;
+  --copper: #A35A22;
+  --copper-ink: #FFFFFF;
+  --signal: #0A7A5E;
+  --amber: #8A5C00;
+  --fault: #C62828;
+  --ink: #121614;
+  --ink-dim: #5A615D;
+  --grid: #E4E0D5;
+  --glow: rgb(10 122 94 / 0);
+}
+:root {
+  /* Type families (3 only) */
+  --font-display: 'Archivo', 'Arial Narrow', Arial, sans-serif;
+  --font-body: 'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  /* Fluid type scale, 390 to 1440 */
+  --fs-display: clamp(44px, calc(18.74px + 6.476vw), 112px);
+  --wdth-display: 125;
+  --fs-h1: clamp(34px, calc(19.89px + 3.619vw), 72px);
+  --wdth-h1: 110;
+  --fs-h2: clamp(26px, calc(19.31px + 1.714vw), 44px);
+  --wdth-h2: 105;
+  --fs-h3: clamp(20px, calc(17.03px + 0.762vw), 28px);
+  --wdth-h3: 100;
+  --fs-body: clamp(16px, calc(15.26px + 0.190vw), 18px);
+  --wdth-body: 100;
+  --fs-small: clamp(13px, calc(12.63px + 0.095vw), 14px);
+  --wdth-small: 100;
+  --fs-data: clamp(13px, calc(12.63px + 0.095vw), 14px);
+  --wdth-data: 100;
+  --fs-label: clamp(11px, calc(10.63px + 0.095vw), 12px);
+  --wdth-label: 100;
+  /* Spacing, 4px grid */
+  --s1: 4px;
+  --s2: 8px;
+  --s3: 12px;
+  --s4: 16px;
+  --s6: 24px;
+  --s8: 32px;
+  --s12: 48px;
+  --s16: 64px;
+  --s24: 96px;
+  --s32: 128px;
+  --radius-sm: 2px; --radius-md: 6px; --radius-pill: 999px;
+  /* Motion */
+  --ease: cubic-bezier(.2,.8,.2,1);
+  --dur-fast: 150ms; --dur-ui: 250ms; --dur-theme: 450ms; --dur-story: 600ms; --dur-slow: 800ms;
+  --switch-travel: 22px; --press-travel: 2px;
+  /* Line art */
+  --stroke: 1px; --stroke-bold: 2px; --trace-width: 3px; --via-ring: 4px;
+  --grid-cell: 32px; --grid-fine: 8px;
+}
+/* Base helpers */
+.t-display { font: 800 var(--fs-display)/0.95 var(--font-display); font-stretch: calc(var(--wdth-display) * 1%); letter-spacing: -0.02em; }
+.t-h1 { font: 800 var(--fs-h1)/1 var(--font-display); font-stretch: calc(var(--wdth-h1) * 1%); }
+.t-h2 { font: 700 var(--fs-h2)/1.05 var(--font-display); font-stretch: calc(var(--wdth-h2) * 1%); }
+.t-h3 { font: 700 var(--fs-h3)/1.15 var(--font-display); }
+.t-body { font: 400 var(--fs-body)/1.6 var(--font-body); }
+.t-small { font: 400 var(--fs-small)/1.5 var(--font-body); }
+.t-data { font: 500 var(--fs-data)/1.4 var(--font-mono); font-variant-numeric: tabular-nums slashed-zero; }
+.t-label { font: 600 var(--fs-label)/1.3 var(--font-mono); letter-spacing: 0.08em; text-transform: uppercase; }
+/* Grid pattern (cutting mat): fine 8px + major 32px lines */
+.bg-grid { background-color: var(--bg); background-image: linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px); background-size: var(--grid-cell) var(--grid-cell); }
+/* Live-trace glow (Control Room only; Datasheet sets the glow colour fully transparent) */
+.glow { filter: drop-shadow(0 0 4px var(--glow)) drop-shadow(0 0 10px var(--glow)); }
+@media (prefers-reduced-motion: reduce) { :root { --dur-fast: 0ms; --dur-ui: 0ms; --dur-theme: 0ms; --dur-story: 0ms; --dur-slow: 0ms; } }

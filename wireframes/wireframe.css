@@ -1,0 +1,446 @@
+/* ==========================================================================
+   ARMtronix · Wireframe kit (ARM-01)
+   Shared greyscale styles for every Phase 1 wireframe page.
+   Contract: tasks/CONVENTIONS.md §4. Only ARM-01 edits this file; new shared
+   primitives are proposed in a task's handoff log and adopted by ARM-12.
+
+   Responsive rule: mobile layouts use container queries against the frame
+   (`@container wf (max-width: 767px)`), never @media on the viewport, so the
+   toolbar's Mobile 390 toggle shows the real mobile layout.
+   ========================================================================== */
+
+/* ---- 1. Tokens ---------------------------------------------------------- */
+:root {
+  /* Greyscale (dark wireframe inverts these under html.wf-dark) */
+  --wf-ink: #161616;      /* text, strong rules */
+  --wf-paper: #FFFFFF;    /* frame background */
+  --wf-line: #BDBDBD;     /* hairlines, borders */
+  --wf-grey-1: #F1F1F1;   /* faint fills */
+  --wf-grey-2: #DADADA;   /* placeholder fills, desk */
+  --wf-grey-3: #555555;   /* muted text (AA on paper) */
+  --wf-on-ink: #E6E6E6;   /* muted text on an ink-coloured band */
+  /* The single annotation colour */
+  --wf-accent: #B3361B;
+  --wf-accent-soft: rgb(179 54 27 / 0.08);
+  /* Error state only (unknown asset IDs). Never used for design. */
+  --wf-error: #c81e1e;
+  --wf-error-bg: #FFE9E9;
+  --wf-tb-bg: #161616; --wf-tb-line: #666;
+
+  /* Spacing scale, SPEC §8 */
+  --wf-4: 4px;  --wf-8: 8px;  --wf-12: 12px; --wf-16: 16px; --wf-24: 24px;
+  --wf-32: 32px; --wf-48: 48px; --wf-64: 64px; --wf-96: 96px; --wf-128: 128px;
+
+  /* Type */
+  --wf-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --wf-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+
+  /* Layout */
+  --wf-frame-w: 1440px;   /* switched to 390px by the Mobile toggle */
+  --wf-toolbar-h: 44px;   /* height of the kit toolbar */
+  --wf-nav-h: 64px;       /* reserved for the site nav (ARM-05) */
+  --wf-content-max: 1280px;
+}
+html.wf-vp-mobile { --wf-frame-w: 390px; --wf-nav-h: 56px; }
+html.wf-dark {
+  --wf-ink: #ECECEC; --wf-paper: #121212; --wf-line: #444; --wf-grey-1: #1B1B1B;
+  --wf-grey-2: #262626; --wf-grey-3: #A8A8A8; --wf-on-ink: #444;
+  --wf-accent: #FF8A6B; --wf-accent-soft: rgb(255 138 107 / 0.1);
+  --wf-error-bg: #3A1212; --wf-error: #FF7070;
+  --wf-tb-bg: #000; --wf-tb-line: #555;
+  color-scheme: dark;
+}
+
+/* ---- 2. Base ------------------------------------------------------------ */
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: calc(var(--wf-toolbar-h) + var(--wf-nav-h)); }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body {
+  margin: 0;
+  padding-top: var(--wf-toolbar-h);
+  background: var(--wf-grey-2);
+  color: var(--wf-ink);
+  font: 400 16px/1.55 var(--wf-sans);
+  -webkit-font-smoothing: antialiased;
+}
+img, svg, video, iframe { display: block; max-width: 100%; }
+a { color: inherit; text-underline-offset: 3px; }
+button, input, select, textarea { font: inherit; color: inherit; }
+:focus-visible { outline: 3px solid var(--wf-accent); outline-offset: 2px; }
+h1, h2, h3, h4, p, figure, blockquote { margin: 0; }
+
+/* ---- 3. Frame (container-query root) ----------------------------------- */
+.wf-frame {
+  container: wf / inline-size;
+  display: block;
+  width: 100%;
+  max-width: var(--wf-frame-w);
+  margin: 0 auto;
+  background: var(--wf-paper);
+  min-height: calc(100vh - var(--wf-toolbar-h));
+  box-shadow: 0 0 0 1px var(--wf-line);
+}
+
+/* ---- 4. Grid and layout helpers (12 columns at 1440, 4 at 390) -------- */
+.wf-container {
+  width: 100%;
+  max-width: var(--wf-content-max);
+  margin-inline: auto;
+  padding-inline: var(--wf-32);
+}
+.wf-grid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: var(--wf-24);
+  width: 100%;
+  max-width: var(--wf-content-max);
+  margin-inline: auto;
+  padding-inline: var(--wf-32);
+}
+.wf-col-1 { grid-column: span 1; }  .wf-col-2 { grid-column: span 2; }
+.wf-col-3 { grid-column: span 3; }  .wf-col-4 { grid-column: span 4; }
+.wf-col-5 { grid-column: span 5; }  .wf-col-6 { grid-column: span 6; }
+.wf-col-7 { grid-column: span 7; }  .wf-col-8 { grid-column: span 8; }
+.wf-col-9 { grid-column: span 9; }  .wf-col-10 { grid-column: span 10; }
+.wf-col-11 { grid-column: span 11; } .wf-col-12 { grid-column: span 12; }
+.wf-row { display: flex; flex-wrap: wrap; gap: var(--wf-16); align-items: center; }
+.wf-stack { display: flex; flex-direction: column; gap: var(--wf-16); }
+.wf-stack > * { margin: 0; }
+
+@container wf (max-width: 767px) {
+  .wf-container, .wf-grid { padding-inline: var(--wf-16); }
+  .wf-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--wf-16); }
+  /* Every desktop column collapses to full width unless a -sm span is given */
+  .wf-grid > [class*="wf-col-"] { grid-column: span 4; }
+  .wf-grid > .wf-col-sm-1 { grid-column: span 1; }
+  .wf-grid > .wf-col-sm-2 { grid-column: span 2; }
+  .wf-grid > .wf-col-sm-3 { grid-column: span 3; }
+  .wf-grid > .wf-col-sm-4 { grid-column: span 4; }
+}
+
+/* Show/hide by frame width */
+@container wf (max-width: 767px) { .wf-only-desktop { display: none !important; } }
+@container wf (min-width: 768px) { .wf-only-mobile { display: none !important; } }
+
+/* ---- 5. Type scale (system fonts; scale shown, not final faces) -------- */
+.wf-display-xxl, .wf-display-xl, .wf-display-l {
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 0.95;
+  text-wrap: balance;
+}
+.wf-display-xxl { font-size: clamp(52px, 10cqi, 156px); }
+.wf-display-xl  { font-size: clamp(40px, 6.5cqi, 104px); }
+.wf-display-l   { font-size: clamp(30px, 4.2cqi, 64px); line-height: 1.02; }
+.wf-h3          { font-size: clamp(20px, 2cqi, 28px); font-weight: 700; line-height: 1.2; }
+.wf-body        { font-size: 18px; line-height: 1.6; max-width: 60ch; }
+.wf-small       { font-size: 14px; line-height: 1.5; color: var(--wf-grey-3); }
+.wf-label {
+  font: 600 12px/1.3 var(--wf-mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--wf-grey-3);
+}
+.wf-eyebrow { font: 600 13px/1.3 var(--wf-mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--wf-grey-3); }
+.wf-gloss { font-style: italic; color: var(--wf-grey-3); }
+@container wf (max-width: 767px) { .wf-body { font-size: 16px; } }
+
+/* ---- 6. Section --------------------------------------------------------- */
+.wf-section {
+  position: relative;
+  padding-block: var(--wf-96);
+  border-bottom: 1px dashed var(--wf-line);
+  /* anchor offset comes from html { scroll-padding-top } */
+}
+.wf-section::before {             /* corner tag: "H2 · The Voyage" */
+  content: attr(data-section) " · " attr(data-title);
+  position: absolute;
+  top: 0; left: 0;
+  z-index: 3;
+  padding: 4px 10px;
+  background: var(--wf-ink);
+  color: var(--wf-paper);
+  font: 600 11px/1.4 var(--wf-mono);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.wf-section--dark { background: var(--wf-ink); color: var(--wf-paper); }
+html.wf-dark .wf-section--dark { background: #000; color: #ECECEC; }
+.wf-section--dark .wf-label, .wf-section--dark .wf-eyebrow,
+.wf-section--dark .wf-small, .wf-section--dark .wf-gloss { color: var(--wf-on-ink); }
+.wf-section--dark::before { background: var(--wf-paper); color: var(--wf-ink); }
+.wf-section--tint { background: var(--wf-grey-1); }
+.wf-stub { color: var(--wf-grey-3); font: 500 14px/1.5 var(--wf-mono); }
+@container wf (max-width: 767px) { .wf-section { padding-block: var(--wf-64); } }
+
+/* ---- 7. Image ----------------------------------------------------------- */
+.wf-img { position: relative; margin: 0; background: var(--wf-grey-2); }
+/* Height comes from data-ratio (set inline by kit.js). Sections that need the image to
+   fill a box set `height: 100%` on .wf-img__media themselves (captions
+   overflowed when a figure was stretched by a grid row). */
+.wf-img__media { position: relative; overflow: hidden; width: 100%; }
+.wf-img img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  filter: grayscale(1);
+}
+.wf-img[data-fit="contain"] img { object-fit: contain; background: var(--wf-grey-1); }
+.wf-img figcaption {
+  padding: 6px 0 0;
+  background: var(--wf-paper);
+  font: 400 12px/1.4 var(--wf-sans);
+  color: var(--wf-grey-3);
+}
+.wf-section--dark .wf-img figcaption { background: transparent; color: var(--wf-on-ink); }
+.wf-img figcaption b { font: 600 11px/1 var(--wf-mono); color: var(--wf-ink); margin-right: 4px; }
+.wf-section--dark .wf-img figcaption b { color: var(--wf-paper); }
+.wf-img[data-caption="none"] figcaption { display: none; }
+.wf-img[data-caption="overlay"] figcaption {
+  position: absolute; left: 0; bottom: 0; right: 0;
+  padding: 6px 8px; background: color-mix(in srgb, var(--wf-paper) 88%, transparent);
+}
+
+/* Error box for unknown asset IDs (kit-generated) */
+.wf-error {
+  display: flex; align-items: center; justify-content: center;
+  min-height: 120px; padding: var(--wf-16);
+  border: 3px solid var(--wf-error);
+  background: var(--wf-error-bg);
+  color: var(--wf-error);
+  font: 700 14px/1.4 var(--wf-mono);
+  text-align: center;
+}
+
+/* ---- 8. Placeholder (crossed box) -------------------------------------- */
+.wf-ph {
+  position: relative;
+  display: flex; align-items: center; justify-content: center;
+  min-height: 120px;
+  border: 1.5px solid var(--wf-grey-3);
+  background:
+    linear-gradient(to top right, transparent calc(50% - 0.75px), var(--wf-line) calc(50% - 0.75px), var(--wf-line) calc(50% + 0.75px), transparent calc(50% + 0.75px)),
+    linear-gradient(to bottom right, transparent calc(50% - 0.75px), var(--wf-line) calc(50% - 0.75px), var(--wf-line) calc(50% + 0.75px), transparent calc(50% + 0.75px)),
+    var(--wf-grey-1);
+}
+.wf-ph::after {
+  content: attr(data-label);
+  max-width: 80%;
+  padding: 6px 10px;
+  background: var(--wf-paper);
+  border: 1px solid var(--wf-line);
+  font: 600 12px/1.4 var(--wf-mono);
+  letter-spacing: 0.03em;
+  text-align: center;
+  color: var(--wf-ink);
+}
+.wf-ph--round { border-radius: 50%; }
+.wf-section--dark .wf-ph { background-color: #2A2A2A; border-color: #888; }
+
+/* ---- 9. Video (click-to-load) ------------------------------------------ */
+.wf-video { position: relative; background: var(--wf-ink); aspect-ratio: 16 / 9; overflow: hidden; }
+.wf-video__poster {
+  all: unset;
+  position: absolute; inset: 0;
+  cursor: pointer;
+  display: block;
+}
+.wf-video__poster img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(1); }
+.wf-video__play {
+  position: absolute; left: 50%; top: 50%;
+  width: 76px; height: 76px; margin: -38px 0 0 -38px;
+  border-radius: 50%;
+  background: var(--wf-paper);
+  display: grid; place-items: center;
+  box-shadow: 0 4px 18px rgb(0 0 0 / 0.35);
+}
+.wf-video__play::before {
+  content: ""; margin-left: 6px;
+  border-style: solid; border-width: 14px 0 14px 22px;
+  border-color: transparent transparent transparent var(--wf-ink);
+}
+.wf-video__poster:focus-visible .wf-video__play { outline: 3px solid var(--wf-accent); outline-offset: 3px; }
+.wf-video__title {
+  position: absolute; left: 0; right: 0; bottom: 0;
+  padding: 8px 12px;
+  background: linear-gradient(transparent, rgb(0 0 0 / 0.75));
+  color: #fff; font: 500 13px/1.4 var(--wf-sans);
+}
+.wf-video iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+
+/* ---- 10. Annotation ----------------------------------------------------- */
+.wf-anno {
+  position: relative;
+  display: block;
+  max-width: 44ch;
+  margin: var(--wf-12) 0;
+  padding: 10px 12px 10px 40px;
+  border: 1px solid var(--wf-accent);
+  border-left-width: 4px;
+  background: var(--wf-paper);
+  color: var(--wf-ink);
+  font: 400 13px/1.5 var(--wf-sans);
+  box-shadow: 0 1px 0 var(--wf-accent-soft);
+  z-index: 4;
+}
+.wf-anno__pin {
+  position: absolute; left: 8px; top: 9px;
+  width: 22px; height: 22px; border-radius: 50%;
+  background: var(--wf-accent); color: #fff;
+  font: 700 11px/22px var(--wf-mono); text-align: center;
+}
+.wf-anno__ids { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 4px; }
+.wf-anno__id {
+  padding: 1px 6px;
+  border: 1px solid var(--wf-accent);
+  border-radius: 3px;
+  color: var(--wf-accent);
+  font: 700 10.5px/1.5 var(--wf-mono);
+  letter-spacing: 0.03em;
+}
+/* Positioning helpers for annotations pinned onto a layout */
+.wf-anno--float { position: absolute; margin: 0; width: min(36ch, 90%); }
+@container wf (max-width: 767px) {
+  /* Floating notes drop back into the flow on mobile so they never overlap */
+  .wf-anno--float { position: relative; inset: auto !important; width: auto; margin: var(--wf-12) 0; }
+}
+html.wf-hide-anno .wf-anno { display: none !important; }
+
+/* ---- 11. Verify marker -------------------------------------------------- */
+.wf-verify {
+  background: var(--wf-grey-2);
+  color: inherit;
+  padding: 0 3px;
+  outline: 1.5px dashed var(--wf-accent);
+  outline-offset: 1px;
+}
+.wf-verify::after {
+  content: " [VERIFY]";
+  font: 700 0.7em/1 var(--wf-mono);
+  color: var(--wf-accent);
+  letter-spacing: 0.04em;
+}
+.wf-section--dark .wf-verify { background: #333; }
+
+/* ---- 12. Shared UI bits (buttons, chips, heat marks) ------------------- */
+.wf-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 44px; padding: 10px 20px;
+  border: 1.5px solid var(--wf-ink);
+  border-radius: 999px;
+  background: var(--wf-paper);
+  color: var(--wf-ink);
+  font: 600 15px/1.2 var(--wf-sans);
+  text-decoration: none;
+  cursor: pointer;
+}
+.wf-btn--primary { background: var(--wf-ink); color: var(--wf-paper); }
+.wf-btn--ghost { border-color: transparent; text-decoration: underline; padding-inline: 4px; }
+.wf-section--dark .wf-btn { border-color: var(--wf-paper); background: transparent; color: var(--wf-paper); }
+.wf-section--dark .wf-btn--primary { background: var(--wf-paper); color: var(--wf-ink); }
+.wf-btn:active { transform: scale(0.97); }
+.wf-chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  min-height: 32px; padding: 4px 12px;
+  border: 1px solid var(--wf-grey-3);
+  border-radius: 999px;
+  background: transparent;
+  font: 500 13px/1.2 var(--wf-sans);
+  text-decoration: none;
+  color: inherit;
+}
+button.wf-chip { cursor: pointer; }
+/* Touch targets ≥ 44px on mobile (SPEC §12) */
+@container wf (max-width: 767px) { a.wf-chip, button.wf-chip { min-height: 44px; } }
+.wf-chip[aria-pressed="true"], .wf-chip.is-active { background: var(--wf-ink); color: var(--wf-paper); border-color: var(--wf-ink); }
+.wf-heat { font: 700 14px/1 var(--wf-mono); letter-spacing: 2px; white-space: nowrap; }
+.wf-heat .on { color: var(--wf-ink); }
+.wf-heat .off { color: var(--wf-line); }
+.wf-section--dark .wf-heat .on { color: var(--wf-paper); }
+.wf-section--dark .wf-heat .off { color: #777; }
+.wf-tag {
+  display: inline-block; padding: 2px 8px;
+  border: 1px solid currentColor; border-radius: 3px;
+  font: 700 10.5px/1.5 var(--wf-mono); letter-spacing: 0.06em; text-transform: uppercase;
+}
+.wf-rule { border: 0; border-top: 1px solid var(--wf-line); margin: var(--wf-24) 0; }
+.wf-sr-only {
+  position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+/* Dock: fixed to the bottom of the viewport but aligned to the frame width,
+   so mobile sticky bars sit inside the 390 frame in the toggle preview. */
+.wf-dock {
+  position: fixed;
+  left: 50%; bottom: 0;
+  translate: -50% 0;
+  width: 100%;
+  max-width: var(--wf-frame-w);
+  z-index: 40;
+}
+
+/* ---- 13. Toolbar (kit-injected) ---------------------------------------- */
+.wf-toolbar {
+  position: fixed; inset: 0 0 auto 0;
+  height: var(--wf-toolbar-h);
+  z-index: 1000;
+  display: flex; align-items: center; gap: 8px;
+  padding: 0 12px;
+  background: var(--wf-tb-bg); color: #f2f2f2;
+  font: 500 12px/1 var(--wf-sans);
+  overflow-x: auto;
+  white-space: nowrap;
+}
+.wf-toolbar__brand { font: 700 12px/1 var(--wf-mono); letter-spacing: 0.06em; margin-right: 6px; }
+.wf-toolbar__group { display: inline-flex; border: 1px solid var(--wf-tb-line); border-radius: 6px; overflow: hidden; }
+.wf-toolbar button, .wf-toolbar select, .wf-toolbar a {
+  height: 30px; padding: 0 10px;
+  border: 0; background: transparent; color: inherit;
+  font: inherit; cursor: pointer; text-decoration: none;
+  display: inline-flex; align-items: center;
+}
+.wf-toolbar__group > * + * { border-left: 1px solid var(--wf-tb-line); }
+.wf-toolbar [aria-pressed="true"] { background: var(--wf-accent); color: #fff; }
+.wf-toolbar select { border: 1px solid var(--wf-tb-line); border-radius: 6px; background: var(--wf-tb-bg); max-width: 220px; }
+.wf-toolbar kbd { font: 600 10px/1 var(--wf-mono); opacity: 0.65; margin-left: 5px; }
+.wf-toolbar__spacer { flex: 1; }
+.wf-toolbar__pages a[aria-current="page"] { text-decoration: underline; }
+
+/* ---- 14. Shell-only bits ----------------------------------------------- */
+.wf-pagelinks {
+  display: flex; flex-wrap: wrap; gap: var(--wf-16);
+  padding: var(--wf-24) var(--wf-32);
+  border-top: 1px solid var(--wf-line);
+  font: 500 13px/1.4 var(--wf-mono);
+}
+.wf-pagelinks span { color: var(--wf-grey-3); }
+.wf-pagelinks a { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; min-width: 44px; }
+.wf-kittest-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: var(--wf-24); align-items: start; }
+.wf-cq-probe { padding: 8px 12px; border: 1px dashed var(--wf-grey-3); font: 600 13px/1.4 var(--wf-mono); }
+.wf-cq-probe::after { content: "Container: desktop (≥ 768)"; }
+@container wf (max-width: 767px) {
+  .wf-cq-probe { background: var(--wf-ink); color: var(--wf-paper); }
+  .wf-cq-probe::after { content: "Container: mobile (≤ 767) rule applied"; }
+}
+
+/* ---- 15. ARMtronix additions ------------------------------------------ */
+/* Simulated tag: on every telemetry value (CONVENTIONS §5) */
+.wf-sim {
+  display: inline-block; vertical-align: middle;
+  padding: 1px 5px; margin-left: 6px;
+  border: 1px solid currentColor; border-radius: 2px;
+  font: 700 9.5px/1.4 var(--wf-mono); letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--wf-grey-3);
+}
+/* Datasheet spec table */
+.wf-spec { width: 100%; border-collapse: collapse; font: 400 14px/1.45 var(--wf-sans); }
+.wf-spec th, .wf-spec td { padding: 8px 12px; border-bottom: 1px solid var(--wf-line); text-align: left; vertical-align: top; }
+.wf-spec th { width: 34%; font: 600 12px/1.45 var(--wf-mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--wf-grey-3); }
+.wf-spec td { font-family: var(--wf-mono); font-size: 13.5px; }
+.wf-spec caption { text-align: left; padding: 0 0 8px; font: 600 12px/1.4 var(--wf-mono); letter-spacing: 0.08em; text-transform: uppercase; }
+@container wf (max-width: 767px) {
+  .wf-spec, .wf-spec tbody, .wf-spec caption, .wf-spec tr, .wf-spec th, .wf-spec td { display: block; width: 100%; }
+  .wf-spec tr { padding: 8px 0; border-bottom: 1px solid var(--wf-line); }
+  .wf-spec th, .wf-spec td { padding: 2px 0; border: 0; }
+}
+.wf-region-stub { padding: var(--wf-24); border: 1px dashed var(--wf-grey-3); }
