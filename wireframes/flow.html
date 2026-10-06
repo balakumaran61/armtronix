@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ARMtronix · Sitemap and funnels</title>
+<meta name="description" content="Phase 1 sitemap and B2B funnel flows.">
+<link rel="stylesheet" href="wireframe.css">
+<script src="assets/manifest.js"></script>
+<script src="kit.js" defer></script>
+</head>
+<body>
+<main class="wf-frame">
+
+<!-- region:FLOW start -->
+<style>
+  #flow .fl-wrap { display: flex; flex-direction: column; gap: var(--wf-48); }
+  #flow h2 { font: 800 clamp(26px, 3.4cqi, 44px)/1.05 var(--wf-sans); letter-spacing: -0.02em; }
+  #flow h3 { font: 700 18px/1.3 var(--wf-sans); }
+  #flow .fl-sub { max-width: 70ch; color: var(--wf-grey-3); }
+  /* Sitemap */
+  #flow .fl-map { display: grid; grid-template-columns: 1fr 1.2fr 1fr; gap: var(--wf-24); align-items: start; }
+  #flow .fl-box { border: 1.5px solid var(--wf-ink); background: var(--wf-paper); padding: 10px 12px; }
+  #flow .fl-box b { font: 700 13px/1.3 var(--wf-mono); letter-spacing: 0.04em; }
+  #flow .fl-box small { display: block; color: var(--wf-grey-3); font: 400 12.5px/1.4 var(--wf-sans); }
+  #flow .fl-root { border-width: 3px; }
+  #flow .fl-col { display: flex; flex-direction: column; gap: 8px; }
+  #flow .fl-col > h3 { font: 600 12px/1.3 var(--wf-mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--wf-grey-3); }
+  #flow .fl-home { counter-reset: hs; }
+  #flow .fl-home .fl-box { display: grid; grid-template-columns: 44px 1fr; gap: 8px; align-items: baseline; padding: 6px 10px; border-left: 4px solid var(--wf-ink); }
+  #flow .fl-home .fl-box b { font-size: 12px; }
+  #flow .fl-ui .fl-box { border-style: dashed; }
+  /* Lanes */
+  #flow .fl-lane { display: grid; grid-template-columns: 150px 1fr; gap: var(--wf-16); padding: 14px 0; border-top: 1px solid var(--wf-line); align-items: start; }
+  #flow .fl-who b { display: block; font: 800 16px/1.2 var(--wf-sans); }
+  #flow .fl-who small { color: var(--wf-grey-3); font: 400 12.5px/1.4 var(--wf-sans); }
+  #flow .fl-steps { display: flex; flex-wrap: wrap; gap: 0; align-items: stretch; list-style: none; padding: 0; margin: 0; }
+  #flow .fl-step { position: relative; flex: 1 1 150px; min-width: 140px; max-width: 220px; margin-right: 22px; padding: 8px 10px; border: 1.5px solid var(--wf-ink); background: var(--wf-paper); font: 400 13px/1.35 var(--wf-sans); }
+  #flow .fl-step::after { content: "→"; position: absolute; right: -19px; top: 50%; translate: 0 -50%; font: 700 16px/1 var(--wf-mono); }
+  #flow .fl-step:last-child { margin-right: 0; }
+  #flow .fl-step:last-child::after { content: none; }
+  #flow .fl-step b { display: block; font: 700 11px/1.3 var(--wf-mono); letter-spacing: 0.06em; text-transform: uppercase; }
+  #flow .fl-step i { display: block; margin-top: 3px; color: var(--wf-grey-3); font-style: italic; }
+  #flow .fl-step.is-end { background: var(--wf-ink); color: var(--wf-paper); }
+  #flow .fl-step.is-end i, #flow .fl-step.is-end code { color: var(--wf-on-ink); }
+  html.wf-dark #flow .fl-step.is-end { background: #E6E6E6; color: #111; }
+  html.wf-dark #flow .fl-step.is-end i, html.wf-dark #flow .fl-step.is-end code { color: #333; }
+  #flow .fl-step code { display: block; margin-top: 4px; font: 500 11.5px/1.4 var(--wf-mono); overflow-wrap: anywhere; }
+  #flow .fl-step.is-micro { border-style: dashed; }
+  /* Conversion map */
+  #flow table.fl-tab { width: 100%; border-collapse: collapse; font: 400 13.5px/1.4 var(--wf-sans); }
+  #flow .fl-tab th, #flow .fl-tab td { padding: 7px 10px; border-bottom: 1px solid var(--wf-line); text-align: left; vertical-align: top; }
+  #flow .fl-tab th { font: 600 11.5px/1.3 var(--wf-mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--wf-grey-3); }
+  #flow .fl-tab code { font: 500 12px/1.4 var(--wf-mono); word-break: break-all; }
+  #flow .fl-legend { display: flex; flex-wrap: wrap; gap: var(--wf-24); font: 500 13px/1.4 var(--wf-sans); }
+  #flow .fl-key { display: inline-flex; align-items: center; gap: 8px; }
+  #flow .fl-key span { display: inline-block; width: 28px; height: 16px; border: 1.5px solid var(--wf-ink); }
+  #flow .fl-key .k-end { background: var(--wf-ink); }
+  #flow .fl-key .k-micro { border-style: dashed; }
+  @container wf (max-width: 767px) {
+    #flow .fl-map { grid-template-columns: 1fr; }
+    #flow .fl-lane { grid-template-columns: 1fr; }
+    #flow .fl-steps { flex-direction: column; }
+    #flow .fl-step { max-width: none; margin: 0 0 22px; width: 100%; }
+    #flow .fl-step::after { content: "↓"; right: auto; left: 50%; top: auto; bottom: -21px; translate: -50% 0; }
+    #flow .fl-step:last-child { margin-bottom: 0; }
+    #flow .fl-tab thead { display: none; }
+    #flow .fl-tab, #flow .fl-tab tbody, #flow .fl-tab tr, #flow .fl-tab td { display: block; width: 100%; }
+    #flow .fl-tab tr { padding: 8px 0; border-bottom: 1px solid var(--wf-line); }
+    #flow .fl-tab td { border: 0; padding: 2px 0; }
+    #flow .fl-tab td::before { content: attr(data-h) ": "; font: 600 11px/1.3 var(--wf-mono); text-transform: uppercase; color: var(--wf-grey-3); }
+  }
+</style>
+<section class="wf-section" id="flow" data-section="FLOW" data-title="Sitemap and funnels">
+  <div class="wf-container fl-wrap">
+
+    <header class="wf-stack">
+      <p class="wf-eyebrow">ARM-04 · Sitemap and B2B funnels</p>
+      <h1 class="wf-display-l">Every road ends in a quote.</h1>
+      <p class="fl-sub">The site is a funnel, not a brochure. Five buyer types enter on the Home signal path, take the shortest route to the hardware that answers their question, and finish at the RFQ wizard or a measurable micro-conversion.</p>
+      <div class="fl-legend" aria-label="Legend">
+        <span class="fl-key"><span></span> Screen or section</span>
+        <span class="fl-key"><span class="k-micro"></span> Micro-conversion (tracked step)</span>
+        <span class="fl-key"><span class="k-end"></span> Conversion (RFQ with pre-fill)</span>
+      </div>
+    </header>
+
+    <!-- 1 · Sitemap -->
+    <div class="wf-stack">
+      <h2>1 · Sitemap</h2>
+      <div class="fl-map">
+        <div class="fl-col">
+          <h3>Routes (SPEC §5)</h3>
+          <div class="fl-box fl-root"><b>/</b><small>Home: the signal-path story, H0 to H10</small></div>
+          <div class="fl-box"><b>/products</b><small>Catalogue: IA and BA, filters, compare up to 3</small></div>
+          <div class="fl-box"><b>/products/:code</b><small>Detail, e.g. /products/ia015 · 17 pages</small></div>
+          <div class="fl-box"><b>/solutions/retro-iiot</b><small>Optional: stays a Home section (H5)</small></div>
+          <div class="fl-box"><b>/engineering</b><small>Optional: Home H7 summarises it</small></div>
+          <div class="fl-box"><b>/rfq</b><small>Wizard; also opens as an overlay from any CTA</small></div>
+        </div>
+        <div class="fl-col fl-home">
+          <h3>Home sections in scroll order</h3>
+          <div class="fl-box"><b>H0</b><span>Boot sequence <small>once per session · skippable</small></span></div>
+          <div class="fl-box"><b>H1</b><span>Hero: Make every machine talk <small>CTA: Explore hardware · Request a quote</small></span></div>
+          <div class="fl-box"><b>H2</b><span>Signal path <small>Physical, Board, Protocol, Cloud, Decision</small></span></div>
+          <div class="fl-box"><b>H3</b><span>Board explorer <small>Photo · X-ray · Layers, hotspots</small></span></div>
+          <div class="fl-box"><b>H4</b><span>Live telemetry console <small>Simulated</small></span></div>
+          <div class="fl-box"><b>H5</b><span>Retro to IIoT before / after</span></div>
+          <div class="fl-box"><b>H6</b><span>Product lines: parts drawer</span></div>
+          <div class="fl-box"><b>H7</b><span>Engineering services</span></div>
+          <div class="fl-box"><b>H8</b><span>Proof: built in the open</span></div>
+          <div class="fl-box"><b>H9</b><span>Request a quote (inline step 1)</span></div>
+          <div class="fl-box"><b>H10</b><span>Footer</span></div>
+        </div>
+        <div class="fl-col fl-ui">
+          <h3>Persistent UI</h3>
+          <div class="fl-box"><b>Top bar</b><small>Wordmark · Products · Solutions · Engineering · Proof · theme switch · Request a quote</small></div>
+          <div class="fl-box"><b>Theme toggle</b><small>Physical switch: Control Room / Datasheet</small></div>
+          <div class="fl-box"><b>Signal trace</b><small>Left edge (desktop), top edge (mobile); scroll progress</small></div>
+          <div class="fl-box"><b>Status strip</b><small>● 3 boards online · simulated, links to H4</small></div>
+          <div class="fl-box"><b>Sticky mobile bar</b><small>Request quote · Call</small></div>
+          <div class="fl-box"><b>RFQ overlay</b><small>Opens from any CTA, same wizard as /rfq</small></div>
+        </div>
+      </div>
+      <aside class="wf-anno" data-ids="BR-08 GR-04">The RFQ is reachable from every screen in one tap: the nav button on desktop, the sticky bar on mobile. A buyer never has to hunt for the way to ask.</aside>
+    </div>
+
+    <!-- 2 · Lanes -->
+    <div class="wf-stack">
+      <h2>2 · Funnel lanes</h2>
+      <p class="fl-sub">One lane per persona (SPEC §4). Each box names the screen and the question in the buyer's head. Every lane ends in a dark box: a conversion.</p>
+
+      <div class="fl-lane">
+        <div class="fl-who"><b>Automation / controls engineer</b><small>Needs exact I/O, protocols, power, pinout, datasheet</small></div>
+        <ol class="fl-steps">
+          <li class="fl-step"><b>H1 Hero</b>See a real IA015 render. <i>"Is this real hardware?"</i></li>
+          <li class="fl-step"><b>H3 Board explorer</b>Hover the parts. <i>"What's on the board?"</i></li>
+          <li class="fl-step"><b>/products/:code</b>Datasheet table, pinout. <i>"Exact I/O, power, mounting?"</i></li>
+          <li class="fl-step is-micro"><b>Micro</b>View datasheet (GitHub) · copy MQTT snippet. <i>"Can I integrate it?"</i></li>
+          <li class="fl-step is-end"><b>Conversion</b>Request sample. <code>need=sample&amp;product=ia015&amp;who=engineer</code></li>
+        </ol>
+      </div>
+
+      <div class="fl-lane">
+        <div class="fl-who"><b>Industrial buyer / procurement</b><small>Needs reliability, who is behind it, support, a quote</small></div>
+        <ol class="fl-steps">
+          <li class="fl-step"><b>H1 Hero</b>Headline and hardware. <i>"Who are these people?"</i></li>
+          <li class="fl-step"><b>H6 Parts drawer</b>Scan 17 boards by spec. <i>"Which board fits?"</i></li>
+          <li class="fl-step"><b>H8 Proof</b>Repos, reviews, orders (sourced). <i>"Can I trust them?"</i></li>
+          <li class="fl-step is-micro"><b>Micro</b>Download catalogue (PDF). <i>"Let me share this internally."</i></li>
+          <li class="fl-step is-end"><b>Conversion</b>Request a quote (H9 or overlay). <code>need=product</code> (who chosen in step 1)</li>
+        </ol>
+      </div>
+
+      <div class="fl-lane">
+        <div class="fl-who"><b>System integrator / OEM</b><small>Needs customisation, white-label, firmware changes, volume</small></div>
+        <ol class="fl-steps">
+          <li class="fl-step"><b>H1 / H2</b>Meet the signal path. <i>"Do they do protocol work?"</i></li>
+          <li class="fl-step"><b>H7 Engineering</b>Six PCB stages. <i>"Can they build my board?"</i></li>
+          <li class="fl-step"><b>H6 / detail</b>Check a base board. <i>"Can I start from IA013?"</i></li>
+          <li class="fl-step is-end"><b>Conversion</b>Start a custom design. <code>who=oem&amp;need=custom</code></li>
+        </ol>
+      </div>
+
+      <div class="fl-lane">
+        <div class="fl-who"><b>Plant / facility manager</b><small>"Can I monitor my old machines without replacing them?"</small></div>
+        <ol class="fl-steps">
+          <li class="fl-step"><b>H2 Signal path</b>Understand IIoT in 5 s. <i>"What does it do for my cabinet?"</i></li>
+          <li class="fl-step"><b>H5 Retro to IIoT</b>Drag silent to talking. <i>"Do I have to replace the PLC?"</i></li>
+          <li class="fl-step"><b>H4 Console</b>Flip a relay, see data. <i>"What would I see?"</i></li>
+          <li class="fl-step is-micro"><b>Micro</b>Watch a third-party review (H8). <i>"Has anyone else used it?"</i></li>
+          <li class="fl-step is-end"><b>Conversion</b>Assess my machines. <code>who=plant&amp;need=retro</code></li>
+        </ol>
+      </div>
+
+      <div class="fl-lane">
+        <div class="fl-who"><b>Maker / developer <em>(secondary)</em></b><small>Needs open source, Tasmota, GitHub</small></div>
+        <ol class="fl-steps">
+          <li class="fl-step"><b>H8 Proof</b>Public repos, Tasmota docs. <i>"Is it open?"</i></li>
+          <li class="fl-step is-micro"><b>Micro</b>Browse repos on GitHub. <i>"Show me the code."</i></li>
+          <li class="fl-step"><b>/products/:code</b>MQTT snippet, programming notes. <i>"Can I flash my own firmware?"</i></li>
+          <li class="fl-step is-end"><b>Conversion</b>Request sample (short wizard). <code>who=developer&amp;need=sample&amp;product=ba011</code></li>
+        </ol>
+      </div>
+
+      <aside class="wf-anno" data-ids="BR-08 BR-09">Micro-conversions (catalogue PDF, datasheet, MQTT copy, repos, review video) catch visitors who are not ready to ask for a quote. Each is a measurable intent signal and each leads back to the RFQ.</aside>
+    </div>
+
+    <!-- 3 · Conversion map -->
+    <div class="wf-stack">
+      <h2>3 · Conversion map</h2>
+      <p class="fl-sub">Every CTA, where it lives, and what it pre-fills in the RFQ. Parameters: <code>who</code> (oem · integrator · plant · engineer · developer), <code>need</code> (product · customised · custom · retro · sample), <code>product</code> (one or more codes), <code>topic=tech</code> (technical question).</p>
+      <table class="fl-tab">
+        <thead><tr><th>CTA</th><th>Where</th><th>Opens</th><th>Pre-fill</th></tr></thead>
+        <tbody>
+          <tr><td data-h="CTA">Request a quote</td><td data-h="Where">Top bar (desktop), sticky bar (mobile), H1, H9, footer</td><td data-h="Opens">Overlay or <code>rfq.html</code></td><td data-h="Pre-fill">none; step 1 asks who</td></tr>
+          <tr><td data-h="CTA">Talk to an engineer</td><td data-h="Where">Top bar menu, H3, product detail</td><td data-h="Opens">Overlay</td><td data-h="Pre-fill"><code>who=engineer&amp;topic=tech</code></td></tr>
+          <tr><td data-h="CTA">Explore hardware</td><td data-h="Where">H1</td><td data-h="Opens">Scrolls to H6</td><td data-h="Pre-fill">n/a (navigation)</td></tr>
+          <tr><td data-h="CTA">Assess my machines</td><td data-h="Where">H5</td><td data-h="Opens"><code>rfq.html</code></td><td data-h="Pre-fill"><code>who=plant&amp;need=retro</code></td></tr>
+          <tr><td data-h="CTA">Monitor my own machines</td><td data-h="Where">H4</td><td data-h="Opens"><code>rfq.html</code></td><td data-h="Pre-fill"><code>who=plant&amp;need=retro</code></td></tr>
+          <tr><td data-h="CTA">Start a custom design</td><td data-h="Where">H7</td><td data-h="Opens"><code>rfq.html</code></td><td data-h="Pre-fill"><code>who=oem&amp;need=custom</code></td></tr>
+          <tr><td data-h="CTA">Request quote</td><td data-h="Where">Product detail header and end</td><td data-h="Opens">Overlay</td><td data-h="Pre-fill"><code>need=product&amp;product=ia015</code></td></tr>
+          <tr><td data-h="CTA">Request sample</td><td data-h="Where">H3 card, product detail</td><td data-h="Opens">Overlay</td><td data-h="Pre-fill"><code>need=sample&amp;product=ia015</code></td></tr>
+          <tr><td data-h="CTA">Ask about customisation</td><td data-h="Where">Product detail</td><td data-h="Opens">Overlay</td><td data-h="Pre-fill"><code>need=customised&amp;product=ia015</code></td></tr>
+          <tr><td data-h="CTA">Compare, then Request a quote</td><td data-h="Where">/products compare bar</td><td data-h="Opens">Overlay</td><td data-h="Pre-fill"><code>need=product&amp;product=ia015,ba011</code></td></tr>
+          <tr><td data-h="CTA">Who tiles (OEM, Integrator, Plant, Engineer, Developer)</td><td data-h="Where">H9 inline step 1</td><td data-h="Opens"><code>rfq.html</code> step 2</td><td data-h="Pre-fill"><code>who=…</code></td></tr>
+          <tr><td data-h="CTA">Download catalogue (PDF)</td><td data-h="Where">H9, /products</td><td data-h="Opens">GitHub PDF</td><td data-h="Pre-fill">micro-conversion</td></tr>
+          <tr><td data-h="CTA">View datasheet · Copy MQTT snippet</td><td data-h="Where">Product detail</td><td data-h="Opens">GitHub PDF · clipboard</td><td data-h="Pre-fill">micro-conversion</td></tr>
+          <tr><td data-h="CTA">Browse the repos · Watch a review</td><td data-h="Where">H8</td><td data-h="Opens">GitHub · embedded video</td><td data-h="Pre-fill">micro-conversion</td></tr>
+        </tbody>
+      </table>
+      <aside class="wf-anno" data-ids="BR-08 BR-10">The RFQ is a five-step wizard, not one long form: each tap is small, the answers qualify the lead (who, need, spec, volume) and "Developer" gets a shorter path. Sales receives a structured request, not a vague "contact us" message.</aside>
+      <aside class="wf-anno" data-ids="GR-04 BR-08">On mobile the sticky bar keeps "Request quote" and "Call" under the thumb on every screen, because plant visits and shop-floor browsing happen on phones.</aside>
+    </div>
+
+  </div>
+</section>
+<!-- region:FLOW end -->
+
+<!-- shell: page links (ARM-01) -->
+<nav class="wf-pagelinks" aria-label="Wireframe pages">
+  <span>Wireframe pages:</span>
+  <a href="index.html">Home</a>
+  <a href="products.html">Products</a>
+  <a href="product.html">Product detail</a>
+  <a href="rfq.html">RFQ</a>
+  <a href="flow.html">Flow</a>
+  <a href="credits.html">Credits</a>
+</nav>
+</main>
+</body>
+</html>
